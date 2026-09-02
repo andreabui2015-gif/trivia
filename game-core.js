@@ -10,13 +10,11 @@
   var ROUNDS = [
     { id: 1, name: 'Count It', pts: 2, blurb: 'Count the tray. Exact answer only — the techs live here.',
       q: [
-        { type: 'count', seed: 11, kind: 'tab', count: 27,
-          prompt: 'How many tablets are on this tray?',
-          options: ['24', '27', '30', '33'], answer: 1,
+        { type: 'count', seed: 11, kind: 'tab', count: 27, prompt: 'How many tablets are on this tray?',
+          options: ['24','27','30','33'], answer: 1,
           fact: 'Counting by fives beats counting by ones — and it is the only way to survive a 1,000-count bottle.' },
-        { type: 'count', seed: 23, kind: 'cap', count: 41,
-          prompt: 'How many capsules are on this tray?',
-          options: ['39', '41', '43', '45'], answer: 1,
+        { type: 'count', seed: 23, kind: 'cap', count: 41, prompt: 'How many capsules are on this tray?',
+          options: ['39','41','43','45'], answer: 1,
           fact: 'Double-count anything controlled. CII counts need a second set of initials.' }
       ] },
     { id: 2, name: 'Spot the Error', pts: 2, blurb: 'One thing is wrong on each label. Tap what it is.',
@@ -24,8 +22,7 @@
         { type: 'spot', layout: 'pair',
           cards: [
             { title: 'ORDER', lines: ['Pt: DOE, JANE  MRN 4471982', 'DRUG: Metformin 500 mg tablet', 'Sig: 1 tab PO twice daily w/ meals', 'Qty: 60   Refills: 3'] },
-            { title: 'DISPENSED', lines: ['Pt: DOE, JANE  MRN 4471982', 'DRUG: Metoprolol tartrate 50 mg tab', 'Sig: 1 tab PO twice daily w/ meals', 'Qty: 60   Refills: 3'] }
-          ],
+            { title: 'DISPENSED', lines: ['Pt: DOE, JANE  MRN 4471982', 'DRUG: Metoprolol tartrate 50 mg tab', 'Sig: 1 tab PO twice daily w/ meals', 'Qty: 60   Refills: 3'] } ],
           prompt: 'What is wrong here?',
           options: ['Wrong quantity', 'Wrong drug — metoprolol for metformin', 'Wrong directions', 'Wrong patient'], answer: 1,
           fact: 'Metformin / metoprolol is a classic look-alike. The Sig and quantity matched perfectly, which is exactly why it slips through.' },
@@ -40,59 +37,71 @@
           options: ['Allergy conflict — Augmentin is a penicillin', 'Wrong dose', 'Wrong duration', 'Wrong route'], answer: 0,
           fact: 'Brand names hide drug classes. Augmentin, Unasyn, Zosyn — all penicillins. Read the allergy line first, not last.' }
       ] },
-    { id: 3, name: 'Where Does It Go?', pts: 1, blurb: 'Where does this drug live in the pharmacy?',
+    { id: 3, name: 'Vital Signs', pts: 1, blurb: 'Quick clinical warm-ups.',
+      q: [
+        { type: 'mc', prompt: 'What is the antidote for an acetaminophen overdose?',
+          options: ['Naloxone', 'N-acetylcysteine', 'Flumazenil', 'Protamine'], answer: 1,
+          fact: 'N-acetylcysteine replenishes glutathione so the liver can neutralize the toxic metabolite NAPQI.' },
+        { type: 'mc', prompt: 'Which of these is on the ISMP high-alert medication list?',
+          options: ['Insulin', 'Famotidine', 'Docusate', 'Ondansetron'], answer: 0,
+          fact: 'High-alert drugs are not more error-prone — but when an error happens the harm is far worse. Insulin, opioids, anticoagulants and concentrated electrolytes headline the list.' },
+        { type: 'mc', prompt: 'Which vitamin reverses warfarin?',
+          options: ['Vitamin C', 'Vitamin K', 'Vitamin D', 'Vitamin B12'], answer: 1,
+          fact: 'For emergencies, 4-factor PCC works in minutes; vitamin K takes hours because the liver must make new clotting factors.' },
+        { type: 'mc', prompt: 'A patient chart says NPO. What does that mean?',
+          options: ['Nothing by mouth', 'New patient order', 'No prior overdose', 'Not for pharmacy orders'], answer: 0,
+          fact: 'From the Latin nil per os. Yes, that includes the contraband vending-machine snacks.' }
+      ] },
+    { id: 4, name: 'Where Does It Go?', pts: 1, blurb: 'Where does this drug live in the pharmacy?',
       q: [
         { type: 'mc', prompt: 'Unopened vial of insulin glargine',
           options: ['Fridge', 'Room-temp shelf', 'Locked vault / ADC', 'Fridge AND locked'], answer: 0,
           fact: 'Unopened insulin lives at 2–8 °C. Once in use, most pens last 28 days at room temp — check the product.' },
-        { type: 'mc', prompt: 'Hydromorphone 2 mg/mL injection',
-          options: ['Fridge', 'Room-temp shelf', 'Locked vault / ADC', 'Fridge AND locked'], answer: 2,
-          fact: 'Schedule II. Locked storage, perpetual inventory, second count on every transaction.' },
         { type: 'mc', prompt: 'Lorazepam 2 mg/mL injection',
           options: ['Fridge', 'Room-temp shelf', 'Locked vault / ADC', 'Fridge AND locked'], answer: 3,
           fact: 'The trick one. Lorazepam injection is refrigerated AND a Schedule IV controlled substance — the locked fridge everyone forgets.' }
       ] },
-    { id: 4, name: 'Sort It', pts: 2, blurb: 'Pick the correctly ordered sequence.',
+    { id: 5, name: 'Sort It', pts: 2, blurb: 'Pick the correctly ordered sequence.',
       q: [
-        { type: 'mc', prompt: 'Put these strengths smallest → largest',
-          options: ['125 mcg → 0.25 mg → 500 mcg → 1 mg', '0.25 mg → 125 mcg → 500 mcg → 1 mg', '125 mcg → 500 mcg → 0.25 mg → 1 mg', '1 mg → 500 mcg → 0.25 mg → 125 mcg'], answer: 0,
-          fact: '0.25 mg is 250 mcg. Milligram–microgram flips drive a huge share of ten-fold dosing errors.' },
         { type: 'mc', prompt: 'FEFO: which order do you dispense these?',
           options: ['10/2026 → 12/2026 → 01/2027 → 11/2027', '11/2027 → 01/2027 → 12/2026 → 10/2026', '01/2027 → 10/2026 → 11/2027 → 12/2026', '10/2026 → 11/2027 → 12/2026 → 01/2027'], answer: 0,
           fact: 'First-expired, first-out. Shortest-dated stock goes to the front of the shelf every restock.' }
       ] },
-    { id: 5, name: 'Brand or Bust', pts: 1, blurb: 'Match the brand to its generic, or the other way.',
+    { id: 6, name: 'By the Numbers', pts: 2, blurb: 'Doses and standards. Know your limits.',
       q: [
+        { type: 'mc', prompt: 'FDA OTC labeling: max daily acetaminophen for a healthy adult?',
+          options: ['2,000 mg', '3,000 mg', '4,000 mg', '6,000 mg'], answer: 2,
+          fact: 'The Tylenol brand voluntarily lowered its own label to 3,000 mg/day in 2011 — but the FDA monograph still says 4,000.' },
+        { type: 'mc', prompt: 'USP <797>: max beyond-use date for a Category 1 sterile prep at room temp?',
+          options: ['6 hours', '12 hours', '24 hours', '48 hours'], answer: 1,
+          fact: '12 hours at controlled room temp, 24 hours refrigerated. Category 2 and 3 CSPs get longer BUDs but demand a cleanroom suite.' }
+      ] },
+    { id: 7, name: 'Brand or Bust', pts: 1, blurb: 'Match the brand to its generic, or the other way.',
+      q: [
+        { type: 'mc', prompt: 'Atorvastatin — what is the brand?',
+          options: ['Crestor', 'Lipitor', 'Zocor', 'Pravachol'], answer: 1,
+          fact: 'Once the best-selling drug in the world — over $125 billion in lifetime sales.' },
         { type: 'mc', prompt: 'Norco — what is the generic?',
           options: ['Oxycodone-acetaminophen', 'Hydrocodone-acetaminophen', 'Hydromorphone', 'Codeine'], answer: 1,
           fact: 'One of the most-filled controlled substances in the country.' },
-        { type: 'mc', prompt: 'Flagyl — what is the generic?',
-          options: ['Metronidazole', 'Metoclopramide', 'Miconazole', 'Methotrexate'], answer: 0,
-          fact: 'The one with the famous "no alcohol" sticker.' },
-        { type: 'mc', prompt: 'Levetiracetam — what is the brand?',
-          options: ['Dilantin', 'Depakote', 'Keppra', 'Lamictal'], answer: 2,
-          fact: 'Techs meet it constantly: IV, oral solution, tablets, and the ER.' },
-        { type: 'mc', prompt: 'Coumadin — what is the generic?',
-          options: ['Heparin', 'Apixaban', 'Clopidogrel', 'Warfarin'], answer: 3,
-          fact: 'Every strength has its own tablet colour — a deliberate design to cut dispensing errors.' }
+        { type: 'mc', prompt: 'Zosyn — what is the generic?',
+          options: ['Piperacillin-tazobactam', 'Ampicillin-sulbactam', 'Ceftriaxone', 'Meropenem'], answer: 0,
+          fact: 'Tazobactam does no antibacterial work itself — it just protects piperacillin from beta-lactamases.' }
       ] },
-    { id: 6, name: 'Sound-Alike Showdown', pts: 2, blurb: 'The look-alike, sound-alike round.',
+    { id: 8, name: 'Sound-Alike Showdown', pts: 2, blurb: 'The look-alike, sound-alike round.',
       q: [
         { type: 'mc', prompt: 'Hydroxyzine is constantly confused with which antihypertensive?',
           options: ['Hydralazine', 'Hydrochlorothiazide', 'Hydrocortisone', 'Hydroxychloroquine'], answer: 0,
           fact: 'One treats itching, one drops blood pressure. Tall-man: hydrOXYzine vs hydrALAZINE.' },
-        { type: 'mc', prompt: 'This drug is fatal if given intrathecally and every dose says "For IV Use Only." Which is it?',
-          options: ['Vancomycin', 'Vincristine', 'Verapamil', 'Vecuronium'], answer: 1,
-          fact: 'Many hospitals now dispense vincristine only in minibags, never syringes, so it can\'t be mistaken for an intrathecal dose.' },
-        { type: 'mc', prompt: 'Zyprexa is often confused with which over-the-counter antihistamine?',
-          options: ['Zantac', 'Zofran', 'Zyrtec', 'Zetia'], answer: 2,
-          fact: 'Same "Zy" start, same length, same dosage forms. A perfect storm.' }
+        { type: 'mc', prompt: 'Celebrex (celecoxib) is dangerously confused with which anti-seizure drug?',
+          options: ['Cerebyx (fosphenytoin)', 'Keppra', 'Depakote', 'Dilantin'], answer: 0,
+          fact: 'The Celebrex / Cerebyx / Celexa trio is the classic ISMP case study in why brand names get reviewed before approval.' }
       ] },
-    { id: 7, name: 'The Wager', pts: 5, wager: true, blurb: 'Bet 0–5 first, then answer. Right, you gain it. Wrong, you lose it.',
+    { id: 9, name: 'The Wager', pts: 5, wager: true, blurb: 'Bet 0–5 first, then answer. Right, you gain it. Wrong, you lose it.',
       q: [
-        { type: 'mc', prompt: 'Pharmacist Caleb Bradham invented which soft drink in 1893?',
-          options: ['Pepsi', 'Dr Pepper', 'Coca-Cola', '7 Up'], answer: 0,
-          fact: 'Coca-Cola (Pemberton) and Dr Pepper (Alderton) were pharmacists\' inventions too. This profession has range.' }
+        { type: 'mc', prompt: 'Coca-Cola was created in 1886 by which Atlanta pharmacist?',
+          options: ['John Pemberton', 'Caleb Bradham', 'Charles Alderton', 'Joseph Priestley'], answer: 0,
+          fact: 'Pemberton first sold it as a nerve tonic at a pharmacy soda fountain. Caleb Bradham (Pepsi) and Charles Alderton (Dr Pepper) were pharmacists too.' }
       ] }
   ];
 
