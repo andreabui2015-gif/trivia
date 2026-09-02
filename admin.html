@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STAT! Trivia — Host</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0E1F1B;--ink2:#1C3A33;--mint:#E4F2EC;--dim:#8FB0A6;--amber:#F5A524;--amberd:#C77E0B;--label:#FFF4D6;--link:#2A1E05;--alert:#E4573D;--ok:#2FBF8F;--disp:"Barlow Condensed",Arial,sans-serif;--body:"Barlow",Arial,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);color:var(--mint);font-family:var(--body);background-image:radial-gradient(ellipse at 50% 120%,#1C3A33 0%,var(--ink) 65%);min-height:100vh}
+  .wrap{max-width:1200px;margin:0 auto;padding:18px 20px 40px}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
+  header .logo{font-family:var(--disp);font-weight:800;font-size:30px;color:var(--amber)} header .logo small{color:var(--mint);font-weight:600;font-size:18px}
+  header .room{font-family:var(--disp);color:var(--dim);font-size:18px} header .room b{color:var(--amber);font-size:22px}
+  .grid{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:start}
+  @media(max-width:880px){.grid{grid-template-columns:1fr}}
+  .panel{background:var(--ink2);border-radius:16px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+  h2{font-family:var(--disp);font-weight:700;font-size:22px;color:var(--amber);margin-bottom:10px}
+  button{font-family:var(--disp);font-weight:700;cursor:pointer;border-radius:10px;border:1.5px solid #3A5A52;background:transparent;color:var(--mint);padding:12px 18px;font-size:17px}
+  button.primary{background:var(--amber);border-color:var(--amber);color:var(--link);font-weight:800}
+  button.danger{border-color:var(--alert);color:#F3B4A8}
+  button:disabled{opacity:.4;cursor:default}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+  input{border:2px solid #3A5A52;background:var(--ink);color:var(--mint);border-radius:10px;padding:12px;font-size:18px;font-family:var(--body)}
+
+  /* join card */
+  .join{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+  #qr{background:#fff;padding:10px;border-radius:12px;width:180px;height:180px;display:flex;align-items:center;justify-content:center}
+  #qr img,#qr canvas{width:100%;height:100%}
+  .join .link{flex:1;min-width:220px}
+  .join .link .url{font-family:var(--body);font-size:16px;word-break:break-all;background:var(--ink);border-radius:10px;padding:12px;color:var(--mint);border:1px dashed #3A5A52;margin-bottom:8px}
+  .join .link .code{font-family:var(--disp);font-size:20px;color:var(--dim)}.join .link .code b{color:var(--amber);font-size:30px}
+
+  /* the on-screen question the host reads */
+  .label{background:var(--label);color:var(--link);border-radius:14px;padding:16px 18px;box-shadow:inset 0 0 0 3px var(--amber)}
+  .qmeta{display:flex;justify-content:space-between;font-family:var(--disp);color:var(--amberd);font-size:15px;border-bottom:2px dashed #E7C97D;padding-bottom:8px;margin-bottom:12px}
+  .prompt{font-family:var(--disp);font-weight:700;font-size:clamp(22px,3vw,32px);line-height:1.05;margin-bottom:12px}
+  .tray{background:#EAF0EC;border-radius:12px;box-shadow:inset 0 0 0 5px #C9D6CF;padding:8px;margin-bottom:12px}.tray svg{width:100%;max-height:280px;height:auto;display:block}
+  .mock{display:grid;gap:12px;margin-bottom:12px;grid-template-columns:1fr 1fr}.mock.single{grid-template-columns:1fr}
+  .cardm{background:#fff;border:2px solid #B9AE8E;border-radius:8px;padding:12px;font-family:"Courier New",monospace;color:#111;font-size:14px;line-height:1.4}
+  .cardm h4{font-family:var(--disp);font-size:15px;color:var(--amberd);margin-bottom:5px}
+  .cardm .bar{height:15px;margin-top:8px;background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 4px,#111 4px 5px,#fff 5px 9px,#111 9px 12px,#fff 12px 14px)}
+  .opts{display:grid;gap:8px}
+  .optrow{display:flex;align-items:center;gap:12px;background:#fff;border-radius:10px;padding:10px 12px;font-family:var(--disp);font-weight:700;font-size:18px;color:var(--link);position:relative;overflow:hidden}
+  .optrow .k{flex:none;width:30px;height:30px;border-radius:50%;background:var(--link);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800}
+  .optrow.correct{box-shadow:inset 0 0 0 3px var(--ok)}
+  .optrow .fill{position:absolute;left:0;top:0;bottom:0;background:rgba(245,165,36,.25);transition:width .4s}
+  .optrow .cnt{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--amberd);z-index:1}
+  .revealans{margin-top:12px;background:var(--ink);color:var(--amber);border-radius:10px;padding:12px;font-family:var(--disp);font-weight:800;font-size:20px}
+  .revealans .fact{color:var(--mint);font-weight:600;font-size:14px;margin-top:6px;font-family:var(--body)}
+
+  .controls{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap}
+  .prog{font-family:var(--disp);color:var(--dim);font-size:16px;margin-top:8px}
+  .answered{font-family:var(--disp);font-size:34px;color:var(--amber);line-height:1}.answered small{font-size:16px;color:var(--dim)}
+
+  /* players / leaderboard */
+  .plist{max-height:280px;overflow:auto}
+  .prow{display:flex;align-items:center;gap:10px;padding:9px 6px;border-bottom:1px solid #24443C}
+  .prow .dot{width:9px;height:9px;border-radius:50%;background:var(--ok);flex:none}.prow .dot.off{background:#5B6E68}
+  .prow .nm{flex:1;font-size:17px}.prow .sc{font-family:var(--disp);font-weight:800;font-size:20px;color:var(--amber)}
+  .prow .rk{font-family:var(--disp);color:var(--dim);width:34px;text-align:right}
+  .lead .prow:nth-child(1) .rk{color:#F5C542}.lead .prow:nth-child(2) .rk{color:#CFCFCF}.lead .prow:nth-child(3) .rk{color:#D79A5B}
+  .empty{color:var(--dim);text-align:center;padding:20px;font-size:15px}
+  .gate{max-width:420px;margin:16vh auto 0}
+  .hint{color:var(--dim);font-size:13px;margin-top:10px;line-height:1.4}
+  #confetti{position:fixed;inset:0;pointer-events:none;z-index:5}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="wrap" id="wrap"><div class="panel gate"><h2>Loading…</h2></div></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="config.js"></script>
+<script src="game-core.js"></script>
+<script>
+(function(){
+  var CFG=window.STAT_CONFIG||{};
+  var ROOM=(CFG.room||'PARTY').toUpperCase();
+  var wrap=document.getElementById('wrap');
+  var db=null; try{ firebase.initializeApp(CFG.firebase); db=firebase.database(); }catch(e){ wrap.innerHTML='<div class="panel gate"><h2>Not set up yet</h2><div class="hint">Finish the one-time Firebase setup in README.txt, then reload this page.</div></div>'; return; }
+  var base=db.ref('rooms/'+ROOM);
+  var state={phase:'lobby',qIndex:-1}, players={}, answers={}, scores={};
+
+  // ---- host PIN gate ----
+  if(sessionStorage.getItem('stat_host_'+ROOM)==='1'){ boot(); }
+  else gate();
+  function gate(){
+    wrap.innerHTML='<div class="panel gate"><h2>Host access</h2><div class="hint" style="margin-bottom:12px">Enter the host PIN from your config file.</div><div class="row"><input id="pin" type="password" placeholder="Host PIN" style="flex:1"><button class="primary" id="ok">Open</button></div></div>';
+    document.getElementById('ok').onclick=function(){ if(document.getElementById('pin').value===String(CFG.hostPin)){ sessionStorage.setItem('stat_host_'+ROOM,'1'); boot(); } else { document.getElementById('pin').value=''; document.getElementById('pin').placeholder='Wrong PIN'; } };
+    document.getElementById('pin').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('ok').click();});
+  }
+
+  function boot(){
+    base.child('state').on('value',function(s){ state=s.val()||{phase:'lobby',qIndex:-1}; render(); });
+    base.child('players').on('value',function(s){ players=s.val()||{}; recompute(); render(); });
+    base.child('answers').on('value',function(s){ answers=s.val()||{}; recompute(); render(); });
+    render();
+  }
+  function recompute(){ scores=STAT.computeScores(players,answers); }
+  function setState(o){ base.child('state').update(o); }
+
+  var playerURL=(function(){ var u=new URL(location.href); u.pathname=u.pathname.replace(/admin\.html?$/,'index.html'); u.searchParams.set('g',ROOM); u.hash=''; return u.toString(); })();
+
+  function render(){
+    var phase=state.phase, qi=state.qIndex;
+    var q=(qi>=0&&qi<STAT.QUESTIONS.length)?STAT.QUESTIONS[qi]:null;
+    var ranked=STAT.rankPlayers(players,scores);
+    var online=Object.keys(players).filter(function(p){return players[p]&&players[p].online;}).length;
+
+    var left;
+    if(phase==='lobby') left=lobbyPanel(online);
+    else if(phase==='ended') left=finalPanel(ranked);
+    else left=questionPanel(q,phase);
+
+    wrap.innerHTML=
+      '<header><div class="logo">STAT! <small>Host console</small></div><div class="room">Room <b>'+ROOM+'</b> · '+Object.keys(players).length+' joined ('+online+' online)</div></header>'+
+      '<div class="grid"><div>'+left+'</div>'+
+      '<div class="panel '+(phase==='ended'?'lead':'')+'"><h2>'+(phase==='lobby'?'Players':'Leaderboard')+'</h2>'+(phase==='lobby'?playerList():leaderboard(ranked))+'</div></div>';
+
+    wireButtons(q,phase);
+    if(phase==='lobby') drawQR();
+    if(phase==='ended') confetti();
+  }
+
+  function lobbyPanel(online){
+    return '<div class="panel"><h2>Get everyone in</h2>'+
+      '<div class="join"><div id="qr"></div><div class="link">'+
+        '<div class="code">Room code &nbsp;<b>'+ROOM+'</b></div>'+
+        '<div class="hint" style="margin:6px 0 8px">Scan the code, or go to:</div>'+
+        '<div class="url">'+playerURL+'</div>'+
+        '<button id="copy">Copy link</button>'+
+      '</div></div>'+
+      '<div class="controls"><button class="primary" id="start" '+((online||Object.keys(players).length)?'':'disabled')+'>Start game →</button><button class="danger" id="reset">Reset room</button></div>'+
+      '<div class="hint">Players can keep joining right up until you start. Reset wipes all names and scores for a fresh game.</div></div>';
+  }
+  function playerList(){
+    var ks=Object.keys(players); if(!ks.length) return '<div class="empty">No one yet. Share the code.</div>';
+    ks.sort(function(a,b){return (players[a].joinedAt||0)-(players[b].joinedAt||0);});
+    return '<div class="plist">'+ks.map(function(p){return '<div class="prow"><span class="dot '+(players[p].online?'':'off')+'"></span><span class="nm">'+esc(players[p].name||'—')+'</span></div>';}).join('')+'</div>';
+  }
+
+  function questionPanel(q,phase){
+    if(!q) return '<div class="panel"><div class="empty">…</div></div>';
+    var a=answers[q.key]||{}; var counts=[0,0,0,0]; var answered=0;
+    Object.keys(a).forEach(function(p){ if(players[p]){answered++; if(a[p].choice>=0&&a[p].choice<4)counts[a[p].choice]++;} });
+    var total=Object.keys(players).length||1;
+    var reveal=phase==='reveal';
+    var html='<div class="panel"><div class="label"><div class="qmeta"><span>Round '+q.roundId+' · '+esc(q.roundName)+'</span><span>'+(q.isWager?'Wager 0–5':q.pts+' pt'+(q.pts>1?'s':''))+'</span></div>';
+    html+='<div class="prompt">'+esc(q.prompt)+'</div>';
+    html+=STAT.extraHTML(q).replace(/class="card"/g,'class="cardm"');
+    html+='<div class="opts">'+q.options.map(function(o,i){
+      var w=(counts[i]/total*100); var cor=(reveal&&i===q.answer)?' correct':'';
+      return '<div class="optrow'+cor+'">'+(reveal?'<div class="fill" style="width:'+w+'%"></div>':'')+'<span class="k">'+STAT.LETTERS[i]+'</span><span style="z-index:1">'+esc(o)+'</span>'+(reveal?'<span class="cnt">'+counts[i]+'</span>':'')+'</div>';
+    }).join('')+'</div>';
+    if(reveal) html+='<div class="revealans">Answer: '+esc(q.options[q.answer])+'<div class="fact">'+esc(q.fact)+'</div></div>';
+    html+='</div>';
+    if(phase==='question'){
+      html+='<div class="prog"><span class="answered">'+answered+'<small> / '+Object.keys(players).length+' answered</small></span></div>';
+      html+='<div class="controls"><button class="primary" id="reveal">Lock &amp; reveal answer →</button></div>';
+      html+='<div class="hint">Read the question aloud. Watch the count climb. Reveal when most are in — you don\'t have to wait for everyone.</div>';
+    } else {
+      var last=q.roundId===7;
+      html+='<div class="controls"><button class="primary" id="next">'+(last?'Show final results 🏆':'Next question →')+'</button></div>';
+      html+='<div class="hint">Scores are updated. '+(last?'Ready for the winner reveal.':'Give the fun fact a beat, then move on.')+'</div>';
+    }
+    html+='</div>';
+    return html;
+  }
+
+  function finalPanel(ranked){
+    var win=ranked[0];
+    return '<div class="panel"><div class="label" style="text-align:center"><div class="qmeta"><span>Final results</span><span>'+ranked.length+' players</span></div>'+
+      '<div style="font-family:var(--disp);font-weight:800;font-size:clamp(34px,6vw,68px);color:var(--amberd);line-height:1;margin:10px 0">'+(win?esc(win.name):'—')+'</div>'+
+      '<div style="font-family:var(--disp);font-size:22px;color:#6B5A2E">STAT! Champion'+(win?' · '+win.score+' points':'')+'</div></div>'+
+      '<div class="controls"><button id="reset" class="danger">Reset for another game</button></div></div>';
+  }
+
+  function leaderboard(ranked){
+    if(!ranked.length) return '<div class="empty">Scores appear once players answer.</div>';
+    var medals=['🥇','🥈','🥉'];
+    return ranked.slice(0,20).map(function(r){return '<div class="prow"><span class="rk">'+(medals[r.rank-1]||('#'+r.rank))+'</span><span class="nm">'+esc(r.name)+'</span><span class="sc">'+r.score+'</span></div>';}).join('');
+  }
+
+  function wireButtons(q,phase){
+    var b;
+    if(b=document.getElementById('start')) b.onclick=function(){ setState({phase:'question',qIndex:0}); };
+    if(b=document.getElementById('reveal')) b.onclick=function(){ setState({phase:'reveal'}); };
+    if(b=document.getElementById('next')) b.onclick=function(){ var ni=state.qIndex+1; if(ni>=STAT.QUESTIONS.length) setState({phase:'ended'}); else setState({phase:'question',qIndex:ni}); };
+    if(b=document.getElementById('reset')) b.onclick=function(){ if(confirm('Wipe all players, answers and scores for room '+ROOM+'?')){ base.remove().then(function(){ setState({phase:'lobby',qIndex:-1}); }); } };
+    if(b=document.getElementById('copy')) b.onclick=function(){ navigator.clipboard&&navigator.clipboard.writeText(playerURL); b.textContent='Copied ✓'; setTimeout(function(){b.textContent='Copy link';},1500); };
+  }
+
+  function drawQR(){ var el=document.getElementById('qr'); if(!el)return; el.innerHTML=''; try{ new QRCode(el,{text:playerURL,width:180,height:180,correctLevel:QRCode.CorrectLevel.M}); }catch(e){ el.innerHTML='<div style="color:#333;font-size:12px;text-align:center;padding:8px">QR unavailable —<br>use the link/code</div>'; } }
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  var confettiDone=false;
+  function confetti(){ if(confettiDone)return; confettiDone=true; if(matchMedia('(prefers-reduced-motion: reduce)').matches)return; var c=document.getElementById('confetti'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;var ps=[];for(var i=0;i<200;i++)ps.push({x:Math.random()*c.width,y:-20-Math.random()*c.height*.5,v:2+Math.random()*4,w:6+Math.random()*8,h:8+Math.random()*10,a:Math.random()*6,s:Math.random()*.2-.1,col:['#F5A524','#2FBF8F','#E4F2EC','#E4573D'][i%4]});var t=0;(function f(){x.clearRect(0,0,c.width,c.height);ps.forEach(function(p){p.y+=p.v;p.a+=p.s;x.save();x.translate(p.x,p.y);x.rotate(p.a);x.fillStyle=p.col;x.fillRect(-p.w/2,-p.h/2,p.w,p.h);x.restore();});if(++t<280)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height);})(); }
+})();
+</script>
+</body>
+</html>

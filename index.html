@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STAT! Trivia — Join</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#0E1F1B;--ink2:#1C3A33;--mint:#E4F2EC;--dim:#8FB0A6;--amber:#F5A524;--amberd:#C77E0B;--label:#FFF4D6;--link:#2A1E05;--alert:#E4573D;--ok:#2FBF8F;--disp:"Barlow Condensed",Arial,sans-serif;--body:"Barlow",Arial,sans-serif}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{min-height:100%}
+  body{background:var(--ink);color:var(--mint);font-family:var(--body);background-image:radial-gradient(ellipse at 50% 120%,#1C3A33 0%,var(--ink) 65%);padding:env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px)}
+  .app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+  header{display:flex;justify-content:space-between;align-items:center;padding:14px 2px 10px}
+  header .logo{font-family:var(--disp);font-weight:800;font-size:26px;color:var(--amber);letter-spacing:-.01em}
+  header .me{font-family:var(--disp);font-size:16px;color:var(--dim);text-align:right;line-height:1.1}
+  header .me b{display:block;color:var(--mint);font-size:19px}
+  main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:6px 0 20px}
+  .card{background:var(--label);color:var(--link);border-radius:16px;padding:20px 18px;box-shadow:0 18px 50px rgba(0,0,0,.5),inset 0 0 0 3px var(--amber)}
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(30px,8vw,44px);line-height:1;margin-bottom:6px}
+  .sub{color:#6B5A2E;font-size:15px;margin-bottom:16px}
+  label{display:block;font-family:var(--disp);font-weight:700;font-size:15px;color:var(--amberd);letter-spacing:.03em;margin-bottom:6px}
+  input{width:100%;border:2px solid #D9C89A;border-radius:12px;padding:14px;font-size:20px;font-family:var(--body);color:var(--link);background:#fff}
+  input:focus{outline:none;border-color:var(--amber)}
+  button.go{width:100%;margin-top:16px;border:none;border-radius:12px;padding:16px;font-family:var(--disp);font-weight:800;font-size:22px;background:var(--amber);color:var(--link);letter-spacing:.02em}
+  button.go:disabled{opacity:.5}
+  .note{color:var(--dim);font-size:13px;text-align:center;margin-top:14px}
+  .badge{display:inline-block;background:var(--ink);color:var(--amber);font-family:var(--disp);font-weight:700;border-radius:999px;padding:3px 12px;font-size:14px;margin-bottom:12px}
+
+  /* question */
+  .qmeta{display:flex;justify-content:space-between;font-family:var(--disp);color:var(--amberd);font-size:15px;border-bottom:2px dashed #E7C97D;padding-bottom:8px;margin-bottom:12px}
+  .prompt{font-family:var(--disp);font-weight:700;font-size:clamp(22px,6vw,30px);line-height:1.1;margin-bottom:12px}
+  .tray{background:#EAF0EC;border-radius:12px;box-shadow:inset 0 0 0 5px #C9D6CF;padding:6px;margin-bottom:12px}
+  .tray svg{width:100%;height:auto;display:block}
+  .mock{display:grid;gap:10px;margin-bottom:12px}.mock.single{grid-template-columns:1fr}
+  @media(min-width:460px){.mock:not(.single){grid-template-columns:1fr 1fr}}
+  .cardm{background:#fff;border:2px solid #B9AE8E;border-radius:8px;padding:10px 11px;font-family:"Courier New",monospace;color:#111;font-size:13px;line-height:1.4}
+  .cardm h4{font-family:var(--disp);font-size:14px;color:var(--amberd);margin-bottom:4px;letter-spacing:.03em}
+  .cardm .bar{height:14px;margin-top:8px;background:repeating-linear-gradient(90deg,#111 0 2px,#fff 2px 4px,#111 4px 5px,#fff 5px 9px,#111 9px 12px,#fff 12px 14px)}
+  .opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:#fff;border:2px solid #E4D6AA;border-radius:12px;padding:15px 14px;margin-bottom:10px;font-family:var(--disp);font-weight:700;font-size:19px;color:var(--link);line-height:1.15;transition:transform .06s,background .15s,border-color .15s}
+  .opt:active{transform:scale(.985)}
+  .opt .k{flex:none;width:34px;height:34px;border-radius:50%;background:var(--link);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px}
+  .opt.chosen{background:var(--amber);border-color:var(--amberd)}
+  .opt.correct{background:var(--ok);border-color:#1E9C72;color:#fff}.opt.correct .k{background:#fff;color:var(--ok)}
+  .opt.wrong{background:#F3D9D3;border-color:var(--alert);color:#7A2418}
+  .opt:disabled{cursor:default}
+  .wager{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+  .wager button{flex:1;min-width:56px;border:2px solid #E4D6AA;background:#fff;border-radius:12px;padding:14px 0;font-family:var(--disp);font-weight:800;font-size:22px;color:var(--link)}
+  .wager button.sel{background:var(--amber);border-color:var(--amberd)}
+  .timer{height:8px;border-radius:99px;background:#E4D6AA;overflow:hidden;margin-bottom:14px}
+  .timer i{display:block;height:100%;background:var(--amber);width:100%;transition:width 1s linear}
+  .timer i.low{background:var(--alert)}
+
+  /* status blocks */
+  .big{font-family:var(--disp);font-weight:800;font-size:clamp(32px,10vw,52px);line-height:1;text-align:center}
+  .center{text-align:center}
+  .score-row{display:flex;justify-content:space-around;margin-top:14px;gap:10px}
+  .stat{background:var(--ink);border-radius:12px;padding:12px;flex:1;text-align:center}
+  .stat b{display:block;font-family:var(--disp);font-size:30px;color:var(--amber);line-height:1}
+  .stat span{font-size:12px;color:var(--dim)}
+  .verdict{border-radius:12px;padding:14px;text-align:center;font-family:var(--disp);font-weight:800;font-size:26px;margin-bottom:10px}
+  .verdict.yes{background:var(--ok);color:#062;} .verdict.no{background:#F3D9D3;color:#7A2418}
+  .fact{font-size:14px;color:#6B5A2E;line-height:1.4;margin-top:4px}
+  .pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
+  .medal{font-size:44px}
+</style>
+</head>
+<body>
+<div class="app">
+  <header>
+    <div class="logo">STAT!</div>
+    <div class="me" id="me"></div>
+  </header>
+  <main id="main"><div class="center pulse" style="margin:auto;color:var(--dim);font-family:var(--disp);font-size:20px">Connecting…</div></main>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script src="config.js"></script>
+<script src="game-core.js"></script>
+<script>
+(function(){
+  var main=document.getElementById('main'), meEl=document.getElementById('me');
+  var CFG=window.STAT_CONFIG||{};
+  var params=new URLSearchParams(location.search);
+  var ROOM=(params.get('g')||CFG.room||'PARTY').toUpperCase();
+
+  // identity persists across refresh
+  var pid=localStorage.getItem('stat_pid'); if(!pid){pid='p_'+Math.random().toString(36).slice(2,9);localStorage.setItem('stat_pid',pid);}
+  var name=localStorage.getItem('stat_name_'+ROOM)||'';
+
+  // firebase
+  var db=null, connected=false;
+  try{ firebase.initializeApp(CFG.firebase); db=firebase.database(); connected=true; }
+  catch(e){ renderFatal('This game link isn\'t set up yet. The host needs to finish the one-time setup (see README).'); }
+  if(!db) return;
+
+  var base=db.ref('rooms/'+ROOM);
+  var state={phase:'lobby',qIndex:-1}, players={}, scores={}, myAnswers={};
+  var qShownAt=0, pickedWager=null, lowTimer=null;
+
+  function renderFatal(msg){ main.innerHTML='<div class="card center"><h1>Hmm.</h1><div class="sub">'+msg+'</div></div>'; }
+
+  // ---------- JOIN ----------
+  function renderJoin(){
+    meEl.textContent='';
+    main.innerHTML=
+      '<div class="card">'+
+        '<div class="badge">Room '+ROOM+'</div>'+
+        '<h1>Pharmacy Trivia</h1>'+
+        '<div class="sub">Tap your answers on your phone. Everyone plays. It takes about 15 minutes.</div>'+
+        '<label for="nm">Your name (players will see this)</label>'+
+        '<input id="nm" maxlength="24" autocomplete="name" placeholder="e.g. Aisha, tech" value="'+esc(name)+'">'+
+        '<button class="go" id="join">Join the game</button>'+
+        '<div class="note">Pharmacist, tech, intern — same game. Good luck.</div>'+
+      '</div>';
+    var input=document.getElementById('nm');
+    document.getElementById('join').onclick=doJoin;
+    input.addEventListener('keydown',function(e){if(e.key==='Enter')doJoin();});
+    input.focus();
+  }
+  function doJoin(){
+    var v=document.getElementById('nm').value.trim().slice(0,24);
+    if(!v){document.getElementById('nm').focus();return;}
+    name=v; localStorage.setItem('stat_name_'+ROOM,name);
+    base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP});
+    base.child('players/'+pid+'/online').onDisconnect().set(false);
+    base.child('players/'+pid+'/online').set(true);
+    listen();
+  }
+
+  // ---------- LIVE ----------
+  function listen(){
+    base.child('state').on('value',function(s){ state=s.val()||{phase:'lobby',qIndex:-1}; draw(); });
+    base.child('players').on('value',function(s){ players=s.val()||{}; draw(); });
+    base.child('answers').on('value',function(s){ var a=s.val()||{}; myAnswers={}; Object.keys(a).forEach(function(qk){ if(a[qk]&&a[qk][pid])myAnswers[qk]=a[qk][pid]; }); scores=STAT.computeScores(players,a); draw(); });
+    draw();
+  }
+
+  function myRank(){ var r=STAT.rankPlayers(players,scores).find(function(x){return x.pid===pid;}); return r||{rank:'—',score:0}; }
+
+  function draw(){
+    if(!name){ renderJoin(); return; }
+    var r=myRank();
+    meEl.innerHTML='<span>'+esc(name)+'</span><b>'+r.score+' pts · #'+r.rank+'</b>';
+    var phase=state.phase, qi=state.qIndex;
+    var q=(qi>=0&&qi<STAT.QUESTIONS.length)?STAT.QUESTIONS[qi]:null;
+
+    if(phase==='lobby'){
+      var n=Object.keys(players).length;
+      main.innerHTML='<div class="card center"><div class="badge">Room '+ROOM+'</div><h1>You\'re in!</h1><div class="sub">Waiting for the host to start. '+n+' player'+(n===1?'':'s')+' here so far.</div><div class="big pulse" style="color:var(--amberd);margin-top:8px">Hang tight…</div></div>';
+      return;
+    }
+    if(phase==='ended'){ drawFinal(); return; }
+    if(!q){ main.innerHTML='<div class="card center pulse">…</div>'; return; }
+
+    var mine=myAnswers[q.key];
+    if(phase==='question'){
+      if(mine){ drawLocked(q,mine); }
+      else { drawQuestion(q); }
+    } else if(phase==='reveal'){
+      drawReveal(q,mine);
+    }
+  }
+
+  function qmeta(q){ return '<div class="qmeta"><span>Round '+q.roundId+' · '+esc(q.roundName)+'</span><span>'+(q.isWager?'Wager 0–5':q.pts+' pt'+(q.pts>1?'s':''))+'</span></div>'; }
+
+  function drawQuestion(q){
+    qShownAt=Date.now(); pickedWager=(q.isWager?(pickedWager||0):null);
+    var html='<div class="card">'+qmeta(q);
+    html+='<div class="timer"><i id="bar"></i></div>';
+    html+='<div class="prompt">'+esc(q.prompt)+'</div>';
+    html+=STAT.extraHTML(q).replace(/<div class="mock/g,'<div class="mock').replace(/class="card"/g,'class="cardm"');
+    if(q.isWager){
+      html+='<label>1. Your wager</label><div class="wager" id="wg">'+[0,1,2,3,4,5].map(function(n){return '<button data-w="'+n+'"'+(n===pickedWager?' class="sel"':'')+'>'+n+'</button>';}).join('')+'</div><label>2. Your answer</label>';
+    }
+    html+=q.options.map(function(o,i){return '<button class="opt" data-i="'+i+'"><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
+    html+='</div>';
+    main.innerHTML=html;
+    if(q.isWager){ Array.prototype.forEach.call(document.querySelectorAll('#wg button'),function(b){ b.onclick=function(){ pickedWager=+b.dataset.w; document.querySelectorAll('#wg button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel'); }; }); }
+    Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(b){ b.onclick=function(){ submit(q,+b.dataset.i); }; });
+    runBar();
+  }
+  function runBar(){
+    var bar=document.getElementById('bar'); if(!bar)return; var total=32; var start=Date.now();
+    clearInterval(lowTimer);
+    lowTimer=setInterval(function(){ var el=Math.min(total,(Date.now()-start)/1000); var pct=Math.max(0,1-el/total); bar.style.width=(pct*100)+'%'; if(pct<0.18)bar.classList.add('low'); if(pct<=0){clearInterval(lowTimer);} },1000);
+  }
+  function submit(q,i){
+    var rec={choice:i,ms:Date.now()-qShownAt}; if(q.isWager)rec.wager=(pickedWager||0);
+    base.child('answers/'+q.key+'/'+pid).set(rec);
+    clearInterval(lowTimer);
+  }
+  function drawLocked(q,mine){
+    clearInterval(lowTimer);
+    var html='<div class="card">'+qmeta(q)+'<div class="prompt">'+esc(q.prompt)+'</div>';
+    html+=q.options.map(function(o,i){var c=i===mine.choice?' chosen':'';return '<button class="opt'+c+'" disabled data-i="'+i+'"><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
+    html+='<div class="verdict" style="background:var(--ink);color:var(--amber)">Locked in ✓'+(q.isWager?' · wager '+(mine.wager||0):'')+'</div><div class="center" style="color:var(--dim);font-size:14px">Waiting for the host to reveal…</div></div>';
+    main.innerHTML=html;
+  }
+  function drawReveal(q,mine){
+    clearInterval(lowTimer);
+    var got=mine&&mine.choice===q.answer;
+    var html='<div class="card">'+qmeta(q);
+    html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?(q.isWager?'Right! +'+(mine.wager||0):'Correct! +'+q.pts):(mine?(q.isWager?'Missed. −'+(mine.wager||0):'Not this time'):'No answer'))+'</div>';
+    html+=q.options.map(function(o,i){var c=i===q.answer?' correct':(mine&&i===mine.choice?' wrong':'');return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
+    html+='<div class="fact">'+esc(q.fact)+'</div>';
+    var r=myRank();
+    html+='<div class="score-row"><div class="stat"><b>'+r.score+'</b><span>points</span></div><div class="stat"><b>#'+r.rank+'</b><span>of '+Object.keys(players).length+'</span></div></div>';
+    html+='</div>';
+    main.innerHTML=html;
+  }
+  function drawFinal(){
+    var ranked=STAT.rankPlayers(players,scores); var me=ranked.find(function(x){return x.pid===pid;})||{rank:'—',score:0};
+    var medals=['🥇','🥈','🥉'];
+    var top=ranked.slice(0,5).map(function(r,i){var mine=r.pid===pid;return '<div class="opt'+(mine?' chosen':'')+'" disabled style="justify-content:space-between"><span><span class="k">'+(medals[r.rank-1]||r.rank)+'</span> '+esc(r.name)+'</span><b>'+r.score+'</b></div>';}).join('');
+    var head=me.rank===1?'🎉 You won!':'Round complete';
+    main.innerHTML='<div class="card center"><div class="badge">Final results</div><h1>'+head+'</h1><div class="sub">You finished #'+me.rank+' with '+me.score+' points.</div><div style="text-align:left;margin-top:6px">'+top+'</div><div class="note">Thanks for playing. Now go eat.</div></div>';
+  }
+
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+  // boot
+  if(name) doJoinSilent(); else renderJoin();
+  function doJoinSilent(){ base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP}); base.child('players/'+pid+'/online').onDisconnect().set(false); base.child('players/'+pid+'/online').set(true); listen(); }
+})();
+</script>
+</body>
+</html>
