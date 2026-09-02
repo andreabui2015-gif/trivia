@@ -186,9 +186,12 @@
     clearInterval(lowTimer);
     lowTimer=setInterval(function(){ var el=Math.min(total,(Date.now()-start)/1000); var pct=Math.max(0,1-el/total); bar.style.width=(pct*100)+'%'; if(pct<0.18)bar.classList.add('low'); if(pct<=0){clearInterval(lowTimer);} },1000);
   }
+  function safeKey(k){ return String(k).replace(/[.$#\[\]\/]/g,'-'); }
   function submit(q,i){
     var rec={choice:i,ms:Date.now()-qShownAt}; if(q.isWager)rec.wager=(pickedWager||0);
-    base.child('answers/'+q.key+'/'+pid).set(rec);
+    // optimistic lock so the phone responds instantly even before the write round-trips
+    myAnswers[q.key]=rec; draw();
+    base.child('answers/'+safeKey(q.key)+'/'+pid).set(rec).catch(function(){});
     clearInterval(lowTimer);
   }
   function drawLocked(q,mine){

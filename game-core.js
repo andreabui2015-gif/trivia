@@ -101,7 +101,7 @@
   ROUNDS.forEach(function (r) {
     r.q.forEach(function (q, i) {
       QUESTIONS.push({
-        key: r.id + '.' + (i + 1),
+        key: r.id + '-' + (i + 1),
         roundId: r.id, roundName: r.name, roundBlurb: r.blurb,
         pts: r.pts, isWager: !!r.wager,
         type: q.type, prompt: q.prompt, options: q.options.slice(),
