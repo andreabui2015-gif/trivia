@@ -3,29 +3,36 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>STAT! Trivia — Join</title>
+<title>World Pharmacists Day Trivia</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#0E1F1B;--ink2:#1C3A33;--mint:#E4F2EC;--dim:#8FB0A6;--amber:#F5A524;--amberd:#C77E0B;--label:#FFF4D6;--link:#2A1E05;--alert:#E4573D;--ok:#2FBF8F;--disp:"Barlow Condensed",Arial,sans-serif;--body:"Barlow",Arial,sans-serif}
+  :root{--ink:#2A1206;--ink2:#3E1D0C;--mint:#FBEFD2;--dim:#C9A87E;--amber:#F0A828;--amberd:#C8371F;--label:#FBEFD2;--link:#2A1206;--alert:#C8371F;--ok:#2E7D5B;--disp:"Barlow Condensed",Arial,sans-serif;--body:"Barlow",Arial,sans-serif}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{min-height:100%}
-  body{background:var(--ink);color:var(--mint);font-family:var(--body);background-image:radial-gradient(ellipse at 50% 120%,#1C3A33 0%,var(--ink) 65%);padding:env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px)}
+  body{background:var(--ink);color:var(--mint);font-family:var(--body);background-image:radial-gradient(circle at 18% 6%,rgba(240,168,40,.20) 0,transparent 42%),radial-gradient(circle at 84% 24%,rgba(200,55,31,.16) 0,transparent 44%),linear-gradient(170deg,#3E1D0C 0%,var(--ink) 55%,#1B0B03 100%);padding:env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px)}
   .app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
   header{display:flex;justify-content:space-between;align-items:center;padding:14px 2px 10px}
-  header .logo{font-family:var(--disp);font-weight:800;font-size:26px;color:var(--amber);letter-spacing:-.01em}
+  header   header .logo{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:800;font-size:26px;color:var(--amber);letter-spacing:-.01em}
+  .rxlogo{width:26px;height:26px;color:var(--amber);flex:none}
+  .checkband{height:12px;width:100%;
+    background-image:linear-gradient(45deg,var(--amberd) 25%,transparent 25%,transparent 75%,var(--amberd) 75%),
+                     linear-gradient(45deg,var(--amberd) 25%,transparent 25%,transparent 75%,var(--amberd) 75%);
+    background-size:12px 12px;background-position:0 0,6px 6px;border-radius:99px;margin-bottom:14px;opacity:.9}
   header .me{font-family:var(--disp);font-size:16px;color:var(--dim);text-align:right;line-height:1.1}
   header .me b{display:block;color:var(--mint);font-size:19px}
   main{flex:1;display:flex;flex-direction:column;justify-content:center;gap:14px;padding:6px 0 20px}
-  .card{background:var(--label);color:var(--link);border-radius:16px;padding:20px 18px;box-shadow:0 18px 50px rgba(0,0,0,.5),inset 0 0 0 3px var(--amber)}
-  h1{font-family:var(--disp);font-weight:800;font-size:clamp(30px,8vw,44px);line-height:1;margin-bottom:6px}
-  .sub{color:#6B5A2E;font-size:15px;margin-bottom:16px}
+  .card{background:var(--label);color:var(--link);border-radius:16px;padding:22px 20px;box-shadow:0 18px 50px rgba(0,0,0,.5),inset 0 0 0 3px var(--amber)}
+  h1{font-family:var(--disp);font-weight:800;font-size:clamp(34px,9vw,48px);line-height:.98;margin-bottom:8px;text-transform:uppercase;letter-spacing:-.01em}
+  h1 .h1sub{display:inline-block;background:var(--amberd);color:#fff;padding:2px 12px 4px;border-radius:8px;
+    transform:rotate(-1.2deg);box-shadow:3px 3px 0 var(--link);font-size:.82em;margin-top:5px}
+  .sub{color:#7A5A38;font-size:15.5px;line-height:1.4;margin-bottom:16px}
   label{display:block;font-family:var(--disp);font-weight:700;font-size:15px;color:var(--amberd);letter-spacing:.03em;margin-bottom:6px}
   input{width:100%;border:2px solid #D9C89A;border-radius:12px;padding:14px;font-size:20px;font-family:var(--body);color:var(--link);background:#fff}
   input:focus{outline:none;border-color:var(--amber)}
   button.go{width:100%;margin-top:16px;border:none;border-radius:12px;padding:16px;font-family:var(--disp);font-weight:800;font-size:22px;background:var(--amber);color:var(--link);letter-spacing:.02em}
   button.go:disabled{opacity:.5}
   .note{color:var(--dim);font-size:13px;text-align:center;margin-top:14px}
-  .badge{display:inline-block;background:var(--ink);color:var(--amber);font-family:var(--disp);font-weight:700;border-radius:999px;padding:3px 12px;font-size:14px;margin-bottom:12px}
+  .badge{display:inline-block;background:var(--ink);color:var(--amber);font-family:var(--disp);font-weight:700;border-radius:999px;padding:5px 14px;font-size:13.5px;margin-bottom:12px;letter-spacing:.02em}
 
   /* question */
   .qmeta{display:flex;justify-content:space-between;font-family:var(--disp);color:var(--amberd);font-size:15px;border-bottom:2px dashed #E7C97D;padding-bottom:8px;margin-bottom:12px}
@@ -63,6 +70,19 @@
   .fact{font-size:14px;color:#6B5A2E;line-height:1.4;margin-top:4px}
   .pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
   .medal{font-size:44px}
+  .rulelist{list-style:none;margin:2px 0 16px;padding:0}
+  .rulelist li{position:relative;padding-left:20px;font-size:15px;line-height:1.35;color:#3A2C10;margin-bottom:7px}
+  .rulelist li:before{content:"";position:absolute;left:4px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--amber)}
+  .rulelist b{color:var(--link)}
+  .musicopt{display:flex;align-items:center;gap:9px;margin-top:12px;font-family:var(--body);font-size:14.5px;color:#3A2C10;font-weight:600}
+  .musicopt input{width:auto;margin:0}
+  .cdbar{height:10px;border-radius:99px;background:#E4D6AA;overflow:hidden;margin-bottom:12px}
+  .cdbar i{display:block;height:100%;width:100%;background:var(--amber);transition:width .2s linear}
+  .cdbar i.low{background:var(--alert)}
+  .sdbanner{background:var(--alert);color:#fff;border-radius:12px;padding:12px;text-align:center;
+    font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:12px;letter-spacing:.02em}
+  .musicbtn{position:absolute;right:0;top:-2px;background:transparent;border:1px solid #3A5A52;color:var(--dim);
+    border-radius:999px;padding:3px 10px;font-size:12px;font-family:var(--disp);font-weight:700}
   .prizewin{margin:10px 0 4px;background:var(--amber);color:var(--link);border-radius:12px;padding:12px;
     font-family:var(--disp);font-weight:800;font-size:22px;box-shadow:0 6px 16px rgba(0,0,0,.22)}
 </style>
@@ -70,7 +90,7 @@
 <body>
 <div class="app">
   <header>
-    <div class="logo">STAT!</div>
+    <div class="logo"><svg class="rxlogo" viewBox="0 0 100 100" aria-hidden="true"><path d="M20 46 H80 C80 68 68 80 50 80 C32 80 20 68 20 46 Z" fill="currentColor"/><rect x="16" y="40" width="68" height="9" rx="4.5" fill="currentColor"/><rect x="44" y="82" width="12" height="6" rx="3" fill="currentColor"/><path d="M58 38 L78 14" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="80" cy="12" r="7" fill="currentColor"/></svg><span>STAT!</span></div>
     <div class="me" id="me"></div>
   </header>
   <main id="main"><div class="center pulse" style="margin:auto;color:var(--dim);font-family:var(--disp);font-size:20px">Connecting…</div></main>
@@ -80,6 +100,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="config.js"></script>
 <script src="game-core.js"></script>
+<script src="music.js"></script>
 <script>
 (function(){
   var main=document.getElementById('main'), meEl=document.getElementById('me');
@@ -98,7 +119,7 @@
   if(!db) return;
 
   var base=db.ref('rooms/'+ROOM);
-  var state={phase:'lobby',qIndex:-1}, players={}, scores={}, myAnswers={};
+  var state={phase:'lobby',qIndex:-1}, players={}, scores={}, myAnswers={}, sdMine={}, sdAll={};
   var qShownAt=0, pickedWager=null, lowTimer=null;
 
   function renderFatal(msg){ main.innerHTML='<div class="card center"><h1>Hmm.</h1><div class="sub">'+msg+'</div></div>'; }
@@ -108,13 +129,21 @@
     meEl.textContent='';
     main.innerHTML=
       '<div class="card">'+
-        '<div class="badge">Room '+ROOM+'</div>'+
-        '<h1>Pharmacy Trivia</h1>'+
-        '<div class="sub">Tap your answers on your phone. Everyone plays. It takes about 15 minutes.</div>'+
+        '<div class="checkband"></div>'+
+        '<div class="badge">&#127881; World Pharmacists Day &middot; Room '+ROOM+'</div>'+
+        '<h1>Pharmacy Trivia<br><span class="h1sub">Celebration Game</span></h1>'+
+        '<div class="sub">20 questions. Tap your answer on your phone. Pharmacists, techs and interns &mdash; everyone plays.</div>'+
+        '<ul class="rulelist">'+
+          '<li><b>10 seconds</b> per question &mdash; it moves on automatically, so answer fast.</li>'+
+          '<li><b>Faster = better.</b> Ties are broken by who answered quickest.</li>'+
+          '<li><b>Sudden death</b> if anyone is still tied: 5 questions, 5 seconds each.</li>'+
+          '<li><b>Prizes</b> for 1st, 2nd and 3rd place.</li>'+
+        '</ul>'+
         '<label for="nm">Your name (players will see this)</label>'+
         '<input id="nm" maxlength="24" autocomplete="name" placeholder="e.g. Aisha, tech" value="'+esc(name)+'">'+
+        '<label class="musicopt"><input type="checkbox" id="mus" checked> Play music on my phone</label>'+
         '<button class="go" id="join">Join the game</button>'+
-        '<div class="note">Pharmacist, tech, intern — same game. Good luck.</div>'+
+        '<div class="note">&#127881; Happy World Pharmacists Day &mdash; good luck!</div>'+
       '</div>';
     var input=document.getElementById('nm');
     document.getElementById('join').onclick=doJoin;
@@ -124,6 +153,9 @@
   function doJoin(){
     var v=document.getElementById('nm').value.trim().slice(0,24);
     if(!v){document.getElementById('nm').focus();return;}
+    var wantMusic=document.getElementById('mus'); wantMusic=!wantMusic||wantMusic.checked;
+    localStorage.setItem('stat_music',wantMusic?'1':'0');
+    try{ STATMusic.arm(); if(wantMusic) STATMusic.start(); }catch(e){}
     name=v; localStorage.setItem('stat_name_'+ROOM,name);
     base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP});
     base.child('players/'+pid+'/online').onDisconnect().set(false);
@@ -135,6 +167,7 @@
   function listen(){
     base.child('state').on('value',function(s){ state=s.val()||{phase:'lobby',qIndex:-1}; draw(); });
     base.child('players').on('value',function(s){ players=s.val()||{}; draw(); });
+    base.child('sudden').on('value',function(s){ sdAll=s.val()||{}; sdMine={}; Object.keys(sdAll).forEach(function(k){ if(sdAll[k]&&sdAll[k][pid])sdMine[k]=sdAll[k][pid]; }); draw(); });
     base.child('answers').on('value',function(s){ var a=s.val()||{}; myAnswers={}; Object.keys(a).forEach(function(qk){ if(a[qk]&&a[qk][pid])myAnswers[qk]=a[qk][pid]; }); scores=STAT.computeScores(players,a); draw(); });
     draw();
   }
@@ -153,7 +186,9 @@
       main.innerHTML='<div class="card center"><div class="badge">Room '+ROOM+'</div><h1>You\'re in!</h1><div class="sub">Waiting for the host to start. '+n+' player'+(n===1?'':'s')+' here so far.</div><div class="big pulse" style="color:var(--amberd);margin-top:8px">Hang tight…</div></div>';
       return;
     }
-    if(phase==='ended'){ drawFinal(); return; }
+    if(phase==='ended'){ try{STATMusic.setMode('normal');STATMusic.stop();}catch(e){} drawFinal(); return; }
+    if(phase==='sudden_intro'){ try{STATMusic.setMode('sudden');}catch(e){} drawSuddenIntro(); return; }
+    if(phase==='sudden'||phase==='sudden_reveal'){ try{STATMusic.setMode('sudden');}catch(e){} drawSudden(phase); return; }
     if(!q){ main.innerHTML='<div class="card center pulse">…</div>'; return; }
 
     var mine=myAnswers[q.key];
@@ -170,7 +205,7 @@
   function drawQuestion(q){
     qShownAt=Date.now(); pickedWager=(q.isWager?(pickedWager||0):null);
     var html='<div class="card">'+qmeta(q);
-    html+='<div class="timer"><i id="bar"></i></div>';
+    html+='<div class="cdbar"><i id="bar"></i></div>';
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
     html+=STAT.extraHTML(q).replace(/<div class="mock/g,'<div class="mock').replace(/class="card"/g,'class="cardm"');
     if(q.isWager){
@@ -181,12 +216,18 @@
     main.innerHTML=html;
     if(q.isWager){ Array.prototype.forEach.call(document.querySelectorAll('#wg button'),function(b){ b.onclick=function(){ pickedWager=+b.dataset.w; document.querySelectorAll('#wg button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel'); }; }); }
     Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(b){ b.onclick=function(){ submit(q,+b.dataset.i); }; });
-    runBar();
+    runBar(10);
   }
-  function runBar(){
-    var bar=document.getElementById('bar'); if(!bar)return; var total=32; var start=Date.now();
+  function runBar(totalSec){
+    var bar=document.getElementById('bar'); if(!bar)return;
+    var ends=state.endsAt||(Date.now()+totalSec*1000);
     clearInterval(lowTimer);
-    lowTimer=setInterval(function(){ var el=Math.min(total,(Date.now()-start)/1000); var pct=Math.max(0,1-el/total); bar.style.width=(pct*100)+'%'; if(pct<0.18)bar.classList.add('low'); if(pct<=0){clearInterval(lowTimer);} },1000);
+    lowTimer=setInterval(function(){
+      var left=ends-Date.now(), pct=Math.max(0,Math.min(1,left/(totalSec*1000)));
+      bar.style.width=(pct*100)+'%';
+      if(pct<0.3) bar.classList.add('low');
+      if(left<=0) clearInterval(lowTimer);
+    },150);
   }
   function safeKey(k){ return String(k).replace(/[.$#\[\]\/]/g,'-'); }
   function submit(q,i){
@@ -215,8 +256,66 @@
     html+='</div>';
     main.innerHTML=html;
   }
+
+  function drawSuddenIntro(){
+    var iAmIn = (state.tiedNames||'').indexOf(name)>-1;
+    main.innerHTML='<div class="card center">'+
+      '<div class="sdbanner">&#9889; SUDDEN DEATH &#9889;</div>'+
+      '<h1>'+(iAmIn?'You\'re in the tiebreak!':'Tiebreak time')+'</h1>'+
+      '<div class="sub">Tied: <b>'+esc(state.tiedNames||'')+'</b></div>'+
+      '<div class="sub" style="margin-top:8px">5 pop-culture questions. <b>5 seconds each.</b> Fastest correct answers win. Everyone can play along.</div>'+
+      '<div class="big pulse" style="color:var(--amberd);margin-top:6px">Get ready\u2026</div></div>';
+  }
+  function drawSudden(phase){
+    var si=state.sdIndex||0, q=STAT.SUDDEN[si];
+    if(!q){ main.innerHTML='<div class="card center pulse">\u2026</div>'; return; }
+    var mine=sdMine[q.key], reveal=(phase==='sudden_reveal');
+    var html='<div class="card">'+
+      '<div class="qmeta"><span style="color:var(--alert)">SUDDEN DEATH &middot; '+(si+1)+' of '+STAT.SUDDEN.length+'</span><span>5 sec</span></div>';
+    if(!reveal) html+='<div class="cdbar"><i id="bar"></i></div>';
+    html+='<div class="prompt">'+esc(q.prompt)+'</div>';
+    if(reveal){
+      var got=mine&&mine.choice===q.answer;
+      html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?'Correct!':(mine?'Missed':'No answer'))+'</div>';
+      html+=q.options.map(function(o,i){var c=i===q.answer?' correct':(mine&&i===mine.choice?' wrong':'');
+        return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
+    } else if(mine){
+      html+=q.options.map(function(o,i){var c=i===mine.choice?' chosen':'';
+        return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
+      html+='<div class="center" style="color:var(--dim);font-size:14px">Locked in \u2713</div>';
+    } else {
+      html+=q.options.map(function(o,i){
+        return '<button class="opt" data-i="'+i+'"><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
+    }
+    html+='</div>';
+    main.innerHTML=html;
+    if(!reveal && !mine){
+      qShownAt=Date.now();
+      Array.prototype.forEach.call(document.querySelectorAll('.opt[data-i]'),function(b){
+        b.onclick=function(){
+          var rec={choice:+b.dataset.i, ms:Date.now()-qShownAt};
+          sdMine[q.key]=rec; draw();
+          base.child('sudden/'+q.key+'/'+pid).set(rec).catch(function(){});
+        };
+      });
+      runBar(5);
+    }
+  }
+
   function drawFinal(){
     var ranked=STAT.rankPlayers(players,scores);
+    if(Object.keys(sdAll).length){
+      var sdRank=STAT.rankSudden(players,sdAll);
+      var order={}; sdRank.forEach(function(r,i){ order[r.pid]=i; });
+      var tiedSet={}; STAT.findTies(ranked).forEach(function(t){ tiedSet[t.pid]=1; });
+      ranked.sort(function(a,b){
+        if(b.score!==a.score) return b.score-a.score;
+        if(tiedSet[a.pid]&&tiedSet[b.pid]) return (order[a.pid]===undefined?99:order[a.pid])-(order[b.pid]===undefined?99:order[b.pid]);
+        if(a.totalMs!==b.totalMs) return a.totalMs-b.totalMs;
+        return a.name.localeCompare(b.name);
+      });
+      ranked.forEach(function(r,i){ r.rank=i+1; });
+    }
     var me=ranked.find(function(x){return x.pid===pid;})||{rank:'-',score:0};
     var medals=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
     var prizeNames=['Grand Prize','Runner-Up Prize','Third Prize'];
@@ -235,7 +334,7 @@
     main.innerHTML='<div class="card center"><div class="badge">Final results</div>'+
       '<h1>'+head+'</h1><div class="sub">'+sub+'</div>'+prizeBanner+
       '<div style="text-align:left;margin-top:6px">'+top+'</div>'+
-      '<div class="note">Thanks for playing. Now go eat.</div></div>';
+      '<div class="note">&#127881; Happy World Pharmacists Day &mdash; now go get nachos!</div></div>';
     if(me.rank<=3) celebrate();
   }
   function celebrate(){

@@ -20,7 +20,7 @@
           options: ['Mondays','Wednesdays','Fridays','Every day'], answer: 1,
           fact: '"On Wednesdays we wear pink." October 3rd is now unofficially Mean Girls Day.' }
       ] },
-    { id: 2, name: 'Count It', pts: 2, blurb: 'Count the tray. Techs, this is your moment.',
+    { id: 2, name: 'Count It', pts: 2, blurb: 'Count the tray. Techs, this is your moment to shine.',
       q: [
         { type: 'count', seed: 11, kind: 'tab', count: 27, prompt: 'How many tablets are on this tray?',
           options: ['24','27','30','33'], answer: 1,
@@ -63,7 +63,7 @@
           options: ['Survivor','American Idol','The Bachelor','Big Brother'], answer: 1,
           fact: 'At its 2006 peak, over 30 million people watched the finale — more than most Super Bowls that decade.' },
       ] },
-    { id: 6, name: 'Pharmacy 101', pts: 2, blurb: 'Things you learned in school. Everyone else, guess wisely.',
+    { id: 6, name: 'Pharmacy 101', pts: 2, blurb: 'Things every pharmacy student knows. Everyone else, guess wisely.',
       q: [
         { type: 'mc', prompt: 'What is the antidote for an acetaminophen (Tylenol) overdose?',
           options: ['Naloxone','N-acetylcysteine','Flumazenil','Protamine'], answer: 1,
@@ -96,7 +96,7 @@
           options: ['Fridge','Room-temp shelf','Locked vault','Freezer'], answer: 0,
           fact: 'Unopened insulin lives at 2-8 C. Once in use, most pens are fine at room temp for 28 days. Never freeze it.' },
       ] },
-    { id: 10, name: 'The Wager', pts: 5, wager: true, blurb: 'Bet 0-5 before you see it. Right, you gain it. Wrong, you lose it.',
+    { id: 10, name: 'Final Wager', pts: 5, wager: true, blurb: 'Bet 0-5 before you see it. A World Pharmacists Day finale.',
       q: [
         { type: 'mc', prompt: 'Coca-Cola was created in 1886 by John Pemberton, who worked as a...',
           options: ['Pharmacist','Dentist','Chef','Chemistry teacher'], answer: 0,
@@ -118,6 +118,23 @@
       });
     });
   });
+
+
+  // ---- Sudden death: 5 super-easy pop culture questions, 5 seconds each ----
+  var SUDDEN = [
+    { prompt: 'Which superhero is known as the Caped Crusader?',
+      options: ['Batman','Superman','Spider-Man','Thor'], answer: 0 },
+    { prompt: 'What color is SpongeBob SquarePants?',
+      options: ['Blue','Yellow','Green','Pink'], answer: 1 },
+    { prompt: 'Which movie features a shark and the line "You\'re gonna need a bigger boat"?',
+      options: ['Jaws','Titanic','Finding Nemo','The Meg'], answer: 0 },
+    { prompt: 'Who is the famous mouse mascot of Disney?',
+      options: ['Jerry','Mickey','Stuart','Speedy'], answer: 1 },
+    { prompt: 'In The Wizard of Oz, "There\'s no place like ___"',
+      options: ['Kansas','Home','Oz','Bed'], answer: 1 }
+  ];
+  SUDDEN.forEach(function (q, i) { q.key = 'sd-' + (i + 1); q.type = 'mc'; q.pts = 1; q.sudden = true;
+    q.roundId = 'SD'; q.roundName = 'Sudden Death'; q.fact = ''; });
 
   function maxScore() {
     return QUESTIONS.reduce(function (s, q) { return s + q.pts; }, 0);
@@ -172,6 +189,50 @@
     return rows;
   }
 
+
+  // Rank sudden-death: correct answers first, then fastest. Returns [{pid,name,correct,ms}]
+  function rankSudden(players, sdAnswers) {
+    var rows = Object.keys(players || {}).map(function (pid) {
+      var c = 0, ms = 0;
+      SUDDEN.forEach(function (q) {
+        var a = ((sdAnswers || {})[q.key] || {})[pid];
+        if (a) { ms += (typeof a.ms === 'number' ? a.ms : 5000); if (a.choice === q.answer) c++; }
+        else { ms += 5000; }
+      });
+      return { pid: pid, name: (players[pid] && players[pid].name) || '-', correct: c, totalMs: ms };
+    });
+    rows.sort(function (a, b) {
+      if (b.correct !== a.correct) return b.correct - a.correct;
+      if (a.totalMs !== b.totalMs) return a.totalMs - b.totalMs;
+      return a.name.localeCompare(b.name);
+    });
+    var rank = 0, lc = null, lm = null;
+    rows.forEach(function (r, i) {
+      if (r.correct !== lc || r.totalMs !== lm) { rank = i + 1; lc = r.correct; lm = r.totalMs; }
+      r.rank = rank;
+    });
+    return rows;
+  }
+
+  // Who is tied for a podium place? Returns the pids tied at the top-3 boundary.
+  function findTies(ranked) {
+    if (!ranked || ranked.length < 2) return [];
+    // Group by SCORE (not by rank — rank is already split by the speed tiebreak).
+    var groups = [], seen = {};
+    ranked.forEach(function (r) {
+      if (seen[r.score] === undefined) { seen[r.score] = groups.length; groups.push({ score: r.score, rows: [] }); }
+      groups[seen[r.score]].rows.push(r);
+    });
+    // A score group matters if it straddles any of places 1-3.
+    var tied = [], place = 1;
+    groups.forEach(function (gp) {
+      var first = place, last = place + gp.rows.length - 1;
+      if (gp.rows.length > 1 && first <= 3) tied = tied.concat(gp.rows);
+      place = last + 1;
+    });
+    return tied;
+  }
+
   // ---- Deterministic tray SVG (identical on every device) ----
   function trayHTML(seed, count, kind) {
     function rng(s) { return function () { s = (s * 9301 + 49297) % 233280; return s / 233280; }; }
@@ -202,7 +263,8 @@
   }
 
   root.STAT = {
-    ROUNDS: ROUNDS, QUESTIONS: QUESTIONS, maxScore: maxScore,
+    ROUNDS: ROUNDS, QUESTIONS: QUESTIONS, SUDDEN: SUDDEN, maxScore: maxScore,
+    rankSudden: rankSudden, findTies: findTies,
     computeScores: computeScores, rankPlayers: rankPlayers,
     trayHTML: trayHTML, extraHTML: extraHTML,
     LETTERS: ['A', 'B', 'C', 'D']

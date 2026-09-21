@@ -6,6 +6,11 @@ window.STAT_CONFIG = {
     projectId: "pharmacy-trivia",
     appId: "1:902397886385:web:c128f004bc4ddfeee4c790"
   },
+  // Timing — seconds per question / answer reveal / sudden-death question
+  questionSeconds: 10,
+  revealSeconds: 4,
+  suddenDeathSeconds: 5,
+
   room: "PARTY",
   hostPin: "1234"
 };
