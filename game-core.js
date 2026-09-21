@@ -8,7 +8,19 @@
 
   // ---- Content. Every question is 4-option multiple choice so scoring is automatic. ----
   var ROUNDS = [
-    { id: 1, name: 'Count It', pts: 2, blurb: 'Count the tray. Exact answer only — the techs live here.',
+    { id: 1, name: 'Y2K Throwback', pts: 1, blurb: 'Early 2000s. If you owned a flip phone, this is your round.',
+      q: [
+        { type: 'mc', prompt: 'Which boy band released "Bye Bye Bye" in 2000?',
+          options: ['Backstreet Boys','*NSYNC','98 Degrees','O-Town'], answer: 1,
+          fact: 'Their album No Strings Attached sold 2.4 million copies in its first week — a record that stood for 15 years.' },
+        { type: 'mc', prompt: 'Which 2003 movie stars a forgetful blue fish named Dory?',
+          options: ['Shark Tale','Finding Nemo','The Little Mermaid','Happy Feet'], answer: 1,
+          fact: 'Dory could famously "speak whale." The film won the Oscar for Best Animated Feature.' },
+        { type: 'mc', prompt: 'In Mean Girls (2004), what day do the Plastics wear pink?',
+          options: ['Mondays','Wednesdays','Fridays','Every day'], answer: 1,
+          fact: '"On Wednesdays we wear pink." October 3rd is now unofficially Mean Girls Day.' }
+      ] },
+    { id: 2, name: 'Count It', pts: 2, blurb: 'Count the tray. Techs, this is your moment.',
       q: [
         { type: 'count', seed: 11, kind: 'tab', count: 27, prompt: 'How many tablets are on this tray?',
           options: ['24','27','30','33'], answer: 1,
@@ -17,91 +29,78 @@
           options: ['39','41','43','45'], answer: 1,
           fact: 'Double-count anything controlled. CII counts need a second set of initials.' }
       ] },
-    { id: 2, name: 'Spot the Error', pts: 2, blurb: 'One thing is wrong on each label. Tap what it is.',
+    { id: 3, name: 'Name That Tune', pts: 1, blurb: 'Early 2000s radio. You know these.',
+      q: [
+        { type: 'mc', prompt: 'Who sang the 2002 hit "Complicated"?',
+          options: ['Michelle Branch','Avril Lavigne','Vanessa Carlton','Pink'], answer: 1,
+          fact: 'She was 17 when it came out. The skater-punk-with-a-necktie look defined an entire era of mall fashion.' },
+        { type: 'mc', prompt: 'Which artist released the 2000s anthem "Since U Been Gone"?',
+          options: ['Kelly Clarkson','Britney Spears','Christina Aguilera','Hilary Duff'], answer: 0,
+          fact: 'She won the very first season of American Idol in 2002, back when the show was still called a gamble.' },
+        { type: 'mc', prompt: 'Which group released "Hey Ya!" in 2003?',
+          options: ['OutKast','Black Eyed Peas','Gnarls Barkley','The Roots'], answer: 0,
+          fact: 'Shake it like a Polaroid picture. Polaroid actually put out a statement asking people to please not do that.' },
+      ] },
+    { id: 4, name: 'Spot the Error', pts: 2, blurb: 'One thing is wrong on each label. Tap what it is.',
       q: [
         { type: 'spot', layout: 'pair',
           cards: [
-            { title: 'ORDER', lines: ['Pt: DOE, JANE  MRN 4471982', 'DRUG: Metformin 500 mg tablet', 'Sig: 1 tab PO twice daily w/ meals', 'Qty: 60   Refills: 3'] },
-            { title: 'DISPENSED', lines: ['Pt: DOE, JANE  MRN 4471982', 'DRUG: Metoprolol tartrate 50 mg tab', 'Sig: 1 tab PO twice daily w/ meals', 'Qty: 60   Refills: 3'] } ],
+            { title: 'ORDER', lines: ['Pt: DOE, JANE  MRN 4471982','DRUG: Metformin 500 mg tablet','Sig: 1 tab PO twice daily w/ meals','Qty: 60   Refills: 3'] },
+            { title: 'DISPENSED', lines: ['Pt: DOE, JANE  MRN 4471982','DRUG: Metoprolol tartrate 50 mg tab','Sig: 1 tab PO twice daily w/ meals','Qty: 60   Refills: 3'] } ],
           prompt: 'What is wrong here?',
-          options: ['Wrong quantity', 'Wrong drug — metoprolol for metformin', 'Wrong directions', 'Wrong patient'], answer: 1,
+          options: ['Wrong quantity','Wrong drug — metoprolol for metformin','Wrong directions','Wrong patient'], answer: 1,
           fact: 'Metformin / metoprolol is a classic look-alike. The Sig and quantity matched perfectly, which is exactly why it slips through.' },
-        { type: 'spot', layout: 'single',
-          cards: [{ title: 'IV ADMIXTURE LABEL', lines: ['Pt: RIVERA, MARCUS   Rm 6-114', 'DRUG: Potassium chloride 40 mEq/100 mL', 'ROUTE: IV PUSH over 2 minutes', 'Prepared 09/01  Tech: KL  RPh: __'] }],
-          prompt: 'What is wrong here?',
-          options: ['Wrong concentration', 'Expired', 'KCl is never IV push — must be diluted & infused', 'Wrong route: should be IM'], answer: 2,
-          fact: 'Concentrated potassium chloride IV push can stop the heart. Most hospitals removed KCl vials from patient-care areas entirely.' },
-        { type: 'spot', layout: 'single',
-          cards: [{ title: 'PATIENT PROFILE + LABEL', lines: ['Pt: OKAFOR, CHIDI   DOB 04/12/1961', 'ALLERGIES: PENICILLIN (anaphylaxis)', 'DRUG: Amoxicillin-clavulanate 875/125', 'Sig: 1 tab PO twice daily x 10 days'] }],
-          prompt: 'What is wrong here?',
-          options: ['Allergy conflict — Augmentin is a penicillin', 'Wrong dose', 'Wrong duration', 'Wrong route'], answer: 0,
-          fact: 'Brand names hide drug classes. Augmentin, Unasyn, Zosyn — all penicillins. Read the allergy line first, not last.' }
       ] },
-    { id: 3, name: 'Vital Signs', pts: 1, blurb: 'Quick clinical warm-ups.',
+    { id: 5, name: 'Small Screen', pts: 1, blurb: 'TV you definitely watched.',
       q: [
-        { type: 'mc', prompt: 'What is the antidote for an acetaminophen overdose?',
-          options: ['Naloxone', 'N-acetylcysteine', 'Flumazenil', 'Protamine'], answer: 1,
-          fact: 'N-acetylcysteine replenishes glutathione so the liver can neutralize the toxic metabolite NAPQI.' },
-        { type: 'mc', prompt: 'Which of these is on the ISMP high-alert medication list?',
-          options: ['Insulin', 'Famotidine', 'Docusate', 'Ondansetron'], answer: 0,
-          fact: 'High-alert drugs are not more error-prone — but when an error happens the harm is far worse. Insulin, opioids, anticoagulants and concentrated electrolytes headline the list.' },
+        { type: 'mc', prompt: 'In The Office (US), what is the name of the paper company?',
+          options: ['Dunder Mifflin','Vance Refrigeration','Sabre','Staples'], answer: 0,
+          fact: 'The Scranton branch. "That\'s what she said" was largely improvised by Steve Carell.' },
+        { type: 'mc', prompt: 'On Friends, what was the name of the coffee shop?',
+          options: ['Central Perk','Java Joe\'s','The Grind','Monk\'s'], answer: 0,
+          fact: 'The orange couch was found in the Warner Bros. basement. It is now a museum piece.' },
+        { type: 'mc', prompt: 'Which 2000s show made Ryan Seacrest a household name?',
+          options: ['Survivor','American Idol','The Bachelor','Big Brother'], answer: 1,
+          fact: 'At its 2006 peak, over 30 million people watched the finale — more than most Super Bowls that decade.' },
+      ] },
+    { id: 6, name: 'Pharmacy 101', pts: 2, blurb: 'Things you learned in school. Everyone else, guess wisely.',
+      q: [
+        { type: 'mc', prompt: 'What is the antidote for an acetaminophen (Tylenol) overdose?',
+          options: ['Naloxone','N-acetylcysteine','Flumazenil','Protamine'], answer: 1,
+          fact: 'NAC replenishes glutathione so the liver can neutralize the toxic metabolite NAPQI. Given early, it works beautifully.' },
         { type: 'mc', prompt: 'Which vitamin reverses warfarin?',
-          options: ['Vitamin C', 'Vitamin K', 'Vitamin D', 'Vitamin B12'], answer: 1,
-          fact: 'For emergencies, 4-factor PCC works in minutes; vitamin K takes hours because the liver must make new clotting factors.' },
-        { type: 'mc', prompt: 'A patient chart says NPO. What does that mean?',
-          options: ['Nothing by mouth', 'New patient order', 'No prior overdose', 'Not for pharmacy orders'], answer: 0,
-          fact: 'From the Latin nil per os. Yes, that includes the contraband vending-machine snacks.' }
+          options: ['Vitamin C','Vitamin K','Vitamin D','Vitamin B12'], answer: 1,
+          fact: 'Warfarin blocks vitamin K recycling. 4-factor PCC works in minutes; vitamin K takes hours because the liver must build new clotting factors.' },
       ] },
-    { id: 4, name: 'Where Does It Go?', pts: 1, blurb: 'Where does this drug live in the pharmacy?',
+    { id: 7, name: 'Emoji Decode', pts: 2, blurb: 'What movie is this?',
       q: [
-        { type: 'mc', prompt: 'Unopened vial of insulin glargine',
-          options: ['Fridge', 'Room-temp shelf', 'Locked vault / ADC', 'Fridge AND locked'], answer: 0,
-          fact: 'Unopened insulin lives at 2–8 °C. Once in use, most pens last 28 days at room temp — check the product.' },
-        { type: 'mc', prompt: 'Lorazepam 2 mg/mL injection',
-          options: ['Fridge', 'Room-temp shelf', 'Locked vault / ADC', 'Fridge AND locked'], answer: 3,
-          fact: 'The trick one. Lorazepam injection is refrigerated AND a Schedule IV controlled substance — the locked fridge everyone forgets.' }
-      ] },
-    { id: 5, name: 'Sort It', pts: 2, blurb: 'Pick the correctly ordered sequence.',
-      q: [
-        { type: 'mc', prompt: 'FEFO: which order do you dispense these?',
-          options: ['10/2026 → 12/2026 → 01/2027 → 11/2027', '11/2027 → 01/2027 → 12/2026 → 10/2026', '01/2027 → 10/2026 → 11/2027 → 12/2026', '10/2026 → 11/2027 → 12/2026 → 01/2027'], answer: 0,
-          fact: 'First-expired, first-out. Shortest-dated stock goes to the front of the shelf every restock.' }
-      ] },
-    { id: 6, name: 'By the Numbers', pts: 2, blurb: 'Doses and standards. Know your limits.',
-      q: [
-        { type: 'mc', prompt: 'FDA OTC labeling: max daily acetaminophen for a healthy adult?',
-          options: ['2,000 mg', '3,000 mg', '4,000 mg', '6,000 mg'], answer: 2,
-          fact: 'The Tylenol brand voluntarily lowered its own label to 3,000 mg/day in 2011 — but the FDA monograph still says 4,000.' },
-        { type: 'mc', prompt: 'USP <797>: max beyond-use date for a Category 1 sterile prep at room temp?',
-          options: ['6 hours', '12 hours', '24 hours', '48 hours'], answer: 1,
-          fact: '12 hours at controlled room temp, 24 hours refrigerated. Category 2 and 3 CSPs get longer BUDs but demand a cleanroom suite.' }
-      ] },
-    { id: 7, name: 'Brand or Bust', pts: 1, blurb: 'Match the brand to its generic, or the other way.',
-      q: [
-        { type: 'mc', prompt: 'Atorvastatin — what is the brand?',
-          options: ['Crestor', 'Lipitor', 'Zocor', 'Pravachol'], answer: 1,
-          fact: 'Once the best-selling drug in the world — over $125 billion in lifetime sales.' },
-        { type: 'mc', prompt: 'Norco — what is the generic?',
-          options: ['Oxycodone-acetaminophen', 'Hydrocodone-acetaminophen', 'Hydromorphone', 'Codeine'], answer: 1,
-          fact: 'One of the most-filled controlled substances in the country.' },
-        { type: 'mc', prompt: 'Zosyn — what is the generic?',
-          options: ['Piperacillin-tazobactam', 'Ampicillin-sulbactam', 'Ceftriaxone', 'Meropenem'], answer: 0,
-          fact: 'Tazobactam does no antibacterial work itself — it just protects piperacillin from beta-lactamases.' }
+        { type: 'mc', prompt: 'LION + CROWN + SUNRISE  ( 🦁 👑 🌅 )',
+          options: ['Madagascar','The Lion King','Zootopia','Jungle Book'], answer: 1,
+          fact: 'The 2019 remake made over $1.6 billion worldwide.' },
+        { type: 'mc', prompt: 'WIZARD + LIGHTNING + CASTLE + OWL  ( 🧙 ⚡ 🏰 🦉 )',
+          options: ['Lord of the Rings','Narnia','Harry Potter','Percy Jackson'], answer: 2,
+          fact: 'Rejected by twelve publishers before Bloomsbury took a chance on it.' },
       ] },
     { id: 8, name: 'Sound-Alike Showdown', pts: 2, blurb: 'The look-alike, sound-alike round.',
       q: [
-        { type: 'mc', prompt: 'Hydroxyzine is constantly confused with which antihypertensive?',
-          options: ['Hydralazine', 'Hydrochlorothiazide', 'Hydrocortisone', 'Hydroxychloroquine'], answer: 0,
-          fact: 'One treats itching, one drops blood pressure. Tall-man: hydrOXYzine vs hydrALAZINE.' },
-        { type: 'mc', prompt: 'Celebrex (celecoxib) is dangerously confused with which anti-seizure drug?',
-          options: ['Cerebyx (fosphenytoin)', 'Keppra', 'Depakote', 'Dilantin'], answer: 0,
-          fact: 'The Celebrex / Cerebyx / Celexa trio is the classic ISMP case study in why brand names get reviewed before approval.' }
+        { type: 'mc', prompt: 'Hydroxyzine is constantly confused with which blood pressure drug?',
+          options: ['Hydralazine','Hydrochlorothiazide','Hydrocortisone','Hydroxychloroquine'], answer: 0,
+          fact: 'One treats itching and anxiety, one drops blood pressure. Tall-man lettering exists for exactly this: hydrOXYzine vs hydrALAZINE.' },
+        { type: 'mc', prompt: 'Which pair is a classic look-alike/sound-alike warning in pharmacy?',
+          options: ['Celebrex and Celexa','Aspirin and Tylenol','Ibuprofen and Naproxen','Zyrtec and Claritin'], answer: 0,
+          fact: 'Celebrex (arthritis), Celexa (depression) and Cerebyx (seizures) — three different drugs, three similar names. A textbook ISMP case study.' }
       ] },
-    { id: 9, name: 'The Wager', pts: 5, wager: true, blurb: 'Bet 0–5 first, then answer. Right, you gain it. Wrong, you lose it.',
+    { id: 9, name: 'Where Does It Go?', pts: 1, blurb: 'Where does this live in the pharmacy?',
       q: [
-        { type: 'mc', prompt: 'Coca-Cola was created in 1886 by which Atlanta pharmacist?',
-          options: ['John Pemberton', 'Caleb Bradham', 'Charles Alderton', 'Joseph Priestley'], answer: 0,
-          fact: 'Pemberton first sold it as a nerve tonic at a pharmacy soda fountain. Caleb Bradham (Pepsi) and Charles Alderton (Dr Pepper) were pharmacists too.' }
+        { type: 'mc', prompt: 'An unopened vial of insulin',
+          options: ['Fridge','Room-temp shelf','Locked vault','Freezer'], answer: 0,
+          fact: 'Unopened insulin lives at 2-8 C. Once in use, most pens are fine at room temp for 28 days. Never freeze it.' },
+      ] },
+    { id: 10, name: 'The Wager', pts: 5, wager: true, blurb: 'Bet 0-5 before you see it. Right, you gain it. Wrong, you lose it.',
+      q: [
+        { type: 'mc', prompt: 'Coca-Cola was created in 1886 by John Pemberton, who worked as a...',
+          options: ['Pharmacist','Dentist','Chef','Chemistry teacher'], answer: 0,
+          fact: 'He sold it as a nerve tonic at a pharmacy soda fountain. Pepsi (Caleb Bradham) and Dr Pepper (Charles Alderton) were pharmacists too — your profession basically invented soda.' }
       ] }
   ];
 
@@ -148,6 +147,8 @@
         }
       });
     });
+    // never show a negative total at a party — floor at zero
+    Object.keys(out).forEach(function (pid) { if (out[pid].score < 0) out[pid].score = 0; });
     return out;
   }
 
@@ -189,6 +190,7 @@
   }
 
   function extraHTML(q) {
+    if (!q) return '';
     if (q.type === 'count') return '<div class="tray">' + trayHTML(q.seed, q.count, q.kind) + '</div>';
     if (q.type === 'spot') {
       var cls = q.layout === 'pair' ? 'mock' : 'mock single';

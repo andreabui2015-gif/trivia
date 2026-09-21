@@ -63,6 +63,8 @@
   .fact{font-size:14px;color:#6B5A2E;line-height:1.4;margin-top:4px}
   .pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
   .medal{font-size:44px}
+  .prizewin{margin:10px 0 4px;background:var(--amber);color:var(--link);border-radius:12px;padding:12px;
+    font-family:var(--disp);font-weight:800;font-size:22px;box-shadow:0 6px 16px rgba(0,0,0,.22)}
 </style>
 </head>
 <body>
@@ -214,11 +216,38 @@
     main.innerHTML=html;
   }
   function drawFinal(){
-    var ranked=STAT.rankPlayers(players,scores); var me=ranked.find(function(x){return x.pid===pid;})||{rank:'—',score:0};
-    var medals=['🥇','🥈','🥉'];
-    var top=ranked.slice(0,5).map(function(r,i){var mine=r.pid===pid;return '<div class="opt'+(mine?' chosen':'')+'" disabled style="justify-content:space-between"><span><span class="k">'+(medals[r.rank-1]||r.rank)+'</span> '+esc(r.name)+'</span><b>'+r.score+'</b></div>';}).join('');
-    var head=me.rank===1?'🎉 You won!':'Round complete';
-    main.innerHTML='<div class="card center"><div class="badge">Final results</div><h1>'+head+'</h1><div class="sub">You finished #'+me.rank+' with '+me.score+' points.</div><div style="text-align:left;margin-top:6px">'+top+'</div><div class="note">Thanks for playing. Now go eat.</div></div>';
+    var ranked=STAT.rankPlayers(players,scores);
+    var me=ranked.find(function(x){return x.pid===pid;})||{rank:'-',score:0};
+    var medals=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
+    var prizeNames=['Grand Prize','Runner-Up Prize','Third Prize'];
+    var top=ranked.slice(0,5).map(function(r){
+      var mine=r.pid===pid;
+      var badge=medals[r.rank-1]||('#'+r.rank);
+      return '<div class="opt'+(mine?' chosen':'')+'" disabled style="justify-content:space-between">'+
+        '<span><span class="k">'+badge+'</span> '+esc(r.name)+'</span><b>'+r.score+'</b></div>';
+    }).join('');
+    var head, sub;
+    if(me.rank===1){ head='\uD83C\uDF89 You won!'; sub='1st place - come collect the Grand Prize.'; }
+    else if(me.rank===2){ head='\uD83E\uDD48 2nd place!'; sub='You won the Runner-Up Prize - see the host.'; }
+    else if(me.rank===3){ head='\uD83E\uDD49 3rd place!'; sub='You won the Third Prize - see the host.'; }
+    else { head='Nice game!'; sub='You finished #'+me.rank+' with '+me.score+' points.'; }
+    var prizeBanner = (me.rank<=3) ? '<div class="prizewin">\uD83C\uDF81 '+prizeNames[me.rank-1]+'</div>' : '';
+    main.innerHTML='<div class="card center"><div class="badge">Final results</div>'+
+      '<h1>'+head+'</h1><div class="sub">'+sub+'</div>'+prizeBanner+
+      '<div style="text-align:left;margin-top:6px">'+top+'</div>'+
+      '<div class="note">Thanks for playing. Now go eat.</div></div>';
+    if(me.rank<=3) celebrate();
+  }
+  function celebrate(){
+    if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    try{
+      var a=new (window.AudioContext||window.webkitAudioContext)();
+      [523,659,784,1047].forEach(function(f,i){ setTimeout(function(){
+        var o=a.createOscillator(),g=a.createGain(); o.type='triangle'; o.frequency.value=f;
+        g.gain.setValueAtTime(0.22,a.currentTime); g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+0.35);
+        o.connect(g); g.connect(a.destination); o.start(); o.stop(a.currentTime+0.36);
+      }, i*130); });
+    }catch(e){}
   }
 
   function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}

@@ -62,6 +62,20 @@
   .prow .rk{font-family:var(--disp);color:var(--dim);width:34px;text-align:right}
   .lead .prow:nth-child(1) .rk{color:#F5C542}.lead .prow:nth-child(2) .rk{color:#CFCFCF}.lead .prow:nth-child(3) .rk{color:#D79A5B}
   .empty{color:var(--dim);text-align:center;padding:20px;font-size:15px}
+  .winnerline{font-family:var(--disp);font-weight:800;font-size:clamp(26px,3.6vw,44px);color:var(--amberd);margin:6px 0 4px}
+  .podium3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;align-items:end;margin:10px 4px 6px}
+  .pod{display:flex;flex-direction:column;align-items:center;justify-content:flex-end}
+  .pmedal{font-size:34px;line-height:1}
+  .pod.first .pmedal{font-size:46px}
+  .pname{font-family:var(--disp);font-weight:800;font-size:22px;color:var(--link);line-height:1.05;margin-top:4px;
+    max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .pod.first .pname{font-size:28px}
+  .pscore{font-family:var(--disp);font-size:17px;color:var(--amberd);margin-bottom:6px}
+  .pblock{width:100%;border-radius:10px 10px 0 0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    box-shadow:inset 0 -4px 0 rgba(0,0,0,.12)}
+  .pplace{font-family:var(--disp);font-weight:800;font-size:19px;color:#2A1E05}
+  .pprize{font-family:var(--body);font-weight:700;font-size:12.5px;color:#4A3A12;margin-top:2px}
+  .prizenote{font-family:var(--disp);font-size:16px;color:#6B5A2E;padding:6px 0 4px}
   .gate{max-width:420px;margin:16vh auto 0}
   .hint{color:var(--dim);font-size:13px;margin-top:10px;line-height:1.4}
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:5}
@@ -76,6 +90,43 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="config.js"></script>
 <script src="game-core.js"></script>
+<script>
+/* ===== STAT! party music — original loop, synthesized live. No files, no licensing. ===== */
+(function(){
+  var AC=window.AudioContext||window.webkitAudioContext, ctx=null, master=null, timer=null, step=0, on=false;
+  var BPM=112, SPB=60/BPM/2; // eighth notes
+  // upbeat major-key progression: I - V - vi - IV  (C G Am F)
+  var CHORDS=[[262,330,392],[196,247,294],[220,262,330],[175,220,262]];
+  var LEAD=[523,587,659,784,659,587,523,440];
+  function n(f,t,dur,type,vol,dest){ var o=ctx.createOscillator(),g=ctx.createGain(); o.type=type; o.frequency.setValueAtTime(f,t);
+    g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.012); g.gain.exponentialRampToValueAtTime(0.0008,t+dur);
+    o.connect(g); g.connect(dest||master); o.start(t); o.stop(t+dur+0.02); }
+  function kick(t){ var o=ctx.createOscillator(),g=ctx.createGain(); o.frequency.setValueAtTime(140,t); o.frequency.exponentialRampToValueAtTime(48,t+0.11);
+    g.gain.setValueAtTime(0.5,t); g.gain.exponentialRampToValueAtTime(0.001,t+0.16); o.connect(g); g.connect(master); o.start(t); o.stop(t+0.18); }
+  function hat(t,open){ var b=ctx.createBuffer(1,1200,ctx.sampleRate),d=b.getChannelData(0);
+    for(var i=0;i<1200;i++)d[i]=Math.random()*2-1;
+    var src=ctx.createBufferSource(); src.buffer=b; var hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7200;
+    var g=ctx.createGain(); g.gain.setValueAtTime(open?0.14:0.07,t); g.gain.exponentialRampToValueAtTime(0.001,t+(open?0.12:0.045));
+    src.connect(hp); hp.connect(g); g.connect(master); src.start(t); src.stop(t+0.14); }
+  function tick(){
+    var t=ctx.currentTime+0.05, bar=Math.floor(step/8)%4, ch=CHORDS[bar], b=step%8;
+    if(b===0||b===4) kick(t);
+    hat(t, b===6);
+    if(b===0){ ch.forEach(function(f){ n(f/2,t,SPB*3.4,'triangle',0.055); }); }     // warm pad
+    if(b%2===0){ n(ch[0]/2,t,SPB*0.85,'square',0.05); }                              // bass pulse
+    n(LEAD[b]*(bar%2?1:1.0),t,SPB*0.75,'sawtooth',0.028);                            // bright lead
+    step++;
+  }
+  function start(){ if(on) return; ctx=ctx||new AC(); if(ctx.state==='suspended')ctx.resume();
+    master=master||ctx.createGain(); master.gain.value=0.19; master.connect(ctx.destination);
+    step=0; on=true; timer=setInterval(tick, SPB*1000); tick(); }
+  function stop(){ on=false; clearInterval(timer); timer=null; if(master){ master.gain.value=0; } }
+  function duck(v){ if(master&&on) master.gain.linearRampToValueAtTime(v, (ctx?ctx.currentTime:0)+0.25); }
+  window.STATMusic={ start:start, stop:stop, isOn:function(){return on;}, duck:duck,
+    toggle:function(){ on?stop():start(); return on; } };
+})();
+</script>
+
 <script>
 (function(){
   var CFG=window.STAT_CONFIG||{};
@@ -117,7 +168,7 @@
     else left=questionPanel(q,phase);
 
     wrap.innerHTML=
-      '<header><div class="logo">STAT! <small>Host console</small></div><div class="room">Room <b>'+ROOM+'</b> · '+Object.keys(players).length+' joined ('+online+' online)</div></header>'+
+      '<header><div class="logo">STAT! <small>Host console</small></div><div class="room"><button id="music" class="musicbtn">'+(window.STATMusic&&STATMusic.isOn()?'&#9835; Music on':'&#9835; Music off')+'</button> &nbsp; Room <b>'+ROOM+'</b> · '+Object.keys(players).length+' joined ('+online+' online)</div></header>'+
       '<div class="grid"><div>'+left+'</div>'+
       '<div class="panel '+(phase==='ended'?'lead':'')+'"><h2>'+(phase==='lobby'?'Players':'Leaderboard')+'</h2>'+(phase==='lobby'?playerList():leaderboard(ranked))+'</div></div>';
 
@@ -172,11 +223,28 @@
   }
 
   function finalPanel(ranked){
-    var win=ranked[0];
-    return '<div class="panel"><div class="label" style="text-align:center"><div class="qmeta"><span>Final results</span><span>'+ranked.length+' players</span></div>'+
-      '<div style="font-family:var(--disp);font-weight:800;font-size:clamp(34px,6vw,68px);color:var(--amberd);line-height:1;margin:10px 0">'+(win?esc(win.name):'—')+'</div>'+
-      '<div style="font-family:var(--disp);font-size:22px;color:#6B5A2E">STAT! Champion'+(win?' · '+win.score+' points':'')+'</div></div>'+
-      '<div class="controls"><button id="reset" class="danger">Reset for another game</button></div></div>';
+    var top=ranked.slice(0,3);
+    var meta=[{m:'&#129352;',t:'1st Place',p:'Grand Prize',c:'#F5C542'},
+              {m:'&#129353;',t:'2nd Place',p:'Runner-Up Prize',c:'#D8D8D8'},
+              {m:'&#129354;',t:'3rd Place',p:'Third Prize',c:'#D79A5B'}];
+    var order=[1,0,2]; // 2nd, 1st, 3rd for podium look
+    var cols=order.map(function(i){
+      var r=top[i]; if(!r) return '<div class="pod empty"></div>';
+      var h=[130,170,110][i];
+      return '<div class="pod'+(i===0?' first':'')+'">'+
+        '<div class="pmedal">'+meta[i].m+'</div>'+
+        '<div class="pname">'+esc(r.name)+'</div>'+
+        '<div class="pscore">'+r.score+' pts</div>'+
+        '<div class="pblock" style="height:'+h+'px;background:'+meta[i].c+'">'+
+          '<div class="pplace">'+meta[i].t+'</div><div class="pprize">'+meta[i].p+'</div>'+
+        '</div></div>';
+    }).join('');
+    return '<div class="panel"><div class="label" style="text-align:center;padding-bottom:6px">'+
+      '<div class="qmeta"><span>Final results</span><span>'+ranked.length+' players</span></div>'+
+      '<div class="winnerline">&#127881; Congratulations! &#127881;</div>'+
+      '<div class="podium3">'+cols+'</div>'+
+      '<div class="prizenote">Top 3 collect your prizes from the host</div>'+
+      '</div><div class="controls"><button id="reset" class="danger">Reset for another game</button></div></div>';
   }
 
   function leaderboard(ranked){
@@ -187,11 +255,12 @@
 
   function wireButtons(q,phase){
     var b;
-    if(b=document.getElementById('start')) b.onclick=function(){ setState({phase:'question',qIndex:0}); };
-    if(b=document.getElementById('reveal')) b.onclick=function(){ setState({phase:'reveal'}); };
-    if(b=document.getElementById('next')) b.onclick=function(){ var ni=state.qIndex+1; if(ni>=STAT.QUESTIONS.length) setState({phase:'ended'}); else setState({phase:'question',qIndex:ni}); };
+    if(b=document.getElementById('start')) b.onclick=function(){ try{STATMusic.start();}catch(e){} setState({phase:'question',qIndex:0}); };
+    if(b=document.getElementById('reveal')) b.onclick=function(){ try{STATMusic.duck(0.07);}catch(e){} setState({phase:'reveal'}); };
+    if(b=document.getElementById('next')) b.onclick=function(){ try{STATMusic.duck(0.19);}catch(e){} var ni=state.qIndex+1; if(ni>=STAT.QUESTIONS.length) setState({phase:'ended'}); else setState({phase:'question',qIndex:ni}); };
     if(b=document.getElementById('reset')) b.onclick=function(){ if(confirm('Wipe all players, answers and scores for room '+ROOM+'?')){ base.remove().then(function(){ setState({phase:'lobby',qIndex:-1}); }); } };
-    if(b=document.getElementById('copy')) b.onclick=function(){ navigator.clipboard&&navigator.clipboard.writeText(playerURL); b.textContent='Copied ✓'; setTimeout(function(){b.textContent='Copy link';},1500); };
+    if(b=document.getElementById('music')) b.onclick=function(){ STATMusic.toggle(); render(); };
+  if(b=document.getElementById('copy')) b.onclick=function(){ navigator.clipboard&&navigator.clipboard.writeText(playerURL); b.textContent='Copied ✓'; setTimeout(function(){b.textContent='Copy link';},1500); };
   }
 
   function drawQR(){ var el=document.getElementById('qr'); if(!el)return; el.innerHTML=''; try{ new QRCode(el,{text:playerURL,width:180,height:180,correctLevel:QRCode.CorrectLevel.M}); }catch(e){ el.innerHTML='<div style="color:#333;font-size:12px;text-align:center;padding:8px">QR unavailable —<br>use the link/code</div>'; } }
