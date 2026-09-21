@@ -10,7 +10,33 @@
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
   html,body{min-height:100%}
   body{background:var(--ink);color:var(--mint);font-family:var(--body);background-image:radial-gradient(circle at 18% 6%,rgba(240,168,40,.20) 0,transparent 42%),radial-gradient(circle at 84% 24%,rgba(200,55,31,.16) 0,transparent 44%),linear-gradient(170deg,#3E1D0C 0%,var(--ink) 55%,#1B0B03 100%);padding:env(safe-area-inset-top) 16px calc(env(safe-area-inset-bottom) + 16px)}
-  .app{max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
+  body::before{content:'';position:fixed;inset:-240px;pointer-events:none;z-index:0;background-image:var(--bgtile);
+    background-size:240px 240px;animation:drift 70s linear infinite}
+  @keyframes drift{to{transform:translate(240px,240px)}}
+  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse at 50% 45%,transparent 30%,rgba(20,8,2,.55) 100%)}
+  /* stickers */
+  .stk{display:inline-block;filter:drop-shadow(2px 4px 3px rgba(0,0,0,.45));pointer-events:none;user-select:none}
+  .stk svg{width:100%;height:100%;display:block}
+  .bob{animation:bob 3.2s ease-in-out infinite}
+  .bob.b2{animation-duration:3.8s;animation-delay:-1.1s}.bob.b3{animation-duration:2.9s;animation-delay:-2s}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-7px) rotate(calc(var(--r,0deg) + 4deg))}}
+  #stkLayer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+  #stkLayer .stk{position:absolute}
+  .strip{display:flex;justify-content:space-around;align-items:center;height:62px;position:relative;z-index:1;pointer-events:none}
+  .strip .stk{width:52px;height:52px}
+  #reward{position:fixed;left:50%;top:40%;z-index:50;pointer-events:none;text-align:center;transform:translate(-50%,-50%)}
+  #reward .stk{width:128px;height:128px;animation:popin .9s cubic-bezier(.2,1.6,.4,1) both}
+  #reward .cap{display:inline-block;font-family:var(--disp);font-weight:800;font-size:24px;color:#FBEFD2;background:#2A1206;
+    border:3px solid #F0A828;border-radius:999px;padding:6px 18px;margin-top:2px;white-space:nowrap;box-shadow:0 8px 20px rgba(0,0,0,.45);
+    animation:popin .9s .08s cubic-bezier(.2,1.6,.4,1) both}
+  #reward.out{animation:floatout .6s ease-in forwards}
+  @keyframes popin{0%{transform:scale(0) rotate(-30deg);opacity:0}100%{transform:scale(1) rotate(-6deg);opacity:1}}
+  @keyframes floatout{to{transform:translate(-50%,-110%);opacity:0}}
+  .winstk{display:flex;justify-content:center;gap:10px;margin:4px 0 2px}.winstk .stk{width:56px;height:56px}
+  @media (max-height:720px){ #stkBot{display:none} .strip{height:48px} .strip .stk{width:40px;height:40px} }
+  @media (prefers-reduced-motion:reduce){ body::before,.bob,#reward .stk,#reward .cap{animation:none!important} }
+  .app{position:relative;z-index:2;max-width:560px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
   header{display:flex;justify-content:space-between;align-items:center;padding:14px 2px 10px}
   header   header .logo{display:flex;align-items:center;gap:8px;font-family:var(--disp);font-weight:800;font-size:26px;color:var(--amber);letter-spacing:-.01em}
   .rxlogo{width:26px;height:26px;color:var(--amber);flex:none}
@@ -70,6 +96,28 @@
   .fact{font-size:14px;color:#6B5A2E;line-height:1.4;margin-top:4px}
   .pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
   .medal{font-size:44px}
+  .rxhead{border-bottom:2px dashed #E7C97D;padding-bottom:8px;margin-bottom:12px;font-family:var(--disp)}
+  .rxtop{display:flex;justify-content:space-between;align-items:baseline}
+  .rxno{font-weight:800;font-size:17px;color:var(--amberd);letter-spacing:.03em}
+  .rxof{font-size:14px;color:#9A7A52}
+  .rxrow{display:flex;justify-content:space-between;font-size:14px;color:#6B4A28;margin-top:2px}
+  .rxrow b{color:var(--link)}
+  .filling{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+  .filling span{font-family:var(--disp);font-weight:700;font-size:13px;color:#9A7A52;letter-spacing:.04em;text-transform:uppercase}
+  .filling .cdbar{flex:1;margin:0;height:14px;border:2px solid var(--link);border-radius:99px;background:#fff}
+  .filling .cdbar i{background:linear-gradient(90deg,var(--amberd) 0 50%,var(--amber) 50% 100%)}
+  .bottle{width:74px;height:100px;margin:4px auto 6px;display:block}
+  .pillsfall{animation:shake 1.4s ease-in-out infinite;transform-origin:40px 90px}
+  @keyframes shake{0%,100%{transform:translateY(0)}25%{transform:translateY(-4px) rotate(-2deg)}75%{transform:translateY(-2px) rotate(2deg)}}
+  .rtitle{text-align:center;font-size:14px;color:#7A5A38;margin-top:10px}
+  .rtitle b{color:var(--amberd);font-family:var(--disp);font-size:16px}
+  .rxlabel{margin:12px 0 6px;background:#fff;border:2px solid var(--link);border-radius:8px;padding:10px 12px;
+    font-family:"Courier New",monospace;color:#111;text-align:left;box-shadow:4px 4px 0 var(--amberd)}
+  .rxl-top{display:flex;justify-content:space-between;font-size:10px;font-weight:700;border-bottom:1px solid #111;padding-bottom:4px;margin-bottom:6px}
+  .rxl-pt{font-size:12px}
+  .rxl-drug{font-family:var(--disp);font-weight:800;font-size:24px;color:var(--amberd);margin:4px 0}
+  .rxl-sig{font-size:12px}
+  .rxl-foot{display:flex;justify-content:space-between;font-size:11px;border-top:1px dashed #111;margin-top:6px;padding-top:4px}
   .rulelist{list-style:none;margin:2px 0 16px;padding:0}
   .rulelist li{position:relative;padding-left:20px;font-size:15px;line-height:1.35;color:#3A2C10;margin-bottom:7px}
   .rulelist li:before{content:"";position:absolute;left:4px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--amber)}
@@ -88,12 +136,15 @@
 </style>
 </head>
 <body>
+<div id="stkLayer"></div>
 <div class="app">
   <header>
     <div class="logo"><svg class="rxlogo" viewBox="0 0 100 100" aria-hidden="true"><path d="M20 46 H80 C80 68 68 80 50 80 C32 80 20 68 20 46 Z" fill="currentColor"/><rect x="16" y="40" width="68" height="9" rx="4.5" fill="currentColor"/><rect x="44" y="82" width="12" height="6" rx="3" fill="currentColor"/><path d="M58 38 L78 14" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="80" cy="12" r="7" fill="currentColor"/></svg><span>STAT!</span></div>
     <div class="me" id="me"></div>
   </header>
+  <div class="strip" id="stkTop"></div>
   <main id="main"><div class="center pulse" style="margin:auto;color:var(--dim);font-family:var(--disp);font-size:20px">Connecting…</div></main>
+  <div class="strip" id="stkBot"></div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -104,6 +155,34 @@
 <script>
 (function(){
   var main=document.getElementById('main'), meEl=document.getElementById('me');
+  /* ---------- stickers ---------- */
+  function stk(name,size,cls,rot){ return '<span class="stk '+(cls||'')+'" style="width:'+size+'px;height:'+size+'px;--r:'+(rot||0)+'deg;transform:rotate('+(rot||0)+'deg)">'+STAT.STICKERS[name]+'</span>'; }
+  (function decorate(){
+    try{
+      document.documentElement.style.setProperty('--bgtile','url("'+STAT.BG_TILE+'")');
+      // peeking stickers behind the card (z-index below content, never blocks taps)
+      var L=[['capsule',78,'top:13%;left:-22px',-18,'b2'],['heart',64,'top:30%;right:-18px',14,''],['bottle',72,'top:52%;left:-24px',10,'b3'],
+             ['rx',66,'top:70%;right:-20px',-12,'b2'],['nacho',70,'bottom:4%;left:-16px',16,''],['blister',66,'bottom:10%;right:-22px',-8,'b3']];
+      document.getElementById('stkLayer').innerHTML=L.map(function(x){
+        return '<span class="stk bob '+x[4]+'" style="width:'+x[1]+'px;height:'+x[1]+'px;'+x[2]+';--r:'+x[3]+'deg">'+STAT.STICKERS[x[0]]+'</span>';}).join('');
+      document.getElementById('stkTop').innerHTML=stk('mortar',52,'bob',-10)+stk('happy',58,'bob b2',8)+stk('capsule',52,'bob b3',-6)+stk('stat',54,'bob',6);
+      document.getElementById('stkBot').innerHTML=stk('tablet',50,'bob b3',6)+stk('verified',54,'bob',-8)+stk('heart',50,'bob b2',10)+stk('bandaid',52,'bob',-6);
+    }catch(e){}
+  })();
+  var GOOD=[['verified','Verified by RPh!'],['happy','Nailed it!'],['heart','Love that for you'],['stat','STAT genius!'],['capsule','Refill that brain!'],['mortar','Compounded perfectly']];
+  var BAD=[['bandaid','Walk it off!'],['tablet','Take two & try again'],['blister','Next dose, champ']];
+  function reward(ok){
+    try{
+      if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var pick=(ok?GOOD:BAD)[Math.floor(Math.random()*(ok?GOOD:BAD).length)];
+      var old=document.getElementById('reward'); if(old) old.remove();
+      var d=document.createElement('div'); d.id='reward';
+      d.innerHTML='<span class="stk">'+STAT.STICKERS[pick[0]]+'</span><div class="cap">'+pick[1]+'</div>';
+      document.body.appendChild(d);
+      setTimeout(function(){ d.classList.add('out'); },1250);
+      setTimeout(function(){ if(d.parentNode) d.remove(); },1900);
+    }catch(e){}
+  }
   var CFG=window.STAT_CONFIG||{};
   var params=new URLSearchParams(location.search);
   var ROOM=(params.get('g')||CFG.room||'PARTY').toUpperCase();
@@ -172,6 +251,8 @@
     draw();
   }
 
+  var TITLES=['Pill Counting Prodigy','Label Legend','Capsule Captain','Tablet Titan','Vial Virtuoso','Sig Code Savant','Blister Pack Boss','Refill Royalty'];
+  function titleFor(rank){ return TITLES[(Math.max(1,rank)-1)%TITLES.length]; }
   function myRank(){ var r=STAT.rankPlayers(players,scores).find(function(x){return x.pid===pid;}); return r||{rank:'—',score:0}; }
 
   function draw(){
@@ -183,7 +264,10 @@
 
     if(phase==='lobby'){
       var n=Object.keys(players).length;
-      main.innerHTML='<div class="card center"><div class="badge">Room '+ROOM+'</div><h1>You\'re in!</h1><div class="sub">Waiting for the host to start. '+n+' player'+(n===1?'':'s')+' here so far.</div><div class="big pulse" style="color:var(--amberd);margin-top:8px">Hang tight…</div></div>';
+      main.innerHTML='<div class="card center"><div class="checkband"></div><div class="badge">Rx received &middot; Room '+ROOM+'</div>'+
+        '<svg class="bottle" viewBox="0 0 80 110" aria-hidden="true"><rect x="14" y="4" width="52" height="16" rx="4" fill="#F7F3EA" stroke="#2A1206" stroke-width="3"/><rect x="10" y="20" width="60" height="84" rx="10" fill="#E89A2C" fill-opacity=".35" stroke="#2A1206" stroke-width="3"/><rect x="18" y="42" width="44" height="30" rx="3" fill="#FBEFD2" stroke="#2A1206" stroke-width="2"/><text x="40" y="62" text-anchor="middle" font-family="Arial" font-weight="700" font-size="14" fill="#C8371F">Rx</text><g class="pillsfall"><circle cx="30" cy="94" r="5" fill="#fff"/><circle cx="44" cy="96" r="5" fill="#fff"/><circle cx="52" cy="90" r="5" fill="#C8371F"/><circle cx="38" cy="86" r="5" fill="#fff"/></g></svg>'+
+        '<h1>You\'re in!</h1><div class="sub">Your order is in the queue. The pharmacist (host) starts the game shortly. '+n+' player'+(n===1?'':'s')+' checked in so far.</div>'+
+        '<div class="big pulse" style="color:var(--amberd);margin-top:4px">Now filling&hellip;</div></div>';
       return;
     }
     if(phase==='ended'){ try{STATMusic.setMode('normal');STATMusic.stop();}catch(e){} drawFinal(); return; }
@@ -196,16 +280,22 @@
       if(mine){ drawLocked(q,mine); }
       else { drawQuestion(q); }
     } else if(phase==='reveal'){
+      if(window._lastBell!==q.key){ window._lastBell=q.key; if(localStorage.getItem('stat_music')!=='0'){ try{STATMusic.sting('bell');}catch(e){} } if(mine) reward(mine.choice===q.answer); }
       drawReveal(q,mine);
     }
   }
 
-  function qmeta(q){ return '<div class="qmeta"><span>Round '+q.roundId+' · '+esc(q.roundName)+'</span><span>'+(q.isWager?'Wager 0–5':q.pts+' pt'+(q.pts>1?'s':''))+'</span></div>'; }
+  function rxNum(q){ var i=STAT.QUESTIONS.indexOf(q); return '0925-'+String(i+1).padStart(2,'0'); }
+  function qmeta(q){
+    var i=STAT.QUESTIONS.indexOf(q)+1;
+    return '<div class="rxhead"><div class="rxtop"><span class="rxno">Rx #'+rxNum(q)+'</span><span class="rxof">'+i+' of '+STAT.QUESTIONS.length+'</span></div>'+
+      '<div class="rxrow"><span><b>Sig:</b> '+esc(q.roundName)+'</span><span><b>Qty:</b> '+(q.isWager?'wager 0–5':q.pts+' pt'+(q.pts>1?'s':''))+'</span></div></div>';
+  }
 
   function drawQuestion(q){
     qShownAt=Date.now(); pickedWager=(q.isWager?(pickedWager||0):null);
     var html='<div class="card">'+qmeta(q);
-    html+='<div class="cdbar"><i id="bar"></i></div>';
+    html+='<div class="filling"><span>Filling&hellip;</span><div class="cdbar"><i id="bar"></i></div></div>';
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
     html+=STAT.extraHTML(q).replace(/<div class="mock/g,'<div class="mock').replace(/class="card"/g,'class="cardm"');
     if(q.isWager){
@@ -241,18 +331,19 @@
     clearInterval(lowTimer);
     var html='<div class="card">'+qmeta(q)+'<div class="prompt">'+esc(q.prompt)+'</div>';
     html+=q.options.map(function(o,i){var c=i===mine.choice?' chosen':'';return '<button class="opt'+c+'" disabled data-i="'+i+'"><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
-    html+='<div class="verdict" style="background:var(--ink);color:var(--amber)">Locked in ✓'+(q.isWager?' · wager '+(mine.wager||0):'')+'</div><div class="center" style="color:var(--dim);font-size:14px">Waiting for the host to reveal…</div></div>';
+    html+='<div class="verdict" style="background:var(--ink);color:var(--amber)">&#9745; Submitted for verification'+(q.isWager?' · wager '+(mine.wager||0):'')+'</div><div class="center" style="color:var(--dim);font-size:14px">The pharmacist is checking your work&hellip;</div></div>';
     main.innerHTML=html;
   }
   function drawReveal(q,mine){
     clearInterval(lowTimer);
     var got=mine&&mine.choice===q.answer;
     var html='<div class="card">'+qmeta(q);
-    html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?(q.isWager?'Right! +'+(mine.wager||0):'Correct! +'+q.pts):(mine?(q.isWager?'Missed. −'+(mine.wager||0):'Not this time'):'No answer'))+'</div>';
+    html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?(q.isWager?'&#10004; VERIFIED! +'+(mine.wager||0):'&#10004; VERIFIED! +'+q.pts):(mine?(q.isWager?'&#10008; REJECTED &minus;'+(mine.wager||0):'&#10008; REJECTED at verification'):'&#10008; Never dispensed'))+'</div>';
     html+=q.options.map(function(o,i){var c=i===q.answer?' correct':(mine&&i===mine.choice?' wrong':'');return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
     html+='<div class="fact">'+esc(q.fact)+'</div>';
     var r=myRank();
     html+='<div class="score-row"><div class="stat"><b>'+r.score+'</b><span>points</span></div><div class="stat"><b>#'+r.rank+'</b><span>of '+Object.keys(players).length+'</span></div></div>';
+    html+='<div class="rtitle">Current title: <b>'+titleFor(r.rank)+'</b></div>';
     html+='</div>';
     main.innerHTML=html;
   }
@@ -276,13 +367,13 @@
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
     if(reveal){
       var got=mine&&mine.choice===q.answer;
-      html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?'Correct!':(mine?'Missed':'No answer'))+'</div>';
+      html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?'&#10004; VERIFIED':(mine?'&#10008; REJECTED':'&#10008; Never dispensed'))+'</div>';
       html+=q.options.map(function(o,i){var c=i===q.answer?' correct':(mine&&i===mine.choice?' wrong':'');
         return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
     } else if(mine){
       html+=q.options.map(function(o,i){var c=i===mine.choice?' chosen':'';
         return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
-      html+='<div class="center" style="color:var(--dim);font-size:14px">Locked in \u2713</div>';
+      html+='<div class="center" style="color:var(--dim);font-size:14px">&#9745; Submitted</div>';
     } else {
       html+=q.options.map(function(o,i){
         return '<button class="opt" data-i="'+i+'"><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
@@ -330,9 +421,15 @@
     else if(me.rank===2){ head='\uD83E\uDD48 2nd place!'; sub='You won the Runner-Up Prize - see the host.'; }
     else if(me.rank===3){ head='\uD83E\uDD49 3rd place!'; sub='You won the Third Prize - see the host.'; }
     else { head='Nice game!'; sub='You finished #'+me.rank+' with '+me.score+' points.'; }
-    var prizeBanner = (me.rank<=3) ? '<div class="prizewin">\uD83C\uDF81 '+prizeNames[me.rank-1]+'</div>' : '';
+    var prizeBanner = (me.rank<=3) ?
+      '<div class="rxlabel"><div class="rxl-top"><span>WORLD PHARMACISTS DAY PHARMACY</span><span>Rx #0925-WIN'+me.rank+'</span></div>'+
+      '<div class="rxl-pt">PATIENT: '+esc(name).toUpperCase()+'</div>'+
+      '<div class="rxl-drug">'+prizeNames[me.rank-1].toUpperCase()+'</div>'+
+      '<div class="rxl-sig">Sig: Collect from host STAT. Enjoy with nachos.</div>'+
+      '<div class="rxl-foot"><span>Qty: 1</span><span>Refills: 0</span><span>RPh: &#10004;</span></div></div>'
+      : '<div class="rtitle" style="margin-top:6px">Final title: <b>'+titleFor(me.rank)+'</b></div>';
     main.innerHTML='<div class="card center"><div class="badge">Final results</div>'+
-      '<h1>'+head+'</h1><div class="sub">'+sub+'</div>'+prizeBanner+
+      (me.rank<=3?'<div class="winstk">'+stk('happy',56,'bob',-8)+stk('verified',56,'bob b2',6)+stk('heart',56,'bob b3',-4)+'</div>':'')+'<h1>'+head+'</h1><div class="sub">'+sub+'</div>'+prizeBanner+
       '<div style="text-align:left;margin-top:6px">'+top+'</div>'+
       '<div class="note">&#127881; Happy World Pharmacists Day &mdash; now go get nachos!</div></div>';
     if(me.rank<=3) celebrate();

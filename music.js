@@ -80,6 +80,17 @@
   function sting(kind) {
     try {
       ensure();
+      if (kind === 'bell') {                       // pharmacy counter "ding"
+        var t0 = ctx.currentTime;
+        [1568, 3136, 4700].forEach(function (f, k) {
+          var o = ctx.createOscillator(), g = ctx.createGain();
+          o.type = 'sine'; o.frequency.value = f;
+          g.gain.setValueAtTime([0.22, 0.08, 0.04][k], t0);
+          g.gain.exponentialRampToValueAtTime(0.0008, t0 + 1.4);
+          o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0 + 1.45);
+        });
+        return;
+      }
       var seq = kind === 'win' ? [523, 659, 784, 1047] : kind === 'urgent' ? [880, 880] : [660, 520];
       seq.forEach(function (f, i) {
         setTimeout(function () {

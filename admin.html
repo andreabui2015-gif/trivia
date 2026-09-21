@@ -9,7 +9,24 @@
   :root{--ink:#2A1206;--ink2:#3E1D0C;--mint:#FBEFD2;--dim:#C9A87E;--amber:#F0A828;--amberd:#C8371F;--label:#FBEFD2;--link:#2A1206;--alert:#C8371F;--ok:#2E7D5B;--disp:"Barlow Condensed",Arial,sans-serif;--body:"Barlow",Arial,sans-serif}
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--ink);color:var(--mint);font-family:var(--body);background-image:radial-gradient(circle at 18% 6%,rgba(240,168,40,.20) 0,transparent 42%),radial-gradient(circle at 84% 24%,rgba(200,55,31,.16) 0,transparent 44%),linear-gradient(170deg,#3E1D0C 0%,var(--ink) 55%,#1B0B03 100%);min-height:100vh}
-  .wrap{max-width:1200px;margin:0 auto;padding:18px 20px 40px}
+  body::before{content:'';position:fixed;inset:-240px;pointer-events:none;z-index:0;background-image:var(--bgtile);
+    background-size:240px 240px;animation:drift 80s linear infinite}
+  @keyframes drift{to{transform:translate(240px,240px)}}
+  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;
+    background:radial-gradient(ellipse at 45% 40%,transparent 35%,rgba(20,8,2,.5) 100%)}
+  #stkLayer{position:fixed;inset:0;pointer-events:none;z-index:1;overflow:hidden}
+  #stkLayer .stk{position:absolute}
+  .stk{display:inline-block;filter:drop-shadow(3px 6px 5px rgba(0,0,0,.45));pointer-events:none;user-select:none;vertical-align:middle}
+  .stk svg{width:100%;height:100%;display:block}
+  .bob{animation:bob 3.4s ease-in-out infinite}.bob.b2{animation-duration:4s;animation-delay:-1.3s}.bob.b3{animation-duration:3s;animation-delay:-2.1s}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-9px) rotate(calc(var(--r,0deg) + 4deg))}}
+  .stkrow{display:flex;gap:14px;align-items:center;margin:4px 0 10px}
+  .lblstk{position:absolute;top:-40px;right:-30px;z-index:3}
+  .label .qmeta{padding-right:40px}
+  .label{position:relative}
+  .podstk{display:flex;justify-content:space-between;margin:-4px 6px 0}
+  @media (prefers-reduced-motion:reduce){ body::before,.bob{animation:none!important} }
+  .wrap{position:relative;z-index:2;max-width:1200px;margin:0 auto;padding:18px 20px 40px}
   header{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
     header .logo{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-weight:800;font-size:30px;color:var(--amber)}
   .rxlogo{width:30px;height:30px;color:var(--amber);flex:none}
@@ -92,12 +109,18 @@
   .sdsub{font-family:var(--disp);font-size:24px;color:var(--link)}
   .sdsub b{color:var(--amberd)}
   .sdnote{font-size:15px;color:#6B5A2E;margin-top:8px}
+  .sdstat{display:inline-block;background:var(--alert);color:#fff;font-family:var(--disp);font-weight:800;letter-spacing:.12em;
+    padding:4px 14px;border-radius:6px;font-size:16px;margin-top:6px;animation:blink 1s steps(2) infinite}
+  @keyframes blink{50%{opacity:.55}}
+  .rxno{color:var(--amberd);letter-spacing:.03em}
+  .psig{font-family:"Courier New",monospace;font-size:11px;color:#4A3A12;margin-top:3px}
   .sdlabel{box-shadow:inset 0 0 0 4px var(--alert)}
   .sdlabel .qmeta{color:var(--alert);border-bottom-color:#F0B5A8}
 </style>
 </head>
 <body>
 <canvas id="confetti"></canvas>
+<div id="stkLayer"></div>
 <div class="wrap" id="wrap"><div class="panel gate"><h2>Loading…</h2></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -115,6 +138,18 @@
   var wrap=document.getElementById('wrap');
   var db=null; try{ firebase.initializeApp(CFG.firebase); db=firebase.database(); }catch(e){ wrap.innerHTML='<div class="panel gate"><h2>Not set up yet</h2><div class="hint">Finish the one-time Firebase setup in README.txt, then reload this page.</div></div>'; return; }
   var base=db.ref('rooms/'+ROOM);
+  function stk(name,size,cls,rot,extra){ return '<span class="stk '+(cls||'')+'" style="width:'+size+'px;height:'+size+'px;--r:'+(rot||0)+'deg;transform:rotate('+(rot||0)+'deg);'+(extra||'')+'">'+STAT.STICKERS[name]+'</span>'; }
+  (function decorate(){
+    try{
+      document.documentElement.style.setProperty('--bgtile','url("'+STAT.BG_TILE+'")');
+      var L=[['happy',130,'top:16%;right:3%',10,'bob'],['capsule',112,'top:44%;right:9%',-18,'bob b2'],['nacho',118,'bottom:6%;right:3%',12,'bob b3'],
+             ['bottle',104,'top:66%;right:21%',-8,'bob'],['heart',92,'bottom:4%;left:3%',-12,'bob b2'],['mortar',110,'bottom:8%;left:38%',8,'bob b3'],
+             ['rx',86,'top:30%;left:-26px',-10,'bob'],['blister',96,'top:62%;left:-20px',14,'bob b2'],['stat',100,'top:84%;right:38%',-6,'bob'],
+             ['tablet',78,'top:22%;right:24%',6,'bob b3'],['verified',88,'bottom:22%;right:30%',-14,'bob b2'],['bandaid',84,'top:90%;left:22%',20,'bob']];
+      document.getElementById('stkLayer').innerHTML=L.map(function(x){
+        return '<span class="stk '+x[4]+'" style="width:'+x[1]+'px;height:'+x[1]+'px;'+x[2]+';--r:'+x[3]+'deg">'+STAT.STICKERS[x[0]]+'</span>';}).join('');
+    }catch(e){}
+  })();
   var state={phase:'lobby',qIndex:-1}, players={}, answers={}, scores={}, sdAnswers={};
 
   // ---- host PIN gate ----
@@ -158,7 +193,7 @@
   }
   function autoAdvance(){
     var st=state;
-    if (st.phase==='question'){ try{STATMusic.duck(0.06);}catch(e){} setState({phase:'reveal', endsAt:Date.now()+REVEAL_SEC*1000}); }
+    if (st.phase==='question'){ try{STATMusic.duck(0.06);}catch(e){} setState({phase:'reveal', endsAt:Date.now()+REVEAL_SEC*1000}); try{STATMusic.sting('bell');}catch(e){} }
     else if (st.phase==='reveal'){
       try{STATMusic.duck(0.16);}catch(e){}
       var ni=st.qIndex+1;
@@ -200,7 +235,7 @@
     wrap.innerHTML=
       '<header><div class="logo"><svg class=\"rxlogo\" viewBox=\"0 0 100 100\" aria-hidden=\"true\"><path d=\"M20 46 H80 C80 68 68 80 50 80 C32 80 20 68 20 46 Z\" fill=\"currentColor\"/><rect x=\"16\" y=\"40\" width=\"68\" height=\"9\" rx=\"4.5\" fill=\"currentColor\"/><rect x=\"44\" y=\"82\" width=\"12\" height=\"6\" rx=\"3\" fill=\"currentColor\"/><path d=\"M58 38 L78 14\" stroke=\"currentColor\" stroke-width=\"8\" stroke-linecap=\"round\"/><circle cx=\"80\" cy=\"12\" r=\"7\" fill=\"currentColor\"/></svg>STAT! <small>World Pharmacists Day</small></div><div class="room"><button id="music" class="musicbtn">'+(window.STATMusic&&STATMusic.isOn()?'&#9835; Music on':'&#9835; Music off')+'</button> &nbsp; Room <b>'+ROOM+'</b> · '+Object.keys(players).length+' joined ('+online+' online)</div></header>'+
       '<div class="grid"><div>'+left+'</div>'+
-      '<div class="panel '+(phase==='ended'?'lead':'')+'"><h2>'+(phase==='lobby'?'Players':'Leaderboard')+'</h2>'+(phase==='lobby'?playerList():leaderboard(ranked))+'</div></div>';
+      '<div class="panel '+(phase==='ended'?'lead':'')+'"><h2>'+(phase==='lobby'?'&#128138; Checked in':'&#127942; Pharmacy Leaderboard')+'</h2>'+(phase==='lobby'?playerList():leaderboard(ranked))+'</div></div>';
 
     wireButtons(q,phase);
     // (re)arm the auto timer for timed phases
@@ -217,9 +252,10 @@
 
   function lobbyPanel(online){
     return '<div class="panel"><div class="checkband"></div><h2>&#127881; World Pharmacists Day Trivia</h2>'+
+      '<div class="stkrow">'+stk('mortar',58,'bob',-8)+stk('capsule',54,'bob b2',10)+stk('happy',62,'bob b3',-6)+stk('bottle',54,'bob',8)+stk('nacho',56,'bob b2',-10)+'</div>'+
       '<div class="join"><div id="qr"></div><div class="link">'+
         '<div class="code">Room code &nbsp;<b>'+ROOM+'</b></div>'+
-        '<div class="hint" style="margin:6px 0 8px">Scan the code, or go to:</div>'+
+        '<div class="hint" style="margin:6px 0 8px">Scan to check in at the pharmacy counter, or go to:</div>'+
         '<div class="url">'+playerURL+'</div>'+
         '<button id="copy">Copy link</button>'+
       '</div></div>'+
@@ -238,23 +274,26 @@
     Object.keys(a).forEach(function(p){ if(players[p]){answered++; if(a[p].choice>=0&&a[p].choice<4)counts[a[p].choice]++;} });
     var total=Object.keys(players).length||1;
     var reveal=phase==='reveal';
-    var html='<div class="panel"><div class="label"><div class="qmeta"><span>Round '+q.roundId+' · '+esc(q.roundName)+'</span><span>'+(q.isWager?'Wager 0–5':q.pts+' pt'+(q.pts>1?'s':''))+'</span></div>';
+    var qn=STAT.QUESTIONS.indexOf(q)+1;
+    var cornerSet=['capsule','heart','bottle','rx','tablet','blister','mortar','nacho'];
+    var corner=reveal?'verified':cornerSet[(qn-1)%cornerSet.length];
+    var html='<div class="panel"><div class="label">'+stk(corner,66,'bob lblstk',reveal?-12:10)+'<div class="qmeta"><span><b class="rxno">Rx #0925-'+String(qn).padStart(2,'0')+'</b> &middot; '+esc(q.roundName)+'</span><span>'+qn+' of '+STAT.QUESTIONS.length+' &middot; '+(q.isWager?'Wager 0–5':q.pts+' pt'+(q.pts>1?'s':''))+'</span></div>';
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
     html+=STAT.extraHTML(q).replace(/class="card"/g,'class="cardm"');
     html+='<div class="opts">'+q.options.map(function(o,i){
       var w=(counts[i]/total*100); var cor=(reveal&&i===q.answer)?' correct':'';
       return '<div class="optrow'+cor+'">'+(reveal?'<div class="fill" style="width:'+w+'%"></div>':'')+'<span class="k">'+STAT.LETTERS[i]+'</span><span style="z-index:1">'+esc(o)+'</span>'+(reveal?'<span class="cnt">'+counts[i]+'</span>':'')+'</div>';
     }).join('')+'</div>';
-    if(reveal) html+='<div class="revealans">Answer: '+esc(q.options[q.answer])+'<div class="fact">'+esc(q.fact)+'</div></div>';
+    if(reveal) html+='<div class="revealans">&#10004; Verified answer: '+esc(q.options[q.answer])+'<div class="fact">&#128138; '+esc(q.fact)+'</div></div>';
     html+='<div class="cdwrap"><div class="cdbar"><i id="cdbar"></i></div><div class="cdnum" id="cdnum">'+(phase==='question'?QSEC:REVEAL_SEC)+'</div></div>';
     html+='</div>';
     if(phase==='question'){
       html+='<div class="prog"><span class="answered">'+answered+'<small> / '+Object.keys(players).length+' answered</small></span></div>';
-      html+='<div class="controls"><button class="primary" id="reveal">Reveal now →</button></div>';
-      html+='<div class="hint">Read the question aloud. It reveals automatically after '+QSEC+' seconds — or hit Reveal now to move early.</div>';
+      html+='<div class="controls"><button class="primary" id="reveal">&#10004; Verify now →</button></div>';
+      html+='<div class="hint">Read the question aloud. It verifies automatically after '+QSEC+' seconds — or hit Verify now to move early.</div>';
     } else {
       var last=q.roundId===7;
-      html+='<div class="controls"><button class="primary" id="next">'+(last?'Show final results 🏆':'Next now →')+'</button></div>';
+      html+='<div class="controls"><button class="primary" id="next">'+(last?'Show final results 🏆':'Next Rx →')+'</button></div>';
       html+='<div class="hint">Read the fun fact aloud. Auto-advances in '+REVEAL_SEC+' seconds.</div>';
     }
     html+='</div>';
@@ -290,12 +329,12 @@
         '<div class="pname">'+esc(r.name)+'</div>'+
         '<div class="pscore">'+r.score+' pts</div>'+
         '<div class="pblock" style="height:'+h+'px;background:'+meta[i].c+'">'+
-          '<div class="pplace">'+meta[i].t+'</div><div class="pprize">'+meta[i].p+'</div>'+
+          '<div class="pplace">'+meta[i].t+'</div><div class="pprize">'+meta[i].p+'</div><div class="psig">Qty 1 &middot; Refills 0</div>'+
         '</div></div>';
     }).join('');
     return '<div class="panel"><div class="label" style="text-align:center;padding-bottom:6px">'+
       '<div class="qmeta"><span>Final results</span><span>'+ranked.length+' players</span></div>'+
-      '<div class="winnerline">&#127881; Happy World Pharmacists Day! &#127881;</div>'+
+      '<div class="podstk">'+stk('happy',70,'bob',-12)+stk('verified',64,'bob b2',8)+'</div>'+'<div class="winnerline">&#127881; Happy World Pharmacists Day! &#127881;</div>'+
       '<div class="podium3">'+cols+'</div>'+
       '<div class="prizenote">Top 3 collect your prizes from the host'+(Object.keys(sdAnswers).length?' &middot; decided by sudden death':'')+'</div>'+
       '</div><div class="controls"><button id="reset" class="danger">Reset for another game</button></div></div>';
@@ -305,7 +344,7 @@
   function suddenIntroPanel(){
     return '<div class="panel"><div class="label" style="text-align:center">'+
       '<div class="qmeta"><span>Tiebreaker</span><span>5 questions &middot; 5 seconds each</span></div>'+
-      '<div class="sdtitle">SUDDEN DEATH</div>'+
+      '<div class="sdstat">&#9888; STAT ORDER &#9888;</div><div class="sdtitle">SUDDEN DEATH</div>'+
       '<div class="sdsub">We have a tie: <b>'+esc(state.tiedNames||'')+'</b></div>'+
       '<div class="sdnote">Five quick pop-culture questions. Five seconds each. Fastest correct answers win.</div>'+
       '<div class="cdwrap"><div class="cdbar"><i id="cdbar"></i></div><div class="cdnum" id="cdnum">6</div></div>'+

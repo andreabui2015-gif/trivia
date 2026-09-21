@@ -136,6 +136,86 @@
   SUDDEN.forEach(function (q, i) { q.key = 'sd-' + (i + 1); q.type = 'mc'; q.pts = 1; q.sudden = true;
     q.roundId = 'SD'; q.roundName = 'Sudden Death'; q.fact = ''; });
 
+
+  // ---- Die-cut pharmacy stickers (SVG, 100x100). Pure strings, no DOM. ----
+  var O = 'stroke="#fff" stroke-width="9" stroke-linejoin="round" paint-order="stroke"';
+  var FACE = function (x, y, k) {
+    k = k || 1;
+    var e = 7 * k, r = 2.6 * k, sm = 6 * k, sd = 12 * k, ch = 12 * k;
+    return '<circle cx="' + (x - e) + '" cy="' + y + '" r="' + r + '" fill="#2A1206"/><circle cx="' + (x + e) + '" cy="' + y + '" r="' + r + '" fill="#2A1206"/>' +
+      '<path d="M' + (x - sm) + ' ' + (y + sm) + ' Q' + x + ' ' + (y + sd) + ' ' + (x + sm) + ' ' + (y + sm) + '" fill="none" stroke="#2A1206" stroke-width="' + (2.4 * k) + '" stroke-linecap="round"/>' +
+      '<circle cx="' + (x - ch) + '" cy="' + (y + 5 * k) + '" r="' + (3 * k) + '" fill="#F28C8C" opacity=".8"/><circle cx="' + (x + ch) + '" cy="' + (y + 5 * k) + '" r="' + (3 * k) + '" fill="#F28C8C" opacity=".8"/>';
+  };
+  var STICKERS = {
+    capsule: '<svg viewBox="0 0 100 100"><g transform="rotate(-28 50 50)">' +
+      '<rect x="12" y="32" width="76" height="36" rx="18" fill="#FBEFD2" ' + O + '/>' +
+      '<path d="M50 32 H30 a18 18 0 0 0 0 36 H50 Z" fill="#C8371F"/>' +
+      '<rect x="12" y="32" width="76" height="36" rx="18" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      FACE(64, 46) + '<path d="M22 40 q4 -4 10 -4" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" opacity=".7"/></g></svg>',
+    tablet: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="33" fill="#FFF7EA" ' + O + '/>' +
+      '<circle cx="50" cy="50" r="33" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      FACE(50, 46, 1.7) + '</svg>',
+    bottle: '<svg viewBox="0 0 100 100"><g ' + O + '>' +
+      '<rect x="28" y="10" width="44" height="16" rx="4" fill="#fff" stroke="#2A1206" stroke-width="3"/>' +
+      '<rect x="24" y="24" width="52" height="68" rx="9" fill="#E89A2C" stroke="#2A1206" stroke-width="3"/></g>' +
+      '<rect x="24" y="24" width="52" height="68" rx="9" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      '<rect x="30" y="42" width="40" height="30" rx="3" fill="#FBEFD2" stroke="#2A1206" stroke-width="2"/>' +
+      '<text x="50" y="63" text-anchor="middle" font-family="Arial" font-weight="900" font-size="17" fill="#C8371F">Rx</text>' +
+      '<path d="M32 30 v52" stroke="#fff" stroke-width="3" opacity=".45" stroke-linecap="round"/></svg>',
+    mortar: '<svg viewBox="0 0 100 100"><g ' + O + '>' +
+      '<path d="M60 44 L82 14" stroke="#7A4A22" stroke-width="10" stroke-linecap="round"/>' +
+      '<path d="M16 46 H84 C84 72 70 84 50 84 C30 84 16 72 16 46 Z" fill="#2E7D5B"/></g>' +
+      '<path d="M60 44 L82 14" stroke="#7A4A22" stroke-width="8" stroke-linecap="round"/>' +
+      '<path d="M16 46 H84 C84 72 70 84 50 84 C30 84 16 72 16 46 Z" fill="#2E7D5B" stroke="#2A1206" stroke-width="3"/>' +
+      '<rect x="12" y="41" width="76" height="9" rx="4.5" fill="#3C9A73" stroke="#2A1206" stroke-width="3"/>' +
+      '<text x="50" y="72" text-anchor="middle" font-family="Arial" font-weight="900" font-size="15" fill="#FBEFD2">Rx</text>' +
+      '<path d="M86 30 l3 -6 l3 6 l6 3 l-6 3 l-3 6 l-3 -6 l-6 -3 z" fill="#F0A828"/></svg>',
+    rx: '<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="38" fill="#C8371F" ' + O + '/>' +
+      '<circle cx="50" cy="50" r="38" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      '<circle cx="50" cy="50" r="30" fill="none" stroke="#FBEFD2" stroke-width="2" stroke-dasharray="4 4"/>' +
+      '<text x="50" y="62" text-anchor="middle" font-family="Arial" font-weight="900" font-size="34" fill="#FBEFD2">Rx</text></svg>',
+    heart: '<svg viewBox="0 0 100 100"><path d="M50 84 C20 64 12 48 14 34 C16 20 30 14 40 20 C45 23 48 27 50 31 C52 27 55 23 60 20 C70 14 84 20 86 34 C88 48 80 64 50 84 Z" fill="#E4573D" ' + O + '/>' +
+      '<path d="M50 84 C20 64 12 48 14 34 C16 20 30 14 40 20 C45 23 48 27 50 31 C52 27 55 23 60 20 C70 14 84 20 86 34 C88 48 80 64 50 84 Z" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      '<path d="M26 34 q2 -8 10 -9" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".7"/>' + FACE(50, 48) + '</svg>',
+    happy: '<svg viewBox="0 0 100 100"><path d="M50 4 L59 22 L79 14 L75 34 L95 40 L79 53 L91 70 L70 70 L66 91 L50 78 L34 91 L30 70 L9 70 L21 53 L5 40 L25 34 L21 14 L41 22 Z" fill="#F0A828" ' + O + '/>' +
+      '<path d="M50 4 L59 22 L79 14 L75 34 L95 40 L79 53 L91 70 L70 70 L66 91 L50 78 L34 91 L30 70 L9 70 L21 53 L5 40 L25 34 L21 14 L41 22 Z" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      '<text x="50" y="47" text-anchor="middle" font-family="Arial" font-weight="900" font-size="15" fill="#2A1206">HAPPY</text>' +
+      '<text x="50" y="64" text-anchor="middle" font-family="Arial" font-weight="900" font-size="17" fill="#C8371F">WPD!</text></svg>',
+    stat: '<svg viewBox="0 0 100 100"><path d="M12 20 H88 a8 8 0 0 1 8 8 V62 a8 8 0 0 1 -8 8 H44 L26 86 L30 70 H12 a8 8 0 0 1 -8 -8 V28 a8 8 0 0 1 8 -8 Z" fill="#2E7D5B" ' + O + '/>' +
+      '<path d="M12 20 H88 a8 8 0 0 1 8 8 V62 a8 8 0 0 1 -8 8 H44 L26 86 L30 70 H12 a8 8 0 0 1 -8 -8 V28 a8 8 0 0 1 8 -8 Z" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      '<text x="50" y="55" text-anchor="middle" font-family="Arial" font-weight="900" font-size="26" fill="#FBEFD2">STAT!</text></svg>',
+    blister: '<svg viewBox="0 0 100 100"><g transform="rotate(12 50 50)"><rect x="14" y="20" width="72" height="60" rx="8" fill="#D9DEE3" ' + O + '/>' +
+      '<rect x="14" y="20" width="72" height="60" rx="8" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      [[32,36,'#C8371F'],[50,36,'#F0A828'],[68,36,'#2E7D5B'],[32,62,'#FFF'],[50,62,'#E4573D'],[68,62,'#F0A828']].map(function (p) {
+        return '<circle cx="' + p[0] + '" cy="' + p[1] + '" r="8" fill="' + p[2] + '" stroke="#2A1206" stroke-width="2"/>';
+      }).join('') + '</g></svg>',
+    nacho: '<svg viewBox="0 0 100 100"><path d="M50 8 L92 86 H8 Z" fill="#F2B84B" ' + O + ' stroke-linejoin="round"/>' +
+      '<path d="M50 8 L92 86 H8 Z" fill="none" stroke="#2A1206" stroke-width="3" stroke-linejoin="round"/>' +
+      '<path d="M30 48 Q34 58 38 50 Q44 64 50 50 Q56 62 62 50 Q66 58 70 48 L64 38 H36 Z" fill="#FFD23F" stroke="#2A1206" stroke-width="2"/>' +
+      '<circle cx="26" cy="79" r="3" fill="#2E7D5B"/><circle cx="74" cy="79" r="3" fill="#C8371F"/><circle cx="50" cy="80" r="2.4" fill="#2E7D5B"/>' + FACE(50, 64) + '</svg>',
+    bandaid: '<svg viewBox="0 0 100 100"><g transform="rotate(-35 50 50)"><rect x="8" y="34" width="84" height="32" rx="16" fill="#E8B98A" ' + O + '/>' +
+      '<rect x="8" y="34" width="84" height="32" rx="16" fill="none" stroke="#2A1206" stroke-width="3"/>' +
+      '<rect x="36" y="38" width="28" height="24" rx="4" fill="#F6D6B4" stroke="#2A1206" stroke-width="2"/>' +
+      '<circle cx="44" cy="46" r="1.6" fill="#B07A4E"/><circle cx="56" cy="46" r="1.6" fill="#B07A4E"/><circle cx="44" cy="54" r="1.6" fill="#B07A4E"/><circle cx="56" cy="54" r="1.6" fill="#B07A4E"/></g></svg>',
+    verified: '<svg viewBox="0 0 100 100"><g transform="rotate(-12 50 50)"><circle cx="50" cy="50" r="40" fill="#FBEFD2" ' + O + '/>' +
+      '<circle cx="50" cy="50" r="40" fill="none" stroke="#2E7D5B" stroke-width="5"/>' +
+      '<path d="M32 44 L45 56 L69 32" fill="none" stroke="#2E7D5B" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>' +
+      '<text x="50" y="74" text-anchor="middle" font-family="Arial" font-weight="900" font-size="11.5" fill="#2E7D5B" letter-spacing=".5">VERIFIED</text></g></svg>'
+  };
+
+  // Colorful drifting doodle tile for page backgrounds (CSS url()-ready)
+  var BG_TILE = "data:image/svg+xml;utf8," + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240"><g fill="none" stroke-width="3" stroke-linecap="round">' +
+    '<g stroke="#F0A828" stroke-opacity=".30"><rect x="18" y="24" width="50" height="20" rx="10" transform="rotate(-25 43 34)"/><line x1="43" y1="24" x2="43" y2="44" transform="rotate(-25 43 34)"/></g>' +
+    '<g stroke="#E4573D" stroke-opacity=".28"><circle cx="168" cy="40" r="13"/><line x1="158" y1="40" x2="178" y2="40"/></g>' +
+    '<g stroke="#3C9A73" stroke-opacity=".30"><path d="M112 96 v18 M103 105 h18"/></g>' +
+    '<g stroke="#FBEFD2" stroke-opacity=".16"><rect x="178" y="118" width="30" height="40" rx="5"/><rect x="182" y="110" width="22" height="8" rx="2"/></g>' +
+    '<g stroke="#F0A828" stroke-opacity=".26"><rect x="120" y="178" width="50" height="20" rx="10" transform="rotate(30 145 188)"/></g>' +
+    '<g stroke="#E4573D" stroke-opacity=".24"><path d="M36 150 c-10 -8 -12 -18 -4 -22 c4 -2 8 0 10 4 c2 -4 6 -6 10 -4 c8 4 6 14 -4 22 l-6 4 z"/></g>' +
+    '<g stroke="#3C9A73" stroke-opacity=".26"><circle cx="70" cy="206" r="10"/></g>' +
+    '<g stroke="#FBEFD2" stroke-opacity=".18"><path d="M214 206 v14 M207 213 h14"/><path d="M90 30 v10 M85 35 h10"/></g>' +
+    '</g><text x="96" y="160" font-family="Arial" font-weight="900" font-size="22" fill="#C8371F" fill-opacity=".22">Rx</text></svg>');
+
   function maxScore() {
     return QUESTIONS.reduce(function (s, q) { return s + q.pts; }, 0);
   }
@@ -264,7 +344,7 @@
 
   root.STAT = {
     ROUNDS: ROUNDS, QUESTIONS: QUESTIONS, SUDDEN: SUDDEN, maxScore: maxScore,
-    rankSudden: rankSudden, findTies: findTies,
+    rankSudden: rankSudden, findTies: findTies, STICKERS: STICKERS, BG_TILE: BG_TILE,
     computeScores: computeScores, rankPlayers: rankPlayers,
     trayHTML: trayHTML, extraHTML: extraHTML,
     LETTERS: ['A', 'B', 'C', 'D']
