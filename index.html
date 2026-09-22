@@ -25,8 +25,8 @@
   #stkLayer .stk{position:absolute}
   .strip{display:flex;justify-content:space-around;align-items:center;height:62px;position:relative;z-index:1;pointer-events:none}
   .strip .stk{width:52px;height:52px}
-  #reward{position:fixed;left:50%;top:40%;z-index:50;pointer-events:none;text-align:center;transform:translate(-50%,-50%)}
-  #reward .stk{width:128px;height:128px;animation:popin .9s cubic-bezier(.2,1.6,.4,1) both}
+  #reward{position:fixed;right:10px;bottom:84px;z-index:50;pointer-events:none;text-align:center}
+  #reward .stk{display:block;width:96px;height:96px;animation:popin .9s cubic-bezier(.2,1.6,.4,1) both}
   #reward .cap{display:inline-block;font-family:var(--disp);font-weight:800;font-size:24px;color:#FBEFD2;background:#2A1206;
     border:3px solid #F0A828;border-radius:999px;padding:6px 18px;margin-top:2px;white-space:nowrap;box-shadow:0 8px 20px rgba(0,0,0,.45);
     animation:popin .9s .08s cubic-bezier(.2,1.6,.4,1) both}
@@ -96,6 +96,76 @@
   .fact{font-size:14px;color:#6B5A2E;line-height:1.4;margin-top:4px}
   .pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
   .medal{font-size:44px}
+  /* quips */
+  .quip{display:flex;gap:10px;align-items:center;text-align:left;border-radius:14px;padding:10px 12px;margin:-2px 0 12px;
+    font-family:var(--disp);font-weight:700;font-size:18px;line-height:1.2;animation:qin .45s cubic-bezier(.2,1.4,.4,1) both}
+  .quip .qstk{flex:none;width:44px;height:44px;filter:drop-shadow(1px 2px 2px rgba(0,0,0,.3))}
+  .quip .qstk svg{width:100%;height:100%;display:block}
+  .quip.q-right{background:#E3F4EC;color:#1F5A40;border:2px solid #2E7D5B}
+  .quip.q-wrong{background:#FCE6E1;color:#8A2A18;border:2px solid #E4573D}
+  .quip.q-none{background:#FFF1D6;color:#6B4A12;border:2px solid #F0A828}
+  @keyframes qin{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+  /* final scoreboard */
+  .mypos{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;margin:12px 0 10px;background:var(--link);color:#FBEFD2;
+    border-radius:12px;padding:10px 12px;font-size:13px;box-shadow:4px 4px 0 var(--amber)}
+  .mypos span:first-child{text-align:left;font-family:var(--disp);font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--amber)}
+  .mypos b{font-family:var(--disp);font-weight:800;font-size:34px;color:#fff;line-height:1}
+  .mypos span:last-child{text-align:right}
+  .bhead{display:flex;justify-content:space-between;align-items:center;margin:4px 0 6px;font-family:var(--disp);font-weight:800;
+    font-size:16px;color:var(--amberd);text-transform:uppercase;letter-spacing:.04em}
+  .findme{border:2px solid var(--amberd);background:#fff;color:var(--amberd);border-radius:999px;padding:4px 12px;font-family:var(--disp);font-weight:800;font-size:14px}
+  .board{max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:left;border:2px solid #E7C97D;border-radius:12px;background:#fff;scroll-behavior:auto}
+  .brow{display:grid;grid-template-columns:44px 1fr auto 44px;align-items:center;gap:6px;padding:9px 10px;border-bottom:1px solid #F1E6C8;font-size:15px}
+  .brow:last-child{border-bottom:0}
+  .brow .bk{font-family:var(--disp);font-weight:800;font-size:16px;color:#9A7A52;text-align:center}
+  .brow.top .bk{font-size:20px}
+  .brow .bn{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .brow .bn em{font-style:normal;font-family:var(--disp);font-weight:800;font-size:12px;background:var(--amberd);color:#fff;border-radius:6px;padding:1px 6px;margin-left:4px}
+  .brow .bc{font-size:12px;color:#9A7A52}
+  .brow .bs{font-family:var(--disp);font-size:19px;text-align:right;color:var(--link)}
+  .brow.me{background:var(--amber);position:sticky;top:0;bottom:0;z-index:1;box-shadow:0 0 0 3px var(--amberd) inset}
+  .brow.me .bk,.brow.me .bc{color:var(--link)}
+  .brow.flash{animation:flash .9s ease-in-out 2}
+  @keyframes flash{50%{background:#FFE082}}
+  /* waiting page */
+  .howto{text-align:left;background:#fff;border:2px solid #E7C97D;border-radius:12px;padding:12px 14px;margin-top:4px}
+  .howto h3{font-family:var(--disp);font-weight:800;font-size:17px;color:var(--amberd);text-transform:uppercase;letter-spacing:.04em;margin:2px 0 6px}
+  .howto .rulelist{margin-bottom:8px}.howto .rulelist li{font-size:14px}
+  .rounds{list-style:none;margin:0;padding:0;counter-reset:rd}
+  .rounds li{counter-increment:rd;display:flex;gap:8px;align-items:flex-start;padding:5px 0;border-bottom:1px dashed #EAD9AE;font-size:14px;line-height:1.25}
+  .rounds li:last-child{border-bottom:0}
+  .rounds .ri{flex:none;width:20px;font-size:15px}
+  .rounds b{font-family:var(--disp);font-size:16px;color:var(--link)}.rounds b:before{content:counter(rd) ". ";color:var(--amberd)}
+  .rounds .rs{color:#7A5A38;font-size:13px}
+  /* music button */
+  header{position:relative}
+  .mbtn{margin-left:auto;margin-right:10px;background:transparent;border:1.5px solid #6B4A2A;color:var(--dim);border-radius:999px;
+    padding:4px 11px;font-family:var(--disp);font-weight:700;font-size:13px;cursor:pointer}
+  .mbtn.on{border-color:var(--amber);color:var(--amber)}
+  .mbtn.nudge{border-color:var(--amber);color:#2A1206;background:var(--amber);animation:nud 1.2s ease-in-out infinite}
+  @keyframes nud{50%{transform:scale(1.08)}}
+  /* countdown number */
+  .secs{font-family:var(--disp);font-weight:800;font-size:20px;color:var(--amberd);min-width:1.4ch;text-align:right;display:inline-block;transition:transform .15s}
+  /* ---------- pressure: red closes in, card shakes harder every second ---------- */
+  #press{position:fixed;inset:0;pointer-events:none;z-index:40;transition:box-shadow .3s}
+  body.press1 #press{box-shadow:inset 0 0 40px rgba(228,87,61,.30)}
+  body.press2 #press{box-shadow:inset 0 0 60px rgba(228,87,61,.45)}
+  body.press3 #press{box-shadow:inset 0 0 85px rgba(228,87,61,.60)}
+  body.press4 #press{box-shadow:inset 0 0 110px rgba(228,87,61,.72);animation:pulseg .5s ease-in-out infinite}
+  body.press5 #press{box-shadow:inset 0 0 150px rgba(228,87,61,.88);animation:pulseg .3s ease-in-out infinite}
+  @keyframes pulseg{50%{opacity:.55}}
+  /* shake the timer + Rx header ONLY - answer buttons never move, so nobody mis-taps under pressure */
+  body.press3 .filling,body.press3 .rxhead{animation:shk .5s ease-in-out infinite}
+  body.press4 .filling,body.press4 .rxhead{animation:shk .28s ease-in-out infinite}
+  body.press5 .filling,body.press5 .rxhead{animation:shk2 .16s ease-in-out infinite}
+  @keyframes shk{0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}75%{transform:translate(2px,-1px)}}
+  @keyframes shk2{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(-3px,2px) rotate(-.5deg)}75%{transform:translate(3px,-2px) rotate(.5deg)}}
+  body[class*=press] .secs{color:var(--alert)}
+  body.press3 .secs{transform:scale(1.3)} body.press4 .secs{transform:scale(1.55)} body.press5 .secs{transform:scale(1.8)}
+  body[class*=press] #fillab{color:var(--alert)}
+  body[class*=press] .filling .cdbar i{background:var(--alert)}
+  body.press4 .filling .cdbar,body.press5 .filling .cdbar{animation:pulseg .3s ease-in-out infinite}
+  @media (prefers-reduced-motion:reduce){ body[class*=press] .filling,body[class*=press] .rxhead,body[class*=press] #press,body[class*=press] .cdbar{animation:none!important} }
   .rxhead{border-bottom:2px dashed #E7C97D;padding-bottom:8px;margin-bottom:12px;font-family:var(--disp)}
   .rxtop{display:flex;justify-content:space-between;align-items:baseline}
   .rxno{font-weight:800;font-size:17px;color:var(--amberd);letter-spacing:.03em}
@@ -137,9 +207,11 @@
 </head>
 <body>
 <div id="stkLayer"></div>
+<div id="press"></div>
 <div class="app">
   <header>
     <div class="logo"><svg class="rxlogo" viewBox="0 0 100 100" aria-hidden="true"><path d="M20 46 H80 C80 68 68 80 50 80 C32 80 20 68 20 46 Z" fill="currentColor"/><rect x="16" y="40" width="68" height="9" rx="4.5" fill="currentColor"/><rect x="44" y="82" width="12" height="6" rx="3" fill="currentColor"/><path d="M58 38 L78 14" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="80" cy="12" r="7" fill="currentColor"/></svg><span>STAT!</span></div>
+    <button class="mbtn" id="mbtn" aria-label="Music on/off">&#9835;</button>
     <div class="me" id="me"></div>
   </header>
   <div class="strip" id="stkTop"></div>
@@ -155,6 +227,19 @@
 <script>
 (function(){
   var main=document.getElementById('main'), meEl=document.getElementById('me');
+  var SET={};  // timing published by the host (overrides config.js when the host uses ?qsec=)
+  function QS(){ return +(SET.qsec||CFG.questionSeconds||10); }
+  function SDS(){ return +(SET.sdsec||CFG.suddenDeathSeconds||5); }
+  function wantMusic(){ return localStorage.getItem('stat_music')!=='0'; }
+  ['pointerdown','touchend','click','keydown'].forEach(function(ev){
+    document.addEventListener(ev,function(e){
+      if(e.target && e.target.closest && e.target.closest('#mbtn')) return;
+      if(!name || !wantMusic()) return;
+      try{ if(!STATMusic.isOn()) { STATMusic.start(); musicBtn(); } else STATMusic.arm(); }catch(err){}
+    },{capture:true,passive:true});
+  });
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden && wantMusic()){ try{ STATMusic.arm(); }catch(e){} setTimeout(musicBtn,300); } });
+  document.getElementById('mbtn').onclick=function(){ try{ var on=STATMusic.toggle(); localStorage.setItem('stat_music',on?'1':'0'); }catch(e){} musicBtn(); };
   /* ---------- stickers ---------- */
   function stk(name,size,cls,rot){ return '<span class="stk '+(cls||'')+'" style="width:'+size+'px;height:'+size+'px;--r:'+(rot||0)+'deg;transform:rotate('+(rot||0)+'deg)">'+STAT.STICKERS[name]+'</span>'; }
   (function decorate(){
@@ -177,7 +262,7 @@
       var pick=(ok?GOOD:BAD)[Math.floor(Math.random()*(ok?GOOD:BAD).length)];
       var old=document.getElementById('reward'); if(old) old.remove();
       var d=document.createElement('div'); d.id='reward';
-      d.innerHTML='<span class="stk">'+STAT.STICKERS[pick[0]]+'</span><div class="cap">'+pick[1]+'</div>';
+      d.innerHTML='<span class="stk">'+STAT.STICKERS[pick[0]]+'</span>';
       document.body.appendChild(d);
       setTimeout(function(){ d.classList.add('out'); },1250);
       setTimeout(function(){ if(d.parentNode) d.remove(); },1900);
@@ -198,7 +283,17 @@
   if(!db) return;
 
   var base=db.ref('rooms/'+ROOM);
-  var state={phase:'lobby',qIndex:-1}, players={}, scores={}, myAnswers={}, sdMine={}, sdAll={};
+  var OFF=0; try{ db.ref('.info/serverTimeOffset').on('value',function(s){ OFF=+(s.val()||0); }); }catch(e){}
+  function now(){ return Date.now()+OFF; }
+  base.child('settings').on('value',function(s){ SET=s.val()||{};
+    setTimeout(function(){   // async + in-place: never wipes a half-typed name, never runs before the page is ready
+      var a=document.getElementById('jq'), b=document.getElementById('jsd'); if(a) a.textContent=QS(); if(b) b.textContent=SDS();
+      if(name && typeof draw==='function') { try{ draw(); }catch(e){} }
+    },0); });
+  // stopwatch starts the FIRST time this phone shows a question - redraws caused by other players must not reset it
+  var shownAt={};
+  function markShown(key){ if(!shownAt[key]) shownAt[key]=Date.now(); return shownAt[key]; }
+  var state={phase:'lobby',qIndex:-1}, players={}, scores={}, myAnswers={}, sdMine={}, sdAll={}, allAns={};
   var qShownAt=0, pickedWager=null, lowTimer=null;
 
   function renderFatal(msg){ main.innerHTML='<div class="card center"><h1>Hmm.</h1><div class="sub">'+msg+'</div></div>'; }
@@ -213,14 +308,14 @@
         '<h1>Pharmacy Trivia<br><span class="h1sub">Celebration Game</span></h1>'+
         '<div class="sub">20 questions. Tap your answer on your phone. Pharmacists, techs and interns &mdash; everyone plays.</div>'+
         '<ul class="rulelist">'+
-          '<li><b>10 seconds</b> per question &mdash; it moves on automatically, so answer fast.</li>'+
+          '<li><b><span id="jq">'+QS()+'</span> seconds</b> per question &mdash; it moves on automatically, so answer fast.</li>'+
           '<li><b>Faster = better.</b> Ties are broken by who answered quickest.</li>'+
-          '<li><b>Sudden death</b> if anyone is still tied: 5 questions, 5 seconds each.</li>'+
+          '<li><b>Sudden death</b> if anyone is still tied: 5 questions, <span id="jsd">'+SDS()+'</span> seconds each.</li>'+
           '<li><b>Prizes</b> for 1st, 2nd and 3rd place.</li>'+
         '</ul>'+
         '<label for="nm">Your name (players will see this)</label>'+
         '<input id="nm" maxlength="24" autocomplete="name" placeholder="e.g. Aisha, tech" value="'+esc(name)+'">'+
-        '<label class="musicopt"><input type="checkbox" id="mus" checked> Play music on my phone</label>'+
+        '<div class="musicopt">&#128266; Music plays on your phone &mdash; turn your volume up! (Tap &#9835; at the top to mute.)</div>'+
         '<button class="go" id="join">Join the game</button>'+
         '<div class="note">&#127881; Happy World Pharmacists Day &mdash; good luck!</div>'+
       '</div>';
@@ -232,9 +327,8 @@
   function doJoin(){
     var v=document.getElementById('nm').value.trim().slice(0,24);
     if(!v){document.getElementById('nm').focus();return;}
-    var wantMusic=document.getElementById('mus'); wantMusic=!wantMusic||wantMusic.checked;
-    localStorage.setItem('stat_music',wantMusic?'1':'0');
-    try{ STATMusic.arm(); if(wantMusic) STATMusic.start(); }catch(e){}
+    var wantMusic=localStorage.getItem('stat_music')!=='0';
+    try{ STATMusic.arm(); STATMusic.setSong('lobby'); if(wantMusic) STATMusic.start(); }catch(e){} setTimeout(musicBtn,50);
     name=v; localStorage.setItem('stat_name_'+ROOM,name);
     base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP});
     base.child('players/'+pid+'/online').onDisconnect().set(false);
@@ -247,38 +341,66 @@
     base.child('state').on('value',function(s){ state=s.val()||{phase:'lobby',qIndex:-1}; draw(); });
     base.child('players').on('value',function(s){ players=s.val()||{}; draw(); });
     base.child('sudden').on('value',function(s){ sdAll=s.val()||{}; sdMine={}; Object.keys(sdAll).forEach(function(k){ if(sdAll[k]&&sdAll[k][pid])sdMine[k]=sdAll[k][pid]; }); draw(); });
-    base.child('answers').on('value',function(s){ var a=s.val()||{}; myAnswers={}; Object.keys(a).forEach(function(qk){ if(a[qk]&&a[qk][pid])myAnswers[qk]=a[qk][pid]; }); scores=STAT.computeScores(players,a); draw(); });
+    base.child('answers').on('value',function(s){ var a=s.val()||{}; allAns=a; myAnswers={}; Object.keys(a).forEach(function(qk){ if(a[qk]&&a[qk][pid])myAnswers[qk]=a[qk][pid]; }); scores=STAT.computeScores(players,a); draw(); });
     draw();
   }
 
   var TITLES=['Pill Counting Prodigy','Label Legend','Capsule Captain','Tablet Titan','Vial Virtuoso','Sig Code Savant','Blister Pack Boss','Refill Royalty'];
   function titleFor(rank){ return TITLES[(Math.max(1,rank)-1)%TITLES.length]; }
+  function setSong(k){ try{ STATMusic.setSong(k); }catch(e){} }
+  var vTimer=null;   // victory music plays ~20s on phones, then goes quiet (battery + sanity)
+  function victoryStop(arm){ clearTimeout(vTimer); vTimer=null; if(arm) vTimer=setTimeout(function(){ try{STATMusic.stop(); musicBtn();}catch(e){} },20000); }
+  /* ---------- last-5-seconds pressure: one level per second ---------- */
+  var pressLvl=0;
+  setInterval(pressTick,120);
+  function pressTick(){
+    var ph=state.phase, lvl=0;
+    if(!state.paused && (ph==='question'||ph==='sudden') && state.endsAt){
+      var left=state.endsAt-now(); if(left>0 && left<=5000) lvl=Math.min(5, 6-Math.ceil(left/1000));
+      var sec=document.getElementById('secs'); if(sec) sec.textContent=Math.max(0,Math.ceil(left/1000));
+    }
+    if(lvl!==pressLvl){ var up=lvl>pressLvl; pressLvl=lvl;
+      document.body.className=document.body.className.replace(/\bpress\d\b/g,'').trim()+(lvl?' press'+lvl:'');
+      try{STATMusic.setPressure(lvl);}catch(e){}
+      if(up && lvl && navigator.vibrate && localStorage.getItem('stat_music')!=='0'){ try{navigator.vibrate(lvl>=4?[60,40,60]:40+lvl*15);}catch(e){} }
+      var lab=document.getElementById('fillab'); if(lab) lab.textContent=lvl>=3?'HURRY!':'Filling…';
+    }
+  }
+  /* ---------- music button (needed after a page reload: phones only allow sound after a tap) ---------- */
+  function musicBtn(){ var b=document.getElementById('mbtn'); if(!b) return;
+    var want=localStorage.getItem('stat_music')!=='0', on=false; try{on=STATMusic.isOn();}catch(e){}
+    b.textContent=on?'♫ On':'♫ Off'; b.className='mbtn'+(on?' on':(want?' nudge':'')); }
   function myRank(){ var r=STAT.rankPlayers(players,scores).find(function(x){return x.pid===pid;}); return r||{rank:'—',score:0}; }
 
   function draw(){
+    musicBtn(); pressTick();
     if(!name){ renderJoin(); return; }
     var r=myRank();
     meEl.innerHTML='<span>'+esc(name)+'</span><b>'+r.score+' pts · #'+r.rank+'</b>';
     var phase=state.phase, qi=state.qIndex;
     var q=(qi>=0&&qi<STAT.QUESTIONS.length)?STAT.QUESTIONS[qi]:null;
 
+    var MID={question:1,reveal:1,sudden_intro:1,sudden:1,sudden_reveal:1};
+    if(state.paused && MID[phase]){ setSong('lobby'); drawPaused(); return; }
     if(phase==='lobby'){
+      setSong('lobby'); victoryStop();
       var n=Object.keys(players).length;
       main.innerHTML='<div class="card center"><div class="checkband"></div><div class="badge">Rx received &middot; Room '+ROOM+'</div>'+
         '<svg class="bottle" viewBox="0 0 80 110" aria-hidden="true"><rect x="14" y="4" width="52" height="16" rx="4" fill="#F7F3EA" stroke="#2A1206" stroke-width="3"/><rect x="10" y="20" width="60" height="84" rx="10" fill="#E89A2C" fill-opacity=".35" stroke="#2A1206" stroke-width="3"/><rect x="18" y="42" width="44" height="30" rx="3" fill="#FBEFD2" stroke="#2A1206" stroke-width="2"/><text x="40" y="62" text-anchor="middle" font-family="Arial" font-weight="700" font-size="14" fill="#C8371F">Rx</text><g class="pillsfall"><circle cx="30" cy="94" r="5" fill="#fff"/><circle cx="44" cy="96" r="5" fill="#fff"/><circle cx="52" cy="90" r="5" fill="#C8371F"/><circle cx="38" cy="86" r="5" fill="#fff"/></g></svg>'+
-        '<h1>You\'re in!</h1><div class="sub">Your order is in the queue. The pharmacist (host) starts the game shortly. '+n+' player'+(n===1?'':'s')+' checked in so far.</div>'+
-        '<div class="big pulse" style="color:var(--amberd);margin-top:4px">Now filling&hellip;</div></div>';
+        '<h1>You\'re in!</h1><div class="sub">Your order is in the queue. The pharmacist (host) starts the game shortly. <b>'+n+'</b> player'+(n===1?'':'s')+' checked in so far.</div>'+
+        '<div class="big pulse" style="color:var(--amberd);margin:2px 0 10px">Now filling&hellip;</div>'+rulesCard()+'</div>';
       return;
     }
-    if(phase==='ended'){ try{STATMusic.setMode('normal');STATMusic.stop();}catch(e){} drawFinal(); return; }
+    if(phase==='ended'){ setSong('victory'); victoryStop(true); drawFinal(); return; }
     if(phase==='sudden_intro'){ try{STATMusic.setMode('sudden');}catch(e){} drawSuddenIntro(); return; }
     if(phase==='sudden'||phase==='sudden_reveal'){ try{STATMusic.setMode('sudden');}catch(e){} drawSudden(phase); return; }
     if(!q){ main.innerHTML='<div class="card center pulse">…</div>'; return; }
 
+    setSong(STATMusic.songForRound(q.roundId));
     var mine=myAnswers[q.key];
     if(phase==='question'){
       if(mine){ drawLocked(q,mine); }
-      else { drawQuestion(q); }
+      else if(!main.querySelector('[data-qv="'+q.key+'"]')) drawQuestion(q);   // already showing -> leave the buttons alone
     } else if(phase==='reveal'){
       if(window._lastBell!==q.key){ window._lastBell=q.key; if(localStorage.getItem('stat_music')!=='0'){ try{STATMusic.sting('bell');}catch(e){} } if(mine) reward(mine.choice===q.answer); }
       drawReveal(q,mine);
@@ -293,9 +415,9 @@
   }
 
   function drawQuestion(q){
-    qShownAt=Date.now(); pickedWager=(q.isWager?(pickedWager||0):null);
-    var html='<div class="card">'+qmeta(q);
-    html+='<div class="filling"><span>Filling&hellip;</span><div class="cdbar"><i id="bar"></i></div></div>';
+    qShownAt=markShown(q.key); pickedWager=(q.isWager?(pickedWager||0):null);
+    var html='<div class="card" data-qv="'+q.key+'">'+qmeta(q);
+    html+='<div class="filling"><span id="fillab">Filling&hellip;</span><div class="cdbar"><i id="bar"></i></div><b id="secs" class="secs">'+QS()+'</b></div>';
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
     html+=STAT.extraHTML(q).replace(/<div class="mock/g,'<div class="mock').replace(/class="card"/g,'class="cardm"');
     if(q.isWager){
@@ -306,14 +428,14 @@
     main.innerHTML=html;
     if(q.isWager){ Array.prototype.forEach.call(document.querySelectorAll('#wg button'),function(b){ b.onclick=function(){ pickedWager=+b.dataset.w; document.querySelectorAll('#wg button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel'); }; }); }
     Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(b){ b.onclick=function(){ submit(q,+b.dataset.i); }; });
-    runBar(10);
+    runBar(QS());
   }
   function runBar(totalSec){
     var bar=document.getElementById('bar'); if(!bar)return;
-    var ends=state.endsAt||(Date.now()+totalSec*1000);
+    var ends=state.endsAt||(now()+totalSec*1000);
     clearInterval(lowTimer);
     lowTimer=setInterval(function(){
-      var left=ends-Date.now(), pct=Math.max(0,Math.min(1,left/(totalSec*1000)));
+      var left=ends-now(), pct=Math.max(0,Math.min(1,left/(totalSec*1000)));
       bar.style.width=(pct*100)+'%';
       if(pct<0.3) bar.classList.add('low');
       if(left<=0) clearInterval(lowTimer);
@@ -339,6 +461,7 @@
     var got=mine&&mine.choice===q.answer;
     var html='<div class="card">'+qmeta(q);
     html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?(q.isWager?'&#10004; VERIFIED! +'+(mine.wager||0):'&#10004; VERIFIED! +'+q.pts):(mine?(q.isWager?'&#10008; REJECTED &minus;'+(mine.wager||0):'&#10008; REJECTED at verification'):'&#10008; Never dispensed'))+'</div>';
+    html+=quipHTML(q,mine,STAT.QUESTIONS,STAT.QUESTIONS.indexOf(q));
     html+=q.options.map(function(o,i){var c=i===q.answer?' correct':(mine&&i===mine.choice?' wrong':'');return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
     html+='<div class="fact">'+esc(q.fact)+'</div>';
     var r=myRank();
@@ -348,26 +471,47 @@
     main.innerHTML=html;
   }
 
+  /* ---------- quips: unique per player, never repeat within a game, stable across reloads ---------- */
+  function outcome(q,a){ return !a ? 'none' : (a.choice===q.answer ? 'right' : 'wrong'); }
+  // Lines are dealt to the WHOLE room at once (every phone computes the same result), so nobody repeats
+  // and neighbours never get the same line on the same question. Once shown, a line is saved and never changes.
+  function quipCache(){ try{ return JSON.parse(localStorage.getItem('stat_q_'+ROOM+'_'+(state.game||'g'))||'{}'); }catch(e){ return {}; } }
+  function quipHTML(q,a,list,upto){
+    var cache=quipCache(), sdPids={};
+    Object.keys(sdAll||{}).forEach(function(k){ Object.keys(sdAll[k]||{}).forEach(function(p){ sdPids[p]=1; }); });
+    if((state.tiedNames||'').indexOf(name)>-1) sdPids[pid]=1;
+    var all=Object.keys(players); if(all.indexOf(pid)<0) all.push(pid);
+    var d=STAT.dealQuips(list.slice(0,upto+1),
+      function(qq,p){ if(p===pid) return (qq.sudden?sdMine:myAnswers)[qq.key]; return ((qq.sudden?sdAll:allAns)[qq.key]||{})[p]; },
+      function(qq){ return qq.sudden ? Object.keys(sdPids) : all; },
+      ROOM+':'+(state.game||'g'), pid, cache);
+    var mineQ=(d[q.key]||{})[pid]; if(!mineQ) return '';
+    if(!cache[q.key]){ cache[q.key]=mineQ.line; try{ localStorage.setItem('stat_q_'+ROOM+'_'+(state.game||'g'),JSON.stringify(cache)); }catch(e){} }
+    var st={right:'verified',wrong:'bandaid',none:'tablet'}[mineQ.kind];
+    return '<div class="quip q-'+mineQ.kind+'"><span class="qstk">'+STAT.STICKERS[st]+'</span><span class="qtx">'+esc(cache[q.key])+'</span></div>';
+  }
   function drawSuddenIntro(){
     var iAmIn = (state.tiedNames||'').indexOf(name)>-1;
     main.innerHTML='<div class="card center">'+
       '<div class="sdbanner">&#9889; SUDDEN DEATH &#9889;</div>'+
       '<h1>'+(iAmIn?'You\'re in the tiebreak!':'Tiebreak time')+'</h1>'+
       '<div class="sub">Tied: <b>'+esc(state.tiedNames||'')+'</b></div>'+
-      '<div class="sub" style="margin-top:8px">5 pop-culture questions. <b>5 seconds each.</b> Fastest correct answers win. Everyone can play along.</div>'+
+      '<div class="sub" style="margin-top:8px">5 pop-culture questions. <b>'+SDS()+' seconds each.</b> Fastest correct answers win. Everyone can play along.</div>'+
       '<div class="big pulse" style="color:var(--amberd);margin-top:6px">Get ready\u2026</div></div>';
   }
   function drawSudden(phase){
     var si=state.sdIndex||0, q=STAT.SUDDEN[si];
     if(!q){ main.innerHTML='<div class="card center pulse">\u2026</div>'; return; }
     var mine=sdMine[q.key], reveal=(phase==='sudden_reveal');
-    var html='<div class="card">'+
-      '<div class="qmeta"><span style="color:var(--alert)">SUDDEN DEATH &middot; '+(si+1)+' of '+STAT.SUDDEN.length+'</span><span>5 sec</span></div>';
+    if(!reveal && !mine && main.querySelector('[data-sv="'+q.key+'"]')) return;   // already showing -> don't eat taps
+    var html='<div class="card"'+(!reveal&&!mine?' data-sv="'+q.key+'"':'')+'>'+
+      '<div class="qmeta"><span style="color:var(--alert)">SUDDEN DEATH &middot; '+(si+1)+' of '+STAT.SUDDEN.length+'</span><span>'+SDS()+' sec</span></div>';
     if(!reveal) html+='<div class="cdbar"><i id="bar"></i></div>';
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
     if(reveal){
       var got=mine&&mine.choice===q.answer;
       html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?'&#10004; VERIFIED':(mine?'&#10008; REJECTED':'&#10008; Never dispensed'))+'</div>';
+      if((state.tiedNames||'').indexOf(name)>-1) html+=quipHTML(q,mine,STAT.QUESTIONS.concat(STAT.SUDDEN),STAT.QUESTIONS.length+si);
       html+=q.options.map(function(o,i){var c=i===q.answer?' correct':(mine&&i===mine.choice?' wrong':'');
         return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
     } else if(mine){
@@ -381,7 +525,7 @@
     html+='</div>';
     main.innerHTML=html;
     if(!reveal && !mine){
-      qShownAt=Date.now();
+      qShownAt=markShown(q.key);
       Array.prototype.forEach.call(document.querySelectorAll('.opt[data-i]'),function(b){
         b.onclick=function(){
           var rec={choice:+b.dataset.i, ms:Date.now()-qShownAt};
@@ -389,38 +533,49 @@
           base.child('sudden/'+q.key+'/'+pid).set(rec).catch(function(){});
         };
       });
-      runBar(5);
+      runBar(SDS());
     }
   }
 
+  function rulesCard(){
+    var R=STAT.roundSummary(), ic={pop:'&#127916;',pharm:'&#128138;',wager:'&#127922;'};
+    var qs=QS();
+    return '<div class="howto"><h3>How to play</h3><ul class="rulelist">'+
+      '<li><b>'+qs+' seconds</b> per question &mdash; it moves on by itself. The last 5 seconds get intense!</li>'+
+      '<li><b>Tap fast.</b> Ties go to whoever answered quickest.</li>'+
+      '<li><b>Sudden death</b> breaks any tie for the top 3: 5 easy questions, '+SDS()+' seconds each.</li>'+
+      '<li><b>Prizes</b> for 1st, 2nd &amp; 3rd.</li></ul>'+
+      '<h3>The '+R.length+' rounds</h3><ol class="rounds">'+R.map(function(r){
+        return '<li><span class="ri">'+(ic[r.kind]||'&#11088;')+'</span><span><b>'+esc(r.name)+'</b><br><span class="rs">'+esc(r.short)+'</span></span></li>';}).join('')+
+      '</ol></div>';
+  }
+  function drawPaused(){
+    main.innerHTML='<div class="card center"><div class="checkband"></div><div class="badge">&#9208; Paused</div>'+
+      '<h1>Hold that thought</h1><div class="sub">The host is reconnecting. Your score is safe &mdash; the game picks up right where it left off.</div>'+
+      '<div class="big pulse" style="color:var(--amberd)">Please wait&hellip;</div></div>';
+  }
+  var lastFinalSig='', celebrated='';
   function drawFinal(){
-    var ranked=STAT.rankPlayers(players,scores);
-    if(Object.keys(sdAll).length){
-      var sdRank=STAT.rankSudden(players,sdAll);
-      var order={}; sdRank.forEach(function(r,i){ order[r.pid]=i; });
-      var tiedSet={}; STAT.findTies(ranked).forEach(function(t){ tiedSet[t.pid]=1; });
-      ranked.sort(function(a,b){
-        if(b.score!==a.score) return b.score-a.score;
-        if(tiedSet[a.pid]&&tiedSet[b.pid]) return (order[a.pid]===undefined?99:order[a.pid])-(order[b.pid]===undefined?99:order[b.pid]);
-        if(a.totalMs!==b.totalMs) return a.totalMs-b.totalMs;
-        return a.name.localeCompare(b.name);
-      });
-      ranked.forEach(function(r,i){ r.rank=i+1; });
-    }
-    var me=ranked.find(function(x){return x.pid===pid;})||{rank:'-',score:0};
+    var ranked=STAT.finalRanking(players,scores,sdAll);
+    var me=ranked.find(function(x){return x.pid===pid;})||{rank:'-',score:0,correct:0};
+    // only redraw when the RESULTS change - otherwise the list would jump to the top while you scroll
+    var sig=ranked.map(function(r){return r.pid+':'+r.rank+':'+r.score;}).join('|')+'#'+name;
+    if(sig===lastFinalSig && document.getElementById('board')) return;
+    lastFinalSig=sig;
     var medals=['\uD83E\uDD47','\uD83E\uDD48','\uD83E\uDD49'];
     var prizeNames=['Grand Prize','Runner-Up Prize','Third Prize'];
-    var top=ranked.slice(0,5).map(function(r){
-      var mine=r.pid===pid;
-      var badge=medals[r.rank-1]||('#'+r.rank);
-      return '<div class="opt'+(mine?' chosen':'')+'" disabled style="justify-content:space-between">'+
-        '<span><span class="k">'+badge+'</span> '+esc(r.name)+'</span><b>'+r.score+'</b></div>';
+    var total=ranked.length;
+    var rows=ranked.map(function(r){
+      var mine=r.pid===pid, badge=medals[r.rank-1]||('#'+r.rank);
+      return '<div class="brow'+(mine?' me':'')+(r.rank<=3?' top':'')+'"'+(mine?' id="myrow"':'')+'>'+
+        '<span class="bk">'+badge+'</span><span class="bn">'+esc(r.name)+(mine?' <em>YOU</em>':'')+'</span>'+
+        '<span class="bc">'+r.correct+'/'+STAT.QUESTIONS.length+'</span><b class="bs">'+r.score+'</b></div>';
     }).join('');
     var head, sub;
     if(me.rank===1){ head='\uD83C\uDF89 You won!'; sub='1st place - come collect the Grand Prize.'; }
     else if(me.rank===2){ head='\uD83E\uDD48 2nd place!'; sub='You won the Runner-Up Prize - see the host.'; }
     else if(me.rank===3){ head='\uD83E\uDD49 3rd place!'; sub='You won the Third Prize - see the host.'; }
-    else { head='Nice game!'; sub='You finished #'+me.rank+' with '+me.score+' points.'; }
+    else { head='Nice game!'; sub='You finished #'+me.rank+' of '+total+' with '+me.score+' points.'; }
     var prizeBanner = (me.rank<=3) ?
       '<div class="rxlabel"><div class="rxl-top"><span>WORLD PHARMACISTS DAY PHARMACY</span><span>Rx #0925-WIN'+me.rank+'</span></div>'+
       '<div class="rxl-pt">PATIENT: '+esc(name).toUpperCase()+'</div>'+
@@ -429,10 +584,18 @@
       '<div class="rxl-foot"><span>Qty: 1</span><span>Refills: 0</span><span>RPh: &#10004;</span></div></div>'
       : '<div class="rtitle" style="margin-top:6px">Final title: <b>'+titleFor(me.rank)+'</b></div>';
     main.innerHTML='<div class="card center"><div class="badge">Final results</div>'+
-      (me.rank<=3?'<div class="winstk">'+stk('happy',56,'bob',-8)+stk('verified',56,'bob b2',6)+stk('heart',56,'bob b3',-4)+'</div>':'')+'<h1>'+head+'</h1><div class="sub">'+sub+'</div>'+prizeBanner+
-      '<div style="text-align:left;margin-top:6px">'+top+'</div>'+
+      (me.rank<=3?'<div class="winstk">'+stk('happy',56,'bob',-8)+stk('verified',56,'bob b2',6)+stk('heart',56,'bob b3',-4)+'</div>':'')+
+      '<h1>'+head+'</h1><div class="sub">'+sub+'</div>'+prizeBanner+
+      '<div class="mypos"><span>Your position</span><b>#'+me.rank+'</b><span>of '+total+' &middot; '+me.score+' pts &middot; '+(me.correct||0)+' correct</span></div>'+
+      '<div class="bhead"><span>Full scoreboard</span><button id="findme" class="findme">&#128205; Find me</button></div>'+
+      '<div class="board" id="board">'+rows+'</div>'+
       '<div class="note">&#127881; Happy World Pharmacists Day &mdash; now go get nachos!</div></div>';
-    if(me.rank<=3) celebrate();
+    function toMe(smooth){ var b=document.getElementById('board'), m=document.getElementById('myrow'); if(!b||!m) return;
+      b.scrollTo({top:m.offsetTop-b.offsetTop-b.clientHeight/2+m.clientHeight/2, behavior:smooth?'smooth':'auto'}); }
+    setTimeout(function(){ toMe(false); },30);
+    document.getElementById('findme').onclick=function(){ toMe(true); var m=document.getElementById('myrow'); if(m){ m.classList.remove('flash'); void m.offsetWidth; m.classList.add('flash'); } };
+    var gk=(state.game||'g');
+    if(me.rank<=3 && celebrated!==gk){ celebrated=gk; celebrate(); }   // fanfare once per game, not on every redraw
   }
   function celebrate(){
     if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;

@@ -8,7 +8,7 @@
 
   // ---- Content. Every question is 4-option multiple choice so scoring is automatic. ----
   var ROUNDS = [
-    { id: 1, name: 'Y2K Throwback', pts: 1, blurb: 'Early 2000s. If you owned a flip phone, this is your round.',
+    { id: 1, name: 'Y2K Throwback', short: 'Early-2000s movies & pop hits', kind: 'pop', pts: 1, blurb: 'Early 2000s. If you owned a flip phone, this is your round.',
       q: [
         { type: 'mc', prompt: 'Which boy band released "Bye Bye Bye" in 2000?',
           options: ['Backstreet Boys','*NSYNC','98 Degrees','O-Town'], answer: 1,
@@ -20,7 +20,7 @@
           options: ['Mondays','Wednesdays','Fridays','Every day'], answer: 1,
           fact: '"On Wednesdays we wear pink." October 3rd is now unofficially Mean Girls Day.' }
       ] },
-    { id: 2, name: 'Count It', pts: 2, blurb: 'Count the tray. Techs, this is your moment to shine.',
+    { id: 2, name: 'Count It', short: 'Count the pills on the tray', kind: 'pharm', pts: 2, blurb: 'Count the tray. Techs, this is your moment to shine.',
       q: [
         { type: 'count', seed: 11, kind: 'tab', count: 27, prompt: 'How many tablets are on this tray?',
           options: ['24','27','30','33'], answer: 1,
@@ -29,7 +29,7 @@
           options: ['39','41','43','45'], answer: 1,
           fact: 'Double-count anything controlled. CII counts need a second set of initials.' }
       ] },
-    { id: 3, name: 'Name That Tune', pts: 1, blurb: 'Early 2000s radio. You know these.',
+    { id: 3, name: 'Name That Tune', short: '2000s radio — who sang it?', kind: 'pop', pts: 1, blurb: 'Early 2000s radio. You know these.',
       q: [
         { type: 'mc', prompt: 'Who sang the 2002 hit "Complicated"?',
           options: ['Michelle Branch','Avril Lavigne','Vanessa Carlton','Pink'], answer: 1,
@@ -41,7 +41,7 @@
           options: ['OutKast','Black Eyed Peas','Gnarls Barkley','The Roots'], answer: 0,
           fact: 'Shake it like a Polaroid picture. Polaroid actually put out a statement asking people to please not do that.' },
       ] },
-    { id: 4, name: 'Spot the Error', pts: 2, blurb: 'One thing is wrong on each label. Tap what it is.',
+    { id: 4, name: 'Spot the Error', short: 'Find the mistake on the Rx label', kind: 'pharm', pts: 2, blurb: 'One thing is wrong on each label. Tap what it is.',
       q: [
         { type: 'spot', layout: 'pair',
           cards: [
@@ -51,7 +51,7 @@
           options: ['Wrong quantity','Wrong drug — metoprolol for metformin','Wrong directions','Wrong patient'], answer: 1,
           fact: 'Metformin / metoprolol is a classic look-alike. The Sig and quantity matched perfectly, which is exactly why it slips through.' },
       ] },
-    { id: 5, name: 'Small Screen', pts: 1, blurb: 'TV you definitely watched.',
+    { id: 5, name: 'Small Screen', short: 'TV shows you definitely binged', kind: 'pop', pts: 1, blurb: 'TV you definitely watched.',
       q: [
         { type: 'mc', prompt: 'In The Office (US), what is the name of the paper company?',
           options: ['Dunder Mifflin','Vance Refrigeration','Sabre','Staples'], answer: 0,
@@ -63,7 +63,7 @@
           options: ['Survivor','American Idol','The Bachelor','Big Brother'], answer: 1,
           fact: 'At its 2006 peak, over 30 million people watched the finale — more than most Super Bowls that decade.' },
       ] },
-    { id: 6, name: 'Pharmacy 101', pts: 2, blurb: 'Things every pharmacy student knows. Everyone else, guess wisely.',
+    { id: 6, name: 'Pharmacy 101', short: 'What every pharmacy student knows', kind: 'pharm', pts: 2, blurb: 'Things every pharmacy student knows. Everyone else, guess wisely.',
       q: [
         { type: 'mc', prompt: 'What is the antidote for an acetaminophen (Tylenol) overdose?',
           options: ['Naloxone','N-acetylcysteine','Flumazenil','Protamine'], answer: 1,
@@ -72,7 +72,7 @@
           options: ['Vitamin C','Vitamin K','Vitamin D','Vitamin B12'], answer: 1,
           fact: 'Warfarin blocks vitamin K recycling. 4-factor PCC works in minutes; vitamin K takes hours because the liver must build new clotting factors.' },
       ] },
-    { id: 7, name: 'Emoji Decode', pts: 2, blurb: 'What movie is this?',
+    { id: 7, name: 'Emoji Decode', short: 'Guess the movie from emojis', kind: 'pop', pts: 2, blurb: 'What movie is this?',
       q: [
         { type: 'mc', prompt: 'LION + CROWN + SUNRISE  ( 🦁 👑 🌅 )',
           options: ['Madagascar','The Lion King','Zootopia','Jungle Book'], answer: 1,
@@ -81,7 +81,7 @@
           options: ['Lord of the Rings','Narnia','Harry Potter','Percy Jackson'], answer: 2,
           fact: 'Rejected by twelve publishers before Bloomsbury took a chance on it.' },
       ] },
-    { id: 8, name: 'Sound-Alike Showdown', pts: 2, blurb: 'The look-alike, sound-alike round.',
+    { id: 8, name: 'Sound-Alike Showdown', short: 'Look-alike, sound-alike drug names', kind: 'pharm', pts: 2, blurb: 'The look-alike, sound-alike round.',
       q: [
         { type: 'mc', prompt: 'Hydroxyzine is constantly confused with which blood pressure drug?',
           options: ['Hydralazine','Hydrochlorothiazide','Hydrocortisone','Hydroxychloroquine'], answer: 0,
@@ -90,13 +90,13 @@
           options: ['Celebrex and Celexa','Aspirin and Tylenol','Ibuprofen and Naproxen','Zyrtec and Claritin'], answer: 0,
           fact: 'Celebrex (arthritis), Celexa (depression) and Cerebyx (seizures) — three different drugs, three similar names. A textbook ISMP case study.' }
       ] },
-    { id: 9, name: 'Where Does It Go?', pts: 1, blurb: 'Where does this live in the pharmacy?',
+    { id: 9, name: 'Where Does It Go?', short: 'Fridge, shelf, or locked vault?', kind: 'pharm', pts: 1, blurb: 'Where does this live in the pharmacy?',
       q: [
         { type: 'mc', prompt: 'An unopened vial of insulin',
           options: ['Fridge','Room-temp shelf','Locked vault','Freezer'], answer: 0,
           fact: 'Unopened insulin lives at 2-8 C. Once in use, most pens are fine at room temp for 28 days. Never freeze it.' },
       ] },
-    { id: 10, name: 'Final Wager', pts: 5, wager: true, blurb: 'Bet 0-5 before you see it. A World Pharmacists Day finale.',
+    { id: 10, name: 'Final Wager', short: 'Bet 0–5 points on one last question', kind: 'wager', pts: 5, wager: true, blurb: 'Bet 0-5 before you see it. A World Pharmacists Day finale.',
       q: [
         { type: 'mc', prompt: 'Coca-Cola was created in 1886 by John Pemberton, who worked as a...',
           options: ['Pharmacist','Dentist','Chef','Chemistry teacher'], answer: 0,
@@ -110,7 +110,7 @@
     r.q.forEach(function (q, i) {
       QUESTIONS.push({
         key: r.id + '-' + (i + 1),
-        roundId: r.id, roundName: r.name, roundBlurb: r.blurb,
+        roundId: r.id, roundName: r.name, roundBlurb: r.blurb, roundShort: r.short || '', roundKind: r.kind || '',
         pts: r.pts, isWager: !!r.wager,
         type: q.type, prompt: q.prompt, options: q.options.slice(),
         answer: q.answer, fact: q.fact,
@@ -215,6 +215,208 @@
     '<g stroke="#3C9A73" stroke-opacity=".26"><circle cx="70" cy="206" r="10"/></g>' +
     '<g stroke="#FBEFD2" stroke-opacity=".18"><path d="M214 206 v14 M207 213 h14"/><path d="M90 30 v10 M85 35 h10"/></g>' +
     '</g><text x="96" y="160" font-family="Arial" font-weight="900" font-size="22" fill="#C8371F" fill-opacity=".22">Rx</text></svg>');
+
+  // One line per round for the waiting page. Built from ROUNDS so edits stay in sync.
+  function roundSummary() {
+    return ROUNDS.map(function (r) {
+      return { id: r.id, name: r.name, short: r.short || r.blurb || '', kind: r.kind || '', count: r.q.length, pts: r.pts, wager: !!r.wager };
+    });
+  }
+
+
+  // ---- Answer quips: shown on each player's phone after every reveal.
+  //      Every player gets their own shuffled order (seeded by their id), so lines are unique to them
+  //      and never repeat until the pool runs out. Edit freely - keep each line in "double quotes".
+  var QUIPS = {
+    right: [
+    "Verified! Your brain passed final check with zero interventions.",
+    "Filled correctly on the first try. Frame this moment.",
+    "No drug interactions with that answer. Clean as a fresh count tray.",
+    "Correct! The pharmacist nodded without even looking up. Highest honor.",
+    "Right! You are now cleared for unsupervised pill counting.",
+    "Nailed it. No prior authorization required.",
+    "Correct — dispensed faster than a STAT order.",
+    "Yes! Brand-name quality answer at a generic price.",
+    "Correct. Your knowledge is in stock, unlike half the wholesaler.",
+    "Verified! Label it, bag it, ship it.",
+    "Right! You counted that one by fives, didn't you. We can tell.",
+    "Correct! Store this brain at room temperature. It's hot right now.",
+    "Correct! The fax machine would've taken three business days.",
+    "Nailed it. Even the Pyxis is impressed.",
+    "Correct! Shelf-stable genius, no refrigeration needed.",
+    "Right! More legible than any handwritten script in history.",
+    "Yes! That answer cleared DUR with no alerts.",
+    "Right! Tall-man lettering could never confuse you.",
+    "Correct! Insurance approved it on the first submission. A miracle.",
+    "Verified. Double-counted. Still right.",
+    "Correct! You're the extended-release version of good decisions.",
+    "Right! That answer has officially been added to the formulary.",
+    "Correct! Somebody check this person for a PharmD.",
+    "Right! Faster onset than an IV push.",
+    "Nailed it. No black box warning on that brain.",
+    "Correct! You'd pass USP 797 in your sleep.",
+    "Right! Sig: keep doing exactly that.",
+    "Correct! 100% fill rate on that one.",
+    "Verified! Filed under 'things you just knew.'",
+    "Right! First-fill success. Zero callbacks.",
+    "Correct! Compounded to perfection.",
+    "Right! The mortar and pestle bow to you.",
+    "Correct! Zero discrepancies on this count.",
+    "Yes! FEFO: First Excellent, Forever Outstanding.",
+    "Right! You just earned an imaginary raise. Don't tell HR.",
+    "Correct! Excellent bioavailability on that brain today.",
+    "Verified! Even the barcode scanner beeped happily.",
+    "Correct! Steady-state brilliance achieved.",
+    "Right! Clean catch. No recall needed.",
+    "Correct! That answer is ready for pickup.",
+    "Nailed it! The whole pharmacy just did a little happy dance.",
+    "Right! Your answer skipped the queue. VIP service.",
+    "Correct! Somewhere a label printer printed a tiny trophy.",
+    "Yes! That was pharmacist-level. Techs, you knew it first.",
+    "Correct! Accuracy so good it should be a quality metric."
+  ],
+    wrong: [
+    "Rejected at verification. The pharmacist has concerns.",
+    "Wrong — but confidently wrong, which is honestly its own skill.",
+    "Missed it. Please consult your pharmacist. Oh wait.",
+    "Nope. That answer has been sent back for clarification.",
+    "Incorrect. Prior authorization for that answer: denied.",
+    "Wrong! Somewhere a label printer just jammed in solidarity.",
+    "Not quite. Take two deep breaths and call me next question.",
+    "Wrong. That answer is on backorder until further notice.",
+    "Oops! Wrong bin, wrong shelf, right attitude.",
+    "Nope — that was a look-alike, sound-alike trap. It got you.",
+    "Wrong! Your brain is on a short break. Refills available.",
+    "Missed! Let's call that a partial fill.",
+    "Incorrect. Please return to the drop-off window.",
+    "Wrong. Even the Pyxis is giving you a look.",
+    "Nope! That answer expired last month.",
+    "Rejected! Insurance says try the generic answer.",
+    "Wrong! Don't worry, that one's non-formulary anyway.",
+    "Not quite. That's what we call a counseling opportunity.",
+    "Incorrect. Shake well before the next question.",
+    "Wrong! Placed in quarantine next to the damaged stock.",
+    "Nope. The only interaction was between you and the right answer.",
+    "Missed! That answer needs a second verification. And a third.",
+    "Wrong, but you tapped with STAT-order speed. Respect.",
+    "Incorrect. The barcode scanner beeped sadly.",
+    "Nope! Dose adjustment required: more trivia, less guessing.",
+    "Wrong! Somebody check the lot number on that answer.",
+    "Not this time. Your answer is sitting in the will-call bin.",
+    "Incorrect! Let's blame the handwriting.",
+    "Wrong! Refills remaining in this game: plenty. Keep going.",
+    "Missed it. Sig: shake it off, try again.",
+    "Nope. That answer got returned to stock.",
+    "Wrong! Keep refrigerated and try again.",
+    "Incorrect — the count was only off by one... answer.",
+    "Wrong! You have been placed on hold with the insurance company.",
+    "Nope! That one needs a pharmacist override.",
+    "Missed! Label says: do not guess on an empty stomach.",
+    "Wrong. Documented as a near-miss. No harm done.",
+    "Incorrect! Partially filled — with enthusiasm.",
+    "Nope — that's what we call an off-label answer.",
+    "Wrong! Nobody saw that. Except everyone. It's fine.",
+    "Missed! Tall-man lettering was invented for moments like this.",
+    "Incorrect. The wholesaler shipped the wrong answer again.",
+    "Wrong! Even the fax machine is sighing.",
+    "Nope. Put that answer on the 'to be verified' shelf forever.",
+    "Incorrect! Still a better guess than a doctor's handwriting."
+  ],
+    none: [
+    "Missed dose! Take it as soon as you remember... next question.",
+    "No answer? That script is still sitting in the drop-off bin.",
+    "Time's up! This order was left in will-call.",
+    "Nothing submitted. The count tray is still empty.",
+    "Too slow! Even the fax machine beat you.",
+    "No answer — did you get put on hold with insurance?",
+    "Silence. The pharmacist is concerned.",
+    "Skipped! That's a missed-dose counseling point.",
+    "Blank! We'll call that a pending prior auth.",
+    "The timer won this round. Rematch next question.",
+    "No answer. Your brain is still processing the claim.",
+    "Out of time! That answer is backordered.",
+    "Empty vial. Try again next question.",
+    "No tap detected. Check your fingers' expiration date.",
+    "Order abandoned at pickup. Come back next question.",
+    "The clock dispensed first. Tap faster next time!",
+    "Nothing? Even the nachos answered faster.",
+    "Still on hold... still on hold... answer next time!",
+    "Zero taps. The tray, like your answer, remains uncounted.",
+    "No answer submitted. Please see the pharmacist. Or the host.",
+    "Time's up — this one timed out like an old prior auth.",
+    "Missed it. Set a reminder for the next question!",
+    "The countdown hit zero before you did.",
+    "No tap? That's a 'patient declined counseling' moment.",
+    "Nothing entered. The label printer waited patiently."
+  ]
+  };
+  function hashStr(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  // n-th quip of a kind for a player: a per-player shuffle, cycling without repeats
+  function quipFor(pid, kind, n) {
+    var pool = QUIPS[kind] || QUIPS.right, len = pool.length, order = [], i;
+    for (i = 0; i < len; i++) order.push(i);
+    var s = hashStr(String(pid) + ':' + kind) || 1;
+    for (i = len - 1; i > 0; i--) { s = (Math.imul(s, 1103515245) + 12345) >>> 0; var j = s % (i + 1), t = order[i]; order[i] = order[j]; order[j] = t; }
+    var cycle = Math.floor(n / len), idx = order[((n % len) + cycle * 7) % len];
+    return pool[idx];
+  }
+
+  // FINAL ranking, shared by host and phones so everyone sees identical positions.
+  // Score first; among players tied for a podium spot, sudden-death results decide; then total answer time.
+  function finalRanking(players, scores, sdAnswers) {
+    var ranked = rankPlayers(players, scores);
+    if (sdAnswers && Object.keys(sdAnswers).length) {
+      var order = {}; rankSudden(players, sdAnswers).forEach(function (r, i) { order[r.pid] = i; });
+      var tied = {}; findTies(ranked).forEach(function (t) { tied[t.pid] = 1; });
+      ranked.sort(function (a, b) {
+        if (b.score !== a.score) return b.score - a.score;
+        if (tied[a.pid] && tied[b.pid]) return (order[a.pid] === undefined ? 99 : order[a.pid]) - (order[b.pid] === undefined ? 99 : order[b.pid]);
+        if (a.totalMs !== b.totalMs) return a.totalMs - b.totalMs;
+        return a.name.localeCompare(b.name);
+      });
+      ranked.forEach(function (r, i) { r.rank = i + 1; });
+    }
+    return ranked;
+  }
+
+  // Deal quips like cards for the WHOLE room (every phone computes the same result from the same data):
+  //  - a player never sees the same line twice in a game
+  //  - two players never see the same line on the same question (while the pool has lines left)
+  // list: questions in order. ansOf(q,pid) -> answer or undefined. who(q) -> pids taking part in q.
+  // cache: lines this phone ALREADY showed {key: line} - kept as-is so nothing changes on screen after it appears.
+  function dealQuips(list, ansOf, who, seed, selfPid, cache) {
+    function outc(q, a) { return !a ? 'none' : (a.choice === q.answer ? 'right' : 'wrong'); }
+    var decks = {}, used = {}, out = {};
+    Object.keys(QUIPS).forEach(function (k) {
+      var L = QUIPS[k].length, o = [], s = hashStr(seed + '|' + k) || 1, i;
+      for (i = 0; i < L; i++) o.push(i);
+      for (i = L - 1; i > 0; i--) { s = (Math.imul(s, 1103515245) + 12345) >>> 0; var j = s % (i + 1), t = o[i]; o[i] = o[j]; o[j] = t; }
+      decks[k] = o;
+    });
+    list.forEach(function (q, qi) {
+      var onQ = { right: {}, wrong: {}, none: {} }, pids = who(q).slice().sort();
+      out[q.key] = {};
+      // self first, if already on screen, so the rest of the room avoids that line
+      if (cache && cache[q.key] && pids.indexOf(selfPid) > -1) { pids.splice(pids.indexOf(selfPid), 1); pids.unshift(selfPid); }
+      pids.forEach(function (p, idx) {
+        var kind = outc(q, ansOf(q, p)), pool = QUIPS[kind], L = pool.length, deck = decks[kind], line = null;
+        used[p] = used[p] || {};
+        if (p === selfPid && cache && cache[q.key]) line = cache[q.key];
+        else {
+          var start = (idx * 7 + qi * 3) % L, j, cand, fallback = null;
+          for (j = 0; j < L; j++) {
+            cand = pool[deck[(start + j) % L]];
+            if (used[p][cand]) continue;
+            if (!onQ[kind][cand]) { line = cand; break; }
+            if (fallback === null) fallback = cand;
+          }
+          if (!line) line = fallback || pool[deck[start]];
+        }
+        used[p][line] = 1; onQ[kind][line] = 1; out[q.key][p] = { line: line, kind: kind };
+      });
+    });
+    return out;
+  }
 
   function maxScore() {
     return QUESTIONS.reduce(function (s, q) { return s + q.pts; }, 0);
@@ -344,7 +546,7 @@
 
   root.STAT = {
     ROUNDS: ROUNDS, QUESTIONS: QUESTIONS, SUDDEN: SUDDEN, maxScore: maxScore,
-    rankSudden: rankSudden, findTies: findTies, STICKERS: STICKERS, BG_TILE: BG_TILE,
+    rankSudden: rankSudden, findTies: findTies, finalRanking: finalRanking, QUIPS: QUIPS, quipFor: quipFor, dealQuips: dealQuips, roundSummary: roundSummary, STICKERS: STICKERS, BG_TILE: BG_TILE,
     computeScores: computeScores, rankPlayers: rankPlayers,
     trayHTML: trayHTML, extraHTML: extraHTML,
     LETTERS: ['A', 'B', 'C', 'D']

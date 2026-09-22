@@ -101,6 +101,52 @@
   .gate{max-width:420px;margin:16vh auto 0}
   .hint{color:var(--dim);font-size:13px;margin-top:10px;line-height:1.4}
   #confetti{position:fixed;inset:0;pointer-events:none;z-index:5}
+  .plist{max-height:190px}
+  .howto{margin-top:14px;background:var(--label);color:var(--link);border-radius:14px;padding:14px 18px;box-shadow:inset 0 0 0 3px var(--amber)}
+  .howto h3{font-family:var(--disp);font-weight:800;font-size:20px;color:var(--amberd);text-transform:uppercase;letter-spacing:.04em;margin:2px 0 6px}
+  .rules{list-style:none;margin:0 0 10px;padding:0}
+  .rules li{position:relative;padding-left:18px;font-size:15px;line-height:1.35;margin-bottom:5px}
+  .rules li:before{content:"";position:absolute;left:3px;top:8px;width:7px;height:7px;border-radius:50%;background:var(--amber)}
+  .rounds{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr;gap:0;counter-reset:rd}
+  .rounds li{counter-increment:rd;display:grid;grid-template-columns:24px auto 1fr;align-items:baseline;column-gap:8px;font-size:14px;line-height:1.25;padding:5px 0;border-bottom:1px dashed #E7C97D}
+  .rounds li:last-child{border-bottom:0}
+  .rounds .ri{font-size:16px}
+  .rounds b{font-family:var(--disp);font-size:16px}.rounds b:before{content:counter(rd) ". ";color:var(--amberd)}
+  .rounds .rs{color:#7A5A38;font-size:13px;text-align:right}
+  .resume{background:var(--alert);color:#fff;border-radius:14px;padding:14px 18px;margin-bottom:14px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+  .resume .rtitle{font-family:var(--disp);font-weight:800;font-size:24px}
+  .resume .rsub{opacity:.9;margin-top:2px}
+  .resume .controls button.danger{background:#fff;color:var(--alert);border-color:#fff}
+  .fboard{max-height:calc(100vh - 210px);overflow-y:auto;border-radius:10px;background:rgba(0,0,0,.18)}
+  .frow{display:grid;grid-template-columns:52px 1fr auto 56px;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid #4A2A16;font-size:19px}
+  .frow .fk{font-family:var(--disp);font-weight:800;color:var(--dim);text-align:center;font-size:18px}
+  .frow.top .fk{font-size:26px}
+  .frow .fn{font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .frow .fc{font-size:14px;color:var(--dim)}
+  .frow .fs{font-family:var(--disp);font-size:24px;color:var(--amber);text-align:right}
+  .frow.t1{background:rgba(245,197,66,.16)}.frow.t2{background:rgba(216,216,216,.10)}.frow.t3{background:rgba(215,154,91,.12)}
+  .lastwin{margin-top:14px;border-top:1px solid #4A2A16;padding-top:10px}
+  .lastwin h3{font-family:var(--disp);color:var(--amber);font-size:18px;margin-bottom:4px}
+  /* ---------- pressure: red closes in, card shakes harder each second ---------- */
+  #press{position:fixed;inset:0;pointer-events:none;z-index:40;transition:box-shadow .3s}
+  body.press1 #press{box-shadow:inset 0 0 60px rgba(228,87,61,.25)}
+  body.press2 #press{box-shadow:inset 0 0 90px rgba(228,87,61,.38)}
+  body.press3 #press{box-shadow:inset 0 0 130px rgba(228,87,61,.52)}
+  body.press4 #press{box-shadow:inset 0 0 170px rgba(228,87,61,.66);animation:pulseg .5s ease-in-out infinite}
+  body.press5 #press{box-shadow:inset 0 0 220px rgba(228,87,61,.82);animation:pulseg .3s ease-in-out infinite}
+  @keyframes pulseg{50%{opacity:.6}}
+  body.press3 .label,body.press3 .sdlabel{animation:shk .5s ease-in-out infinite}
+  body.press4 .label,body.press4 .sdlabel{animation:shk .28s ease-in-out infinite}
+  body.press5 .label,body.press5 .sdlabel{animation:shk2 .16s ease-in-out infinite}
+  @keyframes shk{0%,100%{transform:translate(0,0)}25%{transform:translate(-2px,1px)}75%{transform:translate(2px,-1px)}}
+  @keyframes shk2{0%,100%{transform:translate(0,0) rotate(0)}25%{transform:translate(-4px,2px) rotate(-.4deg)}75%{transform:translate(4px,-2px) rotate(.4deg)}}
+  body.press1 #cdnum,body.press2 #cdnum{color:var(--alert)}
+  body.press3 #cdnum{color:var(--alert);transform:scale(1.35)}
+  body.press4 #cdnum{color:var(--alert);transform:scale(1.6)}
+  body.press5 #cdnum{color:var(--alert);transform:scale(1.9)}
+  #cdnum{transition:transform .15s;display:inline-block}
+  body.press1 .cdbar i,body.press2 .cdbar i,body.press3 .cdbar i,body.press4 .cdbar i,body.press5 .cdbar i{background:var(--alert)}
+  @media (prefers-reduced-motion:reduce){ body[class*=press] .label,body[class*=press] .sdlabel,body[class*=press] #press{animation:none!important} }
   .cdwrap{display:flex;align-items:center;gap:12px;margin-top:12px}
   .cdbar{flex:1;height:12px;border-radius:99px;background:#E4D6AA;overflow:hidden}
   .cdbar i{display:block;height:100%;width:100%;background:var(--amber);transition:width .2s linear}
@@ -121,6 +167,7 @@
 <body>
 <canvas id="confetti"></canvas>
 <div id="stkLayer"></div>
+<div id="press"></div>
 <div class="wrap" id="wrap"><div class="panel gate"><h2>Loading…</h2></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
@@ -138,6 +185,9 @@
   var wrap=document.getElementById('wrap');
   var db=null; try{ firebase.initializeApp(CFG.firebase); db=firebase.database(); }catch(e){ wrap.innerHTML='<div class="panel gate"><h2>Not set up yet</h2><div class="hint">Finish the one-time Firebase setup in README.txt, then reload this page.</div></div>'; return; }
   var base=db.ref('rooms/'+ROOM);
+  // One clock for everyone: correct this device's clock by Firebase's server offset
+  var OFF=0; try{ db.ref('.info/serverTimeOffset').on('value',function(s){ OFF=+(s.val()||0); }); }catch(e){}
+  function now(){ return Date.now()+OFF; }
   function stk(name,size,cls,rot,extra){ return '<span class="stk '+(cls||'')+'" style="width:'+size+'px;height:'+size+'px;--r:'+(rot||0)+'deg;transform:rotate('+(rot||0)+'deg);'+(extra||'')+'">'+STAT.STICKERS[name]+'</span>'; }
   (function decorate(){
     try{
@@ -157,18 +207,62 @@
   else gate();
   function gate(){
     wrap.innerHTML='<div class="panel gate"><h2>Host access</h2><div class="hint" style="margin-bottom:12px">Enter the host PIN from your config file.</div><div class="row"><input id="pin" type="password" placeholder="Host PIN" style="flex:1"><button class="primary" id="ok">Open</button></div></div>';
-    document.getElementById('ok').onclick=function(){ if(document.getElementById('pin').value===String(CFG.hostPin)){ sessionStorage.setItem('stat_host_'+ROOM,'1'); boot(); } else { document.getElementById('pin').value=''; document.getElementById('pin').placeholder='Wrong PIN'; } };
+    document.getElementById('ok').onclick=function(){ if(document.getElementById('pin').value===String(CFG.hostPin)){ sessionStorage.setItem('stat_host_'+ROOM,'1'); try{STATMusic.setSong('lobby');STATMusic.start();}catch(e){} boot(); } else { document.getElementById('pin').value=''; document.getElementById('pin').placeholder='Wrong PIN'; } };
     document.getElementById('pin').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('ok').click();});
   }
 
+  var firstState=true, lastResults=null;
+  var MIDGAME={question:1,reveal:1,sudden_intro:1,sudden:1,sudden_reveal:1};
   function boot(){
-    base.child('state').on('value',function(s){ var prev=state.phase+'|'+state.qIndex+'|'+(state.sdIndex||0); state=s.val()||{phase:'lobby',qIndex:-1}; if(prev!==state.phase+'|'+state.qIndex+'|'+(state.sdIndex||0)) clearAuto(); render(); });
+    base.child('settings').set({qsec:QSEC, reveal:REVEAL_SEC, sdsec:SDSEC});
+    base.child('lastResults').on('value',function(s){ lastResults=s.val(); render(); });
+    // Decide where the host lands only once players/answers/sudden AND state have all loaded (avoids saving empty winners)
+    var loaded={}, st0=null, decided=false;
+    function decide(){
+      if(decided||!loaded.state||!loaded.players||!loaded.answers||!loaded.sudden) return; decided=true;
+      if(st0.phase==='ended'){ recompute(); newGame(true); }                              // finished game -> fresh waiting page
+      else if(MIDGAME[st0.phase] && !st0.paused){ base.child('state').update({paused:true}); } // live game -> pause, host chooses
+    }
+    ['players','answers','sudden'].forEach(function(k){ base.child(k).on('value',function(){ if(!loaded[k]){ loaded[k]=1; setTimeout(decide,0); } }); });
+    base.child('state').on('value',function(s){
+      if(firstState){ firstState=false; st0=s.val()||{phase:'lobby'}; loaded.state=1; setTimeout(decide,0); } var prev=state.phase+'|'+state.qIndex+'|'+(state.sdIndex||0); state=s.val()||{phase:'lobby',qIndex:-1}; if(prev!==state.phase+'|'+state.qIndex+'|'+(state.sdIndex||0)) clearAuto(); render(); });
     base.child('players').on('value',function(s){ players=s.val()||{}; recompute(); render(); });
     base.child('answers').on('value',function(s){ answers=s.val()||{}; recompute(); render(); });
     base.child('sudden').on('value',function(s){ sdAnswers=s.val()||{}; render(); });
     render();
   }
   function recompute(){ scores=STAT.computeScores(players,answers); }
+  /* ---------- music follows the game ---------- */
+  function syncMusic(phase,q,paused){
+    try{
+      if(phase==='lobby'||paused) STATMusic.setSong('lobby');
+      else if(phase==='question'||phase==='reveal'){ if(q) STATMusic.setSong(STATMusic.songForRound(q.roundId)); }
+      else if(phase.indexOf('sudden')===0) STATMusic.setSong('sudden');
+      else if(phase==='ended') STATMusic.setSong('victory');
+    }catch(e){}
+  }
+  /* ---------- last-5-seconds pressure: climbs one level per second ---------- */
+  var pressLvl=0;
+  setInterval(pressTick,120);
+  function pressTick(){
+    var ph=state.phase, lvl=0;
+    if(!state.paused && (ph==='question'||ph==='sudden') && state.endsAt){
+      var left=state.endsAt-now();
+      if(left>0 && left<=5000) lvl=Math.min(5, 6-Math.ceil(left/1000));
+    }
+    if(lvl!==pressLvl){ pressLvl=lvl;
+      document.body.className=document.body.className.replace(/\bpress\d\b/g,'').trim()+(lvl?' press'+lvl:'');
+      try{STATMusic.setPressure(lvl);}catch(e){}
+    }
+  }
+  // Start a fresh game on the waiting page. Keeps players checked in; saves last winners for prize hand-out.
+  function newGame(saveWinners){
+    var rk=applySudden(STAT.rankPlayers(players,scores)).slice(0,3);
+    var ups={ answers:null, sudden:null, state:{phase:'lobby',qIndex:-1,paused:false,endsAt:null,sdIndex:null,tiedNames:null} };
+    if(saveWinners && rk.length && rk[0].score>0) ups.lastResults={ at:now(), top:rk.map(function(r){return {name:r.name,score:r.score};}) };
+    Object.keys(ups).forEach(function(k){ if(ups[k]===null) base.child(k).remove(); else base.child(k).set(ups[k]); });
+    clearAuto();
+  }
   function setState(o){ base.child('state').update(o); }
 
   /* ===== Auto-advance: 10s to answer, 5s in sudden death, then auto-reveal & auto-next ===== */
@@ -180,31 +274,30 @@
   var autoTimer=null, autoDeadline=0;
   function clearAuto(){ clearInterval(autoTimer); autoTimer=null; autoDeadline=0; }
   function startAuto(seconds, whenDone){
-    clearAuto(); autoDeadline = Date.now() + seconds*1000;
+    clearAuto(); autoDeadline = now() + seconds*1000;
     autoTimer = setInterval(function(){
-      var left = Math.ceil((autoDeadline - Date.now())/1000);
+      var left = Math.ceil((autoDeadline - now())/1000);
       var el = document.getElementById('cdnum');
       if (el) el.textContent = Math.max(left,0);
       var ring = document.getElementById('cdbar');
-      if (ring) ring.style.width = Math.max(0, Math.min(100,(autoDeadline-Date.now())/(seconds*10)))+'%';
-      if (left<=3 && left>0 && el && !el.dataset['b'+left]){ el.dataset['b'+left]=1; try{STATMusic.sting('urgent');}catch(e){} }
-      if (Date.now() >= autoDeadline){ clearAuto(); whenDone(); }
+      if (ring) ring.style.width = Math.max(0, Math.min(100,(autoDeadline-now())/(seconds*10)))+'%';
+      if (now() >= autoDeadline){ clearAuto(); whenDone(); }
     }, 200);
   }
   function autoAdvance(){
     var st=state;
-    if (st.phase==='question'){ try{STATMusic.duck(0.06);}catch(e){} setState({phase:'reveal', endsAt:Date.now()+REVEAL_SEC*1000}); try{STATMusic.sting('bell');}catch(e){} }
+    if (st.phase==='question'){ try{STATMusic.duck(0.06);}catch(e){} setState({phase:'reveal', endsAt:now()+REVEAL_SEC*1000}); try{STATMusic.sting('bell');}catch(e){} }
     else if (st.phase==='reveal'){
       try{STATMusic.duck(0.16);}catch(e){}
       var ni=st.qIndex+1;
       if (ni>=STAT.QUESTIONS.length) finishMain();
-      else setState({phase:'question', qIndex:ni, endsAt:Date.now()+QSEC*1000});
+      else setState({phase:'question', qIndex:ni, endsAt:now()+QSEC*1000});
     }
-    else if (st.phase==='sudden'){ setState({phase:'sudden_reveal', endsAt:Date.now()+3000}); }
+    else if (st.phase==='sudden'){ setState({phase:'sudden_reveal', endsAt:now()+3000}); }
     else if (st.phase==='sudden_reveal'){
       var si=(st.sdIndex||0)+1;
       if (si>=STAT.SUDDEN.length) setState({phase:'ended'});
-      else setState({phase:'sudden', sdIndex:si, endsAt:Date.now()+SDSEC*1000});
+      else setState({phase:'sudden', sdIndex:si, endsAt:now()+SDSEC*1000});
     }
   }
   function finishMain(){
@@ -212,7 +305,7 @@
     var ranked=STAT.rankPlayers(players,scores);
     var tied=STAT.findTies(ranked);
     if (tied.length>1){ try{STATMusic.setMode('sudden');}catch(e){}
-      setState({phase:'sudden_intro', sdIndex:0, endsAt:Date.now()+6000, tiedNames:tied.map(function(t){return t.name;}).join(', ')});
+      setState({phase:'sudden_intro', sdIndex:0, endsAt:now()+6000, tiedNames:tied.map(function(t){return t.name;}).join(', ')});
     } else setState({phase:'ended'});
   }
 
@@ -225,33 +318,62 @@
     var ranked=STAT.rankPlayers(players,scores);
     var online=Object.keys(players).filter(function(p){return players[p]&&players[p].online;}).length;
 
-    var left;
-    if(phase==='lobby') left=lobbyPanel(online);
+    var left, paused=!!state.paused && !!MIDGAME[phase];
+    syncMusic(phase,q,paused);
+    if(phase==='lobby'||paused) left=lobbyPanel(online, paused);
     else if(phase==='ended') left=finalPanel(ranked);
     else if(phase==='sudden_intro') left=suddenIntroPanel();
     else if(phase==='sudden'||phase==='sudden_reveal') left=suddenPanel(phase);
     else left=questionPanel(q,phase);
 
+    var _fb=document.getElementById('fboard'), _fbTop=_fb?_fb.scrollTop:0;
     wrap.innerHTML=
-      '<header><div class="logo"><svg class=\"rxlogo\" viewBox=\"0 0 100 100\" aria-hidden=\"true\"><path d=\"M20 46 H80 C80 68 68 80 50 80 C32 80 20 68 20 46 Z\" fill=\"currentColor\"/><rect x=\"16\" y=\"40\" width=\"68\" height=\"9\" rx=\"4.5\" fill=\"currentColor\"/><rect x=\"44\" y=\"82\" width=\"12\" height=\"6\" rx=\"3\" fill=\"currentColor\"/><path d=\"M58 38 L78 14\" stroke=\"currentColor\" stroke-width=\"8\" stroke-linecap=\"round\"/><circle cx=\"80\" cy=\"12\" r=\"7\" fill=\"currentColor\"/></svg>STAT! <small>World Pharmacists Day</small></div><div class="room"><button id="music" class="musicbtn">'+(window.STATMusic&&STATMusic.isOn()?'&#9835; Music on':'&#9835; Music off')+'</button> &nbsp; Room <b>'+ROOM+'</b> · '+Object.keys(players).length+' joined ('+online+' online)</div></header>'+
-      '<div class="grid"><div>'+left+'</div>'+
-      '<div class="panel '+(phase==='ended'?'lead':'')+'"><h2>'+(phase==='lobby'?'&#128138; Checked in':'&#127942; Pharmacy Leaderboard')+'</h2>'+(phase==='lobby'?playerList():leaderboard(ranked))+'</div></div>';
+      '<header><div class="logo"><svg class=\"rxlogo\" viewBox=\"0 0 100 100\" aria-hidden=\"true\"><path d=\"M20 46 H80 C80 68 68 80 50 80 C32 80 20 68 20 46 Z\" fill=\"currentColor\"/><rect x=\"16\" y=\"40\" width=\"68\" height=\"9\" rx=\"4.5\" fill=\"currentColor\"/><rect x=\"44\" y=\"82\" width=\"12\" height=\"6\" rx=\"3\" fill=\"currentColor\"/><path d=\"M58 38 L78 14\" stroke=\"currentColor\" stroke-width=\"8\" stroke-linecap=\"round\"/><circle cx=\"80\" cy=\"12\" r=\"7\" fill=\"currentColor\"/></svg>STAT! <small>World Pharmacists Day</small></div><div class="room"><button id="music" class="musicbtn">'+(window.STATMusic&&STATMusic.isOn()?'&#9835; '+STATMusic.songName():'&#9835; Tap for music')+'</button> &nbsp; Room <b>'+ROOM+'</b> · '+Object.keys(players).length+' joined ('+online+' online)</div></header>'+
+      '<div class="grid"><div>'+left+'</div><div>'+
+      '<div class="panel '+(phase==='ended'?'lead':'')+'"><h2>'+(phase==='lobby'||paused?'&#128138; Checked in':(phase==='ended'?'&#127942; Final Scoreboard &middot; '+Object.keys(players).length+' players':'&#127942; Pharmacy Leaderboard'))+'</h2>'+(phase==='lobby'||paused?playerList()+lastWinners():(phase==='ended'?fullBoard(STAT.finalRanking(players,scores,sdAnswers)):leaderboard(ranked)))+'</div>'+(phase==='lobby'||paused?roundsOnly():'')+'</div>';
 
+    var _fb2=document.getElementById('fboard'); if(_fb2) _fb2.scrollTop=_fbTop;
     wireButtons(q,phase);
     // (re)arm the auto timer for timed phases
-    if (phase==='question'||phase==='reveal'||phase==='sudden'||phase==='sudden_reveal'||phase==='sudden_intro'){
+    if (!paused && (phase==='question'||phase==='reveal'||phase==='sudden'||phase==='sudden_reveal'||phase==='sudden_intro')){
       var secs = phase==='question'?QSEC : phase==='reveal'?REVEAL_SEC : phase==='sudden'?SDSEC : phase==='sudden_reveal'?3 : 6;
-      var rem = state.endsAt ? Math.max(0,(state.endsAt-Date.now())/1000) : secs;
+      var rem = state.endsAt ? Math.max(0,(state.endsAt-now())/1000) : secs;
       if (!autoTimer) startAuto(rem||secs, phase==='sudden_intro'
-        ? function(){ setState({phase:'sudden', sdIndex:0, endsAt:Date.now()+SDSEC*1000}); }
+        ? function(){ setState({phase:'sudden', sdIndex:0, endsAt:now()+SDSEC*1000}); }
         : autoAdvance);
     } else clearAuto();
-    if(phase==='lobby') drawQR();
+    if(phase==='lobby'||paused) drawQR();
+    pressTick();
     if(phase==='ended') confetti();
   }
 
-  function lobbyPanel(online){
-    return '<div class="panel"><div class="checkband"></div><h2>&#127881; World Pharmacists Day Trivia</h2>'+
+  function rulesOnly(){
+    return '<div class="howto"><h3>How to play</h3><ul class="rules">'+
+        '<li><b>'+QSEC+' seconds</b> per question &mdash; it moves on by itself. The last 5 seconds get <b>intense</b>.</li>'+
+        '<li><b>Tap fast.</b> Ties are broken by who answered quickest.</li>'+
+        '<li><b>Sudden death</b> if anyone is tied for 1st, 2nd or 3rd: 5 easy questions, '+SDSEC+' seconds each.</li>'+
+        '<li><b>Prizes</b> for 1st, 2nd and 3rd. Pharmacists, techs &amp; interns all have a shot.</li>'+
+      '</ul></div>';
+  }
+  function roundsOnly(){
+    var R=STAT.roundSummary(), ic={pop:'&#127916;',pharm:'&#128138;',wager:'&#127922;'};
+    return '<div class="howto"><h3>The '+R.length+' rounds</h3><ol class="rounds">'+R.map(function(r){
+        return '<li><span class="ri">'+(ic[r.kind]||'&#11088;')+'</span><b>'+esc(r.name)+'</b><span class="rs">'+esc(r.short)+'</span></li>';
+      }).join('')+'</ol></div>';
+  }
+  function lastWinners(){
+    if(!lastResults||!lastResults.top||!lastResults.top.length) return '';
+    var m=['&#129351;','&#129352;','&#129353;'];
+    return '<div class="lastwin"><h3>Last game&rsquo;s winners</h3>'+lastResults.top.map(function(r,i){
+      return '<div class="prow"><span class="rk">'+m[i]+'</span><span class="nm">'+esc(r.name)+'</span><span class="sc">'+r.score+'</span></div>';}).join('')+'</div>';
+  }
+  function lobbyPanel(online, paused){
+    var qn=(state.qIndex|0)+1;
+    var banner = paused ?
+      '<div class="resume"><div class="rtitle">&#9208; A game is in progress'+(state.phase&&state.phase.indexOf('sudden')===0?' (sudden death)':' &mdash; Rx '+qn+' of '+STAT.QUESTIONS.length)+'</div>'+
+      '<div class="rsub">Players&rsquo; phones show &ldquo;Paused&rdquo;. Nothing has been lost.</div>'+
+      '<div class="controls"><button class="primary" id="resume">&#9654; Resume game</button><button class="danger" id="restart">Restart from the waiting page</button></div></div>' : '';
+    return banner+'<div class="panel"><div class="checkband"></div><h2>&#127881; World Pharmacists Day Trivia</h2>'+
       '<div class="stkrow">'+stk('mortar',58,'bob',-8)+stk('capsule',54,'bob b2',10)+stk('happy',62,'bob b3',-6)+stk('bottle',54,'bob',8)+stk('nacho',56,'bob b2',-10)+'</div>'+
       '<div class="join"><div id="qr"></div><div class="link">'+
         '<div class="code">Room code &nbsp;<b>'+ROOM+'</b></div>'+
@@ -259,8 +381,9 @@
         '<div class="url">'+playerURL+'</div>'+
         '<button id="copy">Copy link</button>'+
       '</div></div>'+
-      '<div class="controls"><button class="primary" id="start" '+((online||Object.keys(players).length)?'':'disabled')+'>Start game →</button><button class="danger" id="reset">Reset room</button></div>'+
-      '<div class="hint">Players can keep joining right up until you start. Reset wipes all names and scores for a fresh game.</div></div>';
+      (paused?'':'<div class="controls"><button class="primary" id="start" '+((online||Object.keys(players).length)?'':'disabled')+'>Start game &rarr;</button><button class="danger" id="reset">Reset room</button></div>'+
+      '<div class="hint">Players can keep joining right up until you start. &ldquo;Reset room&rdquo; also clears everyone&rsquo;s names.</div>')+
+      '</div>'+rulesOnly();
   }
   function playerList(){
     var ks=Object.keys(players); if(!ks.length) return '<div class="empty">No one yet. Share the code.</div>';
@@ -300,20 +423,7 @@
     return html;
   }
 
-  function applySudden(ranked){
-    if(!Object.keys(sdAnswers).length) return ranked;
-    var sdRank=STAT.rankSudden(players,sdAnswers), order={};
-    sdRank.forEach(function(r,i){ order[r.pid]=i; });
-    var tiedSet={}; STAT.findTies(ranked).forEach(function(t){ tiedSet[t.pid]=1; });
-    ranked=ranked.slice().sort(function(a,b){
-      if(b.score!==a.score) return b.score-a.score;
-      if(tiedSet[a.pid]&&tiedSet[b.pid]) return (order[a.pid]===undefined?99:order[a.pid])-(order[b.pid]===undefined?99:order[b.pid]);
-      if(a.totalMs!==b.totalMs) return a.totalMs-b.totalMs;
-      return a.name.localeCompare(b.name);
-    });
-    ranked.forEach(function(r,i){ r.rank=i+1; });
-    return ranked;
-  }
+  function applySudden(ranked){ return STAT.finalRanking(players,scores,sdAnswers); }
   function finalPanel(ranked){
     ranked=applySudden(ranked);
     var top=ranked.slice(0,3);
@@ -337,13 +447,13 @@
       '<div class="podstk">'+stk('happy',70,'bob',-12)+stk('verified',64,'bob b2',8)+'</div>'+'<div class="winnerline">&#127881; Happy World Pharmacists Day! &#127881;</div>'+
       '<div class="podium3">'+cols+'</div>'+
       '<div class="prizenote">Top 3 collect your prizes from the host'+(Object.keys(sdAnswers).length?' &middot; decided by sudden death':'')+'</div>'+
-      '</div><div class="controls"><button id="reset" class="danger">Reset for another game</button></div></div>';
+      '</div><div class="controls"><button id="newgame" class="primary">&#8635; New game (same players)</button></div></div>';
   }
 
 
   function suddenIntroPanel(){
     return '<div class="panel"><div class="label" style="text-align:center">'+
-      '<div class="qmeta"><span>Tiebreaker</span><span>5 questions &middot; 5 seconds each</span></div>'+
+      '<div class="qmeta"><span>Tiebreaker</span><span>5 questions &middot; '+SDSEC+' seconds each</span></div>'+
       '<div class="sdstat">&#9888; STAT ORDER &#9888;</div><div class="sdtitle">SUDDEN DEATH</div>'+
       '<div class="sdsub">We have a tie: <b>'+esc(state.tiedNames||'')+'</b></div>'+
       '<div class="sdnote">Five quick pop-culture questions. Five seconds each. Fastest correct answers win.</div>'+
@@ -371,6 +481,23 @@
     return html;
   }
 
+  function fullBoard(ranked){
+    var m=['&#129351;','&#129352;','&#129353;'];
+    return '<div class="fboard" id="fboard">'+ranked.map(function(r){
+      return '<div class="frow'+(r.rank<=3?' top t'+r.rank:'')+'"><span class="fk">'+(m[r.rank-1]||'#'+r.rank)+'</span>'+
+        '<span class="fn">'+esc(r.name)+'</span><span class="fc">'+r.correct+'/'+STAT.QUESTIONS.length+'</span><b class="fs">'+r.score+'</b></div>';
+    }).join('')+'</div><div class="hint" style="margin-top:8px">Scrolls by itself so everyone can find their name. Hover to pause.</div>';
+  }
+  /* slow auto-scroll of the final scoreboard: down, pause, back to top, repeat. Pauses while the host hovers. */
+  var bScroll={dir:1,hold:0,hover:false};
+  setInterval(function(){
+    var b=document.getElementById('fboard'); if(!b) return;
+    if(!b.dataset.w){ b.dataset.w=1; b.onmouseenter=function(){bScroll.hover=true;}; b.onmouseleave=function(){bScroll.hover=false;}; }
+    if(bScroll.hover||b.scrollHeight<=b.clientHeight+2) return;
+    if(bScroll.hold>0){ bScroll.hold--; return; }
+    if(bScroll.dir>0){ b.scrollTop+=1; if(b.scrollTop+b.clientHeight>=b.scrollHeight-1){ bScroll.hold=90; bScroll.dir=-1; } }
+    else { b.scrollTop=0; bScroll.hold=90; bScroll.dir=1; }
+  },40);
   function leaderboard(ranked){
     if(!ranked.length) return '<div class="empty">Scores appear once players answer.</div>';
     var medals=['🥇','🥈','🥉'];
@@ -379,11 +506,16 @@
 
   function wireButtons(q,phase){
     var b;
-    if(b=document.getElementById('start')) b.onclick=function(){ try{STATMusic.start();}catch(e){} setState({phase:'question',qIndex:0}); };
-    if(b=document.getElementById('reveal')) b.onclick=function(){ try{STATMusic.duck(0.07);}catch(e){} setState({phase:'reveal'}); };
-    if(b=document.getElementById('next')) b.onclick=function(){ try{STATMusic.duck(0.19);}catch(e){} var ni=state.qIndex+1; if(ni>=STAT.QUESTIONS.length) setState({phase:'ended'}); else setState({phase:'question',qIndex:ni}); };
+    if(b=document.getElementById('start')) b.onclick=function(){ try{STATMusic.start();}catch(e){} setState({phase:'question',qIndex:0,paused:false,endsAt:now()+QSEC*1000,game:now()}); };
+    if(b=document.getElementById('reveal')) b.onclick=function(){ clearAuto(); try{STATMusic.duck(0.07);STATMusic.sting('bell');}catch(e){} setState({phase:'reveal',endsAt:now()+REVEAL_SEC*1000}); };
+    if(b=document.getElementById('next')) b.onclick=function(){ clearAuto(); try{STATMusic.duck(0.19);}catch(e){} var ni=state.qIndex+1; if(ni>=STAT.QUESTIONS.length) finishMain(); else setState({phase:'question',qIndex:ni,endsAt:now()+QSEC*1000}); };
     if(b=document.getElementById('reset')) b.onclick=function(){ if(confirm('Wipe all players, answers and scores for room '+ROOM+'?')){ base.remove().then(function(){ setState({phase:'lobby',qIndex:-1}); }); } };
-    if(b=document.getElementById('sdgo')) b.onclick=function(){ clearAuto(); setState({phase:'sudden', sdIndex:0, endsAt:Date.now()+SDSEC*1000}); };
+    if(b=document.getElementById('resume')) b.onclick=function(){ try{STATMusic.start();}catch(e){}
+      var ph=state.phase, secs=ph==='question'?QSEC:ph==='reveal'?REVEAL_SEC:ph==='sudden'?SDSEC:ph==='sudden_reveal'?3:6;
+      clearAuto(); setState({paused:false, endsAt:now()+secs*1000}); };
+    if(b=document.getElementById('restart')) b.onclick=function(){ if(confirm('Throw away the game in progress and go back to the waiting page? Players stay checked in.')) newGame(false); };
+    if(b=document.getElementById('newgame')) b.onclick=function(){ newGame(true); };
+    if(b=document.getElementById('sdgo')) b.onclick=function(){ clearAuto(); setState({phase:'sudden', sdIndex:0, endsAt:now()+SDSEC*1000}); };
   if(b=document.getElementById('music')) b.onclick=function(){ STATMusic.toggle(); render(); };
   if(b=document.getElementById('copy')) b.onclick=function(){ navigator.clipboard&&navigator.clipboard.writeText(playerURL); b.textContent='Copied ✓'; setTimeout(function(){b.textContent='Copy link';},1500); };
   }
