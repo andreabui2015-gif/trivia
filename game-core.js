@@ -455,6 +455,15 @@
     return out;
   }
 
+  // Build stamp + content signature. Every device checks these match, so a phone running a
+  // cached older copy of this file can never show a different question than the TV.
+  var BUILD = '20260923-a';
+  function contentSig() {
+    var s = BUILD + '|';
+    QUESTIONS.concat(SUDDEN).forEach(function (q) { s += q.key + ':' + q.prompt + ':' + (q.options || []).join('~') + ':' + q.answer + '|'; });
+    return hashStr(s).toString(36) + '-' + QUESTIONS.length;
+  }
+
   function maxScore() {
     return QUESTIONS.reduce(function (s, q) { return s + q.pts; }, 0);
   }
@@ -583,7 +592,7 @@
 
   root.STAT = {
     ROUNDS: ROUNDS, QUESTIONS: QUESTIONS, SUDDEN: SUDDEN, maxScore: maxScore,
-    rankSudden: rankSudden, findTies: findTies, finalRanking: finalRanking, QUIPS: QUIPS, QQUIPS: QQUIPS, quipFor: quipFor, dealQuips: dealQuips, roundSummary: roundSummary, STICKERS: STICKERS, BG_TILE: BG_TILE,
+    BUILD: BUILD, SIG: contentSig(), rankSudden: rankSudden, findTies: findTies, finalRanking: finalRanking, QUIPS: QUIPS, QQUIPS: QQUIPS, quipFor: quipFor, dealQuips: dealQuips, roundSummary: roundSummary, STICKERS: STICKERS, BG_TILE: BG_TILE,
     computeScores: computeScores, rankPlayers: rankPlayers,
     trayHTML: trayHTML, extraHTML: extraHTML,
     LETTERS: ['A', 'B', 'C', 'D']

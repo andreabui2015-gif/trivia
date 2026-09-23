@@ -125,6 +125,7 @@
   .frow .fc{font-size:14px;color:var(--dim)}
   .frow .fs{font-family:var(--disp);font-size:24px;color:var(--amber);text-align:right}
   .frow.t1{background:rgba(245,197,66,.16)}.frow.t2{background:rgba(216,216,216,.10)}.frow.t3{background:rgba(215,154,91,.12)}
+  .stalewarn{background:var(--alert);color:#fff;border-radius:10px;padding:10px 12px;margin-bottom:10px;font-size:15px;line-height:1.35}
   .lastwin{margin-top:14px;border-top:1px solid #4A2A16;padding-top:10px}
   .lastwin h3{font-family:var(--disp);color:var(--amber);font-size:18px;margin-bottom:4px}
   /* ---------- pressure: red closes in, card shakes harder each second ---------- */
@@ -173,9 +174,9 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="config.js"></script>
-<script src="game-core.js"></script>
-<script src="music.js"></script>
+<script src="config.js?v=20260923-a"></script>
+<script src="game-core.js?v=20260923-a"></script>
+<script src="music.js?v=20260923-a"></script>
 
 
 <script>
@@ -214,7 +215,7 @@
   var firstState=true, lastResults=null;
   var MIDGAME={question:1,reveal:1,sudden_intro:1,sudden:1,sudden_reveal:1};
   function boot(){
-    base.child('settings').set({qsec:QSEC, reveal:REVEAL_SEC, sdsec:SDSEC});
+    base.child('settings').set({qsec:QSEC, reveal:REVEAL_SEC, sdsec:SDSEC, sig:STAT.SIG, build:STAT.BUILD});
     base.child('lastResults').on('value',function(s){ lastResults=s.val(); render(); });
     // Decide where the host lands only once players/answers/sudden AND state have all loaded (avoids saving empty winners)
     var loaded={}, st0=null, decided=false;
@@ -330,7 +331,7 @@
     wrap.innerHTML=
       '<header><div class="logo"><svg class=\"rxlogo\" viewBox=\"0 0 100 100\" aria-hidden=\"true\"><path d=\"M20 46 H80 C80 68 68 80 50 80 C32 80 20 68 20 46 Z\" fill=\"currentColor\"/><rect x=\"16\" y=\"40\" width=\"68\" height=\"9\" rx=\"4.5\" fill=\"currentColor\"/><rect x=\"44\" y=\"82\" width=\"12\" height=\"6\" rx=\"3\" fill=\"currentColor\"/><path d=\"M58 38 L78 14\" stroke=\"currentColor\" stroke-width=\"8\" stroke-linecap=\"round\"/><circle cx=\"80\" cy=\"12\" r=\"7\" fill=\"currentColor\"/></svg>STAT! <small>World Pharmacists Day</small></div><div class="room"><button id="music" class="musicbtn">'+(window.STATMusic&&STATMusic.isOn()?'&#9835; '+STATMusic.songName():'&#9835; Tap for music')+'</button> &nbsp; Room <b>'+ROOM+'</b> · '+Object.keys(players).length+' joined ('+online+' online)</div></header>'+
       '<div class="grid"><div>'+left+'</div><div>'+
-      '<div class="panel '+(phase==='ended'?'lead':'')+'"><h2>'+(phase==='lobby'||paused?'&#128138; Checked in':(phase==='ended'?'&#127942; Final Scoreboard &middot; '+Object.keys(players).length+' players':'&#127942; Pharmacy Leaderboard'))+'</h2>'+(phase==='lobby'||paused?playerList()+lastWinners():(phase==='ended'?fullBoard(STAT.finalRanking(players,scores,sdAnswers)):leaderboard(ranked)))+'</div>'+(phase==='lobby'||paused?roundsOnly():'')+'</div>';
+      '<div class="panel '+(phase==='ended'?'lead':'')+'"><h2>'+(phase==='lobby'||paused?'&#128138; Checked in':(phase==='ended'?'&#127942; Final Scoreboard &middot; '+Object.keys(players).length+' players':'&#127942; Pharmacy Leaderboard'))+'</h2>'+(phase==='lobby'||paused?staleList()+playerList()+lastWinners():(phase==='ended'?fullBoard(STAT.finalRanking(players,scores,sdAnswers)):leaderboard(ranked)))+'</div>'+(phase==='lobby'||paused?roundsOnly():'')+'</div>';
 
     var _fb2=document.getElementById('fboard'); if(_fb2) _fb2.scrollTop=_fbTop;
     wireButtons(q,phase);
@@ -386,6 +387,12 @@
       (paused?'':'<div class="controls"><button class="primary" id="start" '+((online||Object.keys(players).length)?'':'disabled')+'>Start game &rarr;</button><button class="danger" id="reset">Reset room</button></div>'+
       '<div class="hint">Players can keep joining right up until you start. &ldquo;Reset room&rdquo; also clears everyone&rsquo;s names.</div>')+
       '</div>'+rulesOnly();
+  }
+  function staleList(){
+    var bad=Object.keys(players).filter(function(p){ return players[p].v && players[p].v!==STAT.SIG; }).map(function(p){ return players[p].name; });
+    if(!bad.length) return '';
+    return '<div class="stalewarn"><b>&#9888; '+bad.length+' phone'+(bad.length>1?'s are':' is')+' on an older version:</b> '+bad.map(esc).join(', ')+
+      '<br>Ask them to close the page and reopen the link (they will refresh automatically within a few seconds).</div>';
   }
   function playerList(){
     var ks=Object.keys(players); if(!ks.length) return '<div class="empty">No one yet. Share the code.</div>';

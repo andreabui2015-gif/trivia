@@ -225,9 +225,9 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="config.js"></script>
-<script src="game-core.js"></script>
-<script src="music.js"></script>
+<script src="config.js?v=20260923-a"></script>
+<script src="game-core.js?v=20260923-a"></script>
+<script src="music.js?v=20260923-a"></script>
 <script>
 (function(){
   var main=document.getElementById('main'), meEl=document.getElementById('me');
@@ -289,7 +289,19 @@
   var base=db.ref('rooms/'+ROOM);
   var OFF=0; try{ db.ref('.info/serverTimeOffset').on('value',function(s){ OFF=+(s.val()||0); }); }catch(e){}
   function now(){ return Date.now()+OFF; }
+  var VERBAD=false;
   base.child('settings').on('value',function(s){ SET=s.val()||{};
+    if(SET.sig && SET.sig!==STAT.SIG){
+      VERBAD=true;
+      if(!sessionStorage.getItem('stat_reloaded')){          // try once: reload past the cached files
+        sessionStorage.setItem('stat_reloaded','1');
+        location.replace(location.pathname+'?g='+encodeURIComponent(ROOM)+'&fresh='+Date.now());
+        return;
+      }
+      if(typeof draw==='function') { try{ draw(); }catch(e){} }
+      return;
+    }
+    if(SET.sig){ VERBAD=false; sessionStorage.removeItem('stat_reloaded'); }
     setTimeout(function(){   // async + in-place: never wipes a half-typed name, never runs before the page is ready
       var a=document.getElementById('jq'), b=document.getElementById('jsd'); if(a) a.textContent=QS(); if(b) b.textContent=SDS();
       if(name && typeof draw==='function') { try{ draw(); }catch(e){} }
@@ -334,7 +346,7 @@
     var wantMusic=localStorage.getItem('stat_music')!=='0';
     try{ STATMusic.arm(); STATMusic.setSong('lobby'); if(wantMusic) STATMusic.start(); }catch(e){} setTimeout(musicBtn,50);
     name=v; localStorage.setItem('stat_name_'+ROOM,name);
-    base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP});
+    base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP,v:STAT.SIG});
     base.child('players/'+pid+'/online').onDisconnect().set(false);
     base.child('players/'+pid+'/online').set(true);
     listen();
@@ -378,6 +390,7 @@
 
   function draw(){
     musicBtn(); pressTick();
+    if(VERBAD){ drawVersionMismatch(); return; }
     if(!name){ renderJoin(); return; }
     var r=myRank();
     meEl.innerHTML='<span>'+esc(name)+'</span><b>'+r.score+' pts · #'+r.rank+'</b>';
@@ -569,6 +582,15 @@
         return '<li><span class="ri">'+(ic[r.kind]||'&#11088;')+'</span><span><b>'+esc(r.name)+'</b><br><span class="rs">'+esc(r.short)+'</span></span></li>';}).join('')+
       '</ol></div>';
   }
+  function drawVersionMismatch(){
+    main.innerHTML='<div class="card center"><div class="checkband"></div><div class="badge" style="background:var(--alert);color:#fff">&#9888; Out of date</div>'+
+      '<h1>This page needs a refresh</h1>'+
+      '<div class="sub">Your phone loaded an older copy of the game, so it would show you different questions than the big screen. Nothing is lost &mdash; your name and score are safe.</div>'+
+      '<button id="hardref" class="join" style="margin-top:14px">&#8635; Reload now</button>'+
+      '<div class="sub" style="margin-top:10px;font-size:13px">If it keeps saying this: close this tab completely and open the link again.</div></div>';
+    var b=document.getElementById('hardref');
+    if(b) b.onclick=function(){ sessionStorage.removeItem('stat_reloaded'); location.replace(location.pathname+'?g='+encodeURIComponent(ROOM)+'&fresh='+Date.now()); };
+  }
   function drawPaused(){
     main.innerHTML='<div class="card center"><div class="checkband"></div><div class="badge">&#9208; Paused</div>'+
       '<h1>Hold that thought</h1><div class="sub">The host is reconnecting. Your score is safe &mdash; the game picks up right where it left off.</div>'+
@@ -633,7 +655,7 @@
 
   // boot
   if(name) doJoinSilent(); else renderJoin();
-  function doJoinSilent(){ base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP}); base.child('players/'+pid+'/online').onDisconnect().set(false); base.child('players/'+pid+'/online').set(true); listen(); }
+  function doJoinSilent(){ base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP,v:STAT.SIG}); base.child('players/'+pid+'/online').onDisconnect().set(false); base.child('players/'+pid+'/online').set(true); listen(); }
 })();
 </script>
 </body>
