@@ -77,9 +77,10 @@
   .opt.correct{background:var(--ok);border-color:#1E9C72;color:#fff}.opt.correct .k{background:#fff;color:var(--ok)}
   .opt.wrong{background:#F3D9D3;border-color:var(--alert);color:#7A2418}
   .opt:disabled{cursor:default}
-  .wager{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
-  .wager button{flex:1;min-width:56px;border:2px solid #E4D6AA;background:#fff;border-radius:12px;padding:14px 0;font-family:var(--disp);font-weight:800;font-size:22px;color:var(--link)}
+  .wager{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:6px}
+  .wager button{min-width:0;border:2px solid #E4D6AA;background:#fff;border-radius:12px;padding:14px 0;font-family:var(--disp);font-weight:800;font-size:22px;color:var(--link)}
   .wager button.sel{background:var(--amber);border-color:var(--amberd)}
+  @media (max-width:370px){ .wager{grid-template-columns:repeat(3,1fr)} }
   .timer{height:8px;border-radius:99px;background:#E4D6AA;overflow:hidden;margin-bottom:14px}
   .timer i{display:block;height:100%;background:var(--amber);width:100%;transition:width 1s linear}
   .timer i.low{background:var(--alert)}
@@ -96,6 +97,9 @@
   .fact{font-size:14px;color:#6B5A2E;line-height:1.4;margin-top:4px}
   .pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
   .medal{font-size:44px}
+  .lockmsg{margin-top:4px;text-align:center;font-size:14px;color:#9A7A52;padding:8px;border-radius:10px}
+  .lockmsg.on{background:var(--link);color:var(--amber);font-family:var(--disp);font-weight:700;font-size:15px}
+  .opt.chosen{box-shadow:0 0 0 3px var(--amberd) inset,0 4px 0 var(--amberd);background:#FFF1D0}
   /* quips */
   .quip{display:flex;gap:10px;align-items:center;text-align:left;border-radius:14px;padding:10px 12px;margin:-2px 0 12px;
     font-family:var(--disp);font-weight:700;font-size:18px;line-height:1.2;animation:qin .45s cubic-bezier(.2,1.4,.4,1) both}
@@ -399,8 +403,8 @@
     setSong(STATMusic.songForRound(q.roundId));
     var mine=myAnswers[q.key];
     if(phase==='question'){
-      if(mine){ drawLocked(q,mine); }
-      else if(!main.querySelector('[data-qv="'+q.key+'"]')) drawQuestion(q);   // already showing -> leave the buttons alone
+      if(!main.querySelector('[data-qv="'+q.key+'"]')) drawQuestion(q);   // already showing -> leave the buttons alone (no eaten taps)
+      markChoice(q, mine);
     } else if(phase==='reveal'){
       if(window._lastBell!==q.key){ window._lastBell=q.key; if(localStorage.getItem('stat_music')!=='0'){ try{STATMusic.sting('bell');}catch(e){} } if(mine) reward(mine.choice===q.answer); }
       drawReveal(q,mine);
@@ -415,7 +419,7 @@
   }
 
   function drawQuestion(q){
-    qShownAt=markShown(q.key); pickedWager=(q.isWager?(pickedWager||0):null);
+    qShownAt=markShown(q.key); var prev=myAnswers[q.key]; pickedWager=(q.isWager?(prev&&prev.wager!=null?prev.wager:(pickedWager||0)):null);
     var html='<div class="card" data-qv="'+q.key+'">'+qmeta(q);
     html+='<div class="filling"><span id="fillab">Filling&hellip;</span><div class="cdbar"><i id="bar"></i></div><b id="secs" class="secs">'+QS()+'</b></div>';
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
@@ -424,9 +428,10 @@
       html+='<label>1. Your wager</label><div class="wager" id="wg">'+[0,1,2,3,4,5].map(function(n){return '<button data-w="'+n+'"'+(n===pickedWager?' class="sel"':'')+'>'+n+'</button>';}).join('')+'</div><label>2. Your answer</label>';
     }
     html+=q.options.map(function(o,i){return '<button class="opt" data-i="'+i+'"><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
+    html+='<div class="lockmsg" id="lockmsg">Tap an answer. You can change it until time runs out.</div>';
     html+='</div>';
     main.innerHTML=html;
-    if(q.isWager){ Array.prototype.forEach.call(document.querySelectorAll('#wg button'),function(b){ b.onclick=function(){ pickedWager=+b.dataset.w; document.querySelectorAll('#wg button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel'); }; }); }
+    if(q.isWager){ Array.prototype.forEach.call(document.querySelectorAll('#wg button'),function(b){ b.onclick=function(){ pickedWager=+b.dataset.w; document.querySelectorAll('#wg button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel'); var m=myAnswers[q.key]; if(m) submit(q,m.choice,true); }; }); }
     Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(b){ b.onclick=function(){ submit(q,+b.dataset.i); }; });
     runBar(QS());
   }
@@ -442,12 +447,26 @@
     },150);
   }
   function safeKey(k){ return String(k).replace(/[.$#\[\]\/]/g,'-'); }
-  function submit(q,i){
+  function submit(q,i,wagerOnly){
+    if(state.phase!=='question' || (state.endsAt && now()>state.endsAt)) return;           // time's up: no more changes
+    var prev=myAnswers[q.key];
+    if(prev && prev.choice===i && !wagerOnly && (!q.isWager || prev.wager===(pickedWager||0))) return;   // same tap again: keep your original speed
+    // speed = time of your FINAL answer, so switching late can't win a speed tiebreak
     var rec={choice:i,ms:Date.now()-qShownAt}; if(q.isWager)rec.wager=(pickedWager||0);
-    // optimistic lock so the phone responds instantly even before the write round-trips
-    myAnswers[q.key]=rec; draw();
+    if(prev) rec.changes=(prev.changes||0)+(prev.choice!==i?1:0);
+    myAnswers[q.key]=rec; markChoice(q,rec);
     base.child('answers/'+safeKey(q.key)+'/'+pid).set(rec).catch(function(){});
-    clearInterval(lowTimer);
+    try{ if(navigator.vibrate) navigator.vibrate(15); }catch(e){}
+  }
+  function markSd(q,mine){ var bs=main.querySelectorAll('[data-sv="'+q.key+'"] .opt'); if(!bs.length) return;
+    Array.prototype.forEach.call(bs,function(b){ b.classList.toggle('chosen', !!mine && +b.dataset.i===mine.choice); });
+    var m=document.getElementById('lockmsg'); if(m&&mine){ m.className='lockmsg on'; m.innerHTML='&#9745; Locked in: <b>'+STAT.LETTERS[mine.choice]+'</b> &mdash; tap another to change it'; } }
+  function markChoice(q,mine){
+    var bs=main.querySelectorAll('[data-qv="'+q.key+'"] .opt'); if(!bs.length) return;
+    Array.prototype.forEach.call(bs,function(b){ b.classList.toggle('chosen', !!mine && +b.dataset.i===mine.choice); });
+    var m=document.getElementById('lockmsg'); if(!m) return;
+    if(mine){ m.className='lockmsg on'; m.innerHTML='&#9745; Locked in: <b>'+STAT.LETTERS[mine.choice]+'</b>'+(q.isWager?' &middot; bet <b>'+(mine.wager||0)+'</b>':'')+' &mdash; tap another to change it'; }
+    else { m.className='lockmsg'; m.textContent='Tap an answer. You can change it until time runs out.'; }
   }
   function drawLocked(q,mine){
     clearInterval(lowTimer);
@@ -503,8 +522,8 @@
     var si=state.sdIndex||0, q=STAT.SUDDEN[si];
     if(!q){ main.innerHTML='<div class="card center pulse">\u2026</div>'; return; }
     var mine=sdMine[q.key], reveal=(phase==='sudden_reveal');
-    if(!reveal && !mine && main.querySelector('[data-sv="'+q.key+'"]')) return;   // already showing -> don't eat taps
-    var html='<div class="card"'+(!reveal&&!mine?' data-sv="'+q.key+'"':'')+'>'+
+    if(!reveal && main.querySelector('[data-sv="'+q.key+'"]')){ markSd(q,mine); return; }   // already showing -> don't rebuild (no eaten taps)
+    var html='<div class="card"'+(!reveal?' data-sv="'+q.key+'"':'')+'>'+
       '<div class="qmeta"><span style="color:var(--alert)">SUDDEN DEATH &middot; '+(si+1)+' of '+STAT.SUDDEN.length+'</span><span>'+SDS()+' sec</span></div>';
     if(!reveal) html+='<div class="cdbar"><i id="bar"></i></div>';
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
@@ -514,26 +533,25 @@
       if((state.tiedNames||'').indexOf(name)>-1) html+=quipHTML(q,mine,STAT.QUESTIONS.concat(STAT.SUDDEN),STAT.QUESTIONS.length+si);
       html+=q.options.map(function(o,i){var c=i===q.answer?' correct':(mine&&i===mine.choice?' wrong':'');
         return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
-    } else if(mine){
-      html+=q.options.map(function(o,i){var c=i===mine.choice?' chosen':'';
-        return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
-      html+='<div class="center" style="color:var(--dim);font-size:14px">&#9745; Submitted</div>';
     } else {
       html+=q.options.map(function(o,i){
         return '<button class="opt" data-i="'+i+'"><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
+      html+='<div class="lockmsg" id="lockmsg">Tap an answer. You can change it until time runs out.</div>';
     }
     html+='</div>';
     main.innerHTML=html;
-    if(!reveal && !mine){
+    if(!reveal){
       qShownAt=markShown(q.key);
       Array.prototype.forEach.call(document.querySelectorAll('.opt[data-i]'),function(b){
         b.onclick=function(){
+          if(state.phase!=='sudden' || (state.endsAt && now()>state.endsAt)) return;
+          var prev=sdMine[q.key]; if(prev && prev.choice===+b.dataset.i) return;
           var rec={choice:+b.dataset.i, ms:Date.now()-qShownAt};
-          sdMine[q.key]=rec; draw();
+          sdMine[q.key]=rec; markSd(q,rec);
           base.child('sudden/'+q.key+'/'+pid).set(rec).catch(function(){});
         };
       });
-      runBar(SDS());
+      runBar(SDS()); markSd(q,mine);
     }
   }
 
@@ -542,7 +560,9 @@
     var qs=QS();
     return '<div class="howto"><h3>How to play</h3><ul class="rulelist">'+
       '<li><b>'+qs+' seconds</b> per question &mdash; it moves on by itself. The last 5 seconds get intense!</li>'+
-      '<li><b>Tap fast.</b> Ties go to whoever answered quickest.</li>'+
+      '<li><b>Changed your mind?</b> Tap another answer any time before the clock runs out. Your last tap counts.</li>'+
+      '<li><b>Tap fast.</b> Ties go to whoever locked in their final answer quickest.</li>'+
+      '<li><b>Final Wager:</b> 3 questions, bet 0&ndash;5 points on each. Win it or lose it.</li>'+
       '<li><b>Sudden death</b> breaks any tie for the top 3: 5 easy questions, '+SDS()+' seconds each.</li>'+
       '<li><b>Prizes</b> for 1st, 2nd &amp; 3rd.</li></ul>'+
       '<h3>The '+R.length+' rounds</h3><ol class="rounds">'+R.map(function(r){
