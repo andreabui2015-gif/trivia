@@ -29,17 +29,18 @@
           options: ['39','41','43','45'], answer: 1,
           fact: 'Double-count anything controlled. CII counts need a second set of initials.' }
       ] },
-    { id: 3, name: 'Name That Tune', short: '2000s bangers — who sang it?', kind: 'pop', pts: 1, blurb: 'Your high-school playlist is about to get audited.',
+    { id: 3, name: 'Sleigh That Tune', short: 'Holiday songs you know by heart', kind: 'pop', pts: 1,
+      blurb: 'Yes, in September. Deal with it.',
       q: [
-        { type: 'mc', prompt: "The pettiest breakup anthem of Y2K: which boy band sang \"Bye Bye Bye\"?",
-          options: ["Backstreet Boys", "*NSYNC", "98 Degrees", "O-Town"], answer: 1,
-          fact: "Released in 2000, it sold 2.4 million copies of No Strings Attached in its first week — a record that stood for 15 years." },
-        { type: 'mc', prompt: "Belt it out: which very first American Idol winner released \"Since U Been Gone\"?",
-          options: ["Kelly Clarkson", "Carrie Underwood", "Avril Lavigne", "P!nk"], answer: 0,
-          fact: "Kelly won Season 1 in 2002. \"Since U Been Gone\" arrived in 2004 and became a karaoke war crime." },
-        { type: 'mc', prompt: "Shake it like a Polaroid picture! Who released \"Hey Ya!\" in 2003?",
-          options: ["OutKast", "The Black Eyed Peas", "Gnarls Barkley", "Nelly"], answer: 0,
-          fact: "Polaroid actually told people NOT to shake their photos. Nobody listened." }
+        { type: 'mc', prompt: "It plays in every store from November 1st. Who sang the original \"Jingle Bell Rock\" in 1957?",
+          options: ["Bobby Helms", "Bing Crosby", "Burl Ives", "Brenda Lee"], answer: 0,
+          fact: "Bobby Helms, 1957. Brenda Lee recorded \"Rockin' Around the Christmas Tree\" a year later, at age 13." },
+        { type: 'mc', prompt: "Which duo gave their heart away in \"Last Christmas\" (1984)?",
+          options: ["Wham!", "Hall & Oates", "Tears for Fears", "Pet Shop Boys"], answer: 0,
+          fact: "George Michael and Andrew Ridgeley. It was famously kept off the UK number-one spot by Band Aid." },
+        { type: 'mc', prompt: "Mariah Carey's \"All I Want for Christmas Is You\" came out in 1994. When did it FINALLY hit number one in the US?",
+          options: ["1995", "2003", "2019", "It never has"], answer: 2,
+          fact: "It took 25 years to reach number one on the Billboard Hot 100 — in December 2019. Patience: the ultimate extended-release formulation." }
       ] },
     { id: 4, name: 'Spot the Error', short: 'Find the mistake on the Rx label', kind: 'pharm', pts: 2, blurb: 'One thing is wrong on each label. Tap what it is.',
       q: [
@@ -72,14 +73,15 @@
           options: ['Vitamin C','Vitamin K','Vitamin D','Vitamin B12'], answer: 1,
           fact: 'Warfarin blocks vitamin K recycling. 4-factor PCC works in minutes; vitamin K takes hours because the liver must build new clotting factors.' },
       ] },
-    { id: 7, name: 'Emoji Decode', short: 'Guess the show or movie from emojis', kind: 'pop', pts: 2, blurb: 'Read the emojis. Name the thing.',
+    { id: 7, name: 'Emoji Decode', short: 'Guess the holiday movie from emojis', kind: 'pop', pts: 2,
+      blurb: 'Read the emojis. Name the movie.',
       q: [
-        { type: 'mc', prompt: "CHEMISTRY + TEACHER + MONEY + DESERT  ( 🧪 👨‍🏫 💸 🏜️ )",
-          options: ["Breaking Bad", "Better Call Saul", "Ozark", "Narcos"], answer: 0,
-          fact: "Walter White taught high-school chemistry in Albuquerque. Reminder: all compounding stays inside the licensed pharmacy." },
-        { type: 'mc', prompt: "SHIP + ICEBERG + HEARTBREAK + DOOR  ( 🚢 🧊 💔 🚪 )",
-          options: ["Titanic", "The Notebook", "Pearl Harbor", "Pirates of the Caribbean"], answer: 0,
-          fact: "MythBusters tested it: with a life jacket under the door, Jack could have made it. We are still not okay." }
+        { type: 'mc', prompt: "HOUSE + BOY + PAINT CAN + SCREAM  ( 🏠 👦 🪣 😱 )",
+          options: ["Home Alone", "Dennis the Menace", "The Santa Clause", "Jumanji"], answer: 0,
+          fact: "Kevin McCallister, two burglars and a paint can on a rope. The aftershave scream is cinema." },
+        { type: 'mc', prompt: "ELF + SPAGHETTI + SYRUP + NEW YORK  ( 🧝 🍝 🍯 🗽 )",
+          options: ["Elf", "The Polar Express", "A Christmas Story", "Jingle All the Way"], answer: 0,
+          fact: "Buddy the Elf's four food groups: candy, candy canes, candy corns and syrup. Do not counsel patients on this diet." }
       ] },
     { id: 8, name: 'Sound-Alike Showdown', short: 'Look-alike, sound-alike drug names', kind: 'pharm', pts: 2, blurb: 'The look-alike, sound-alike round.',
       q: [
@@ -102,18 +104,18 @@
         { type: 'mc', prompt: "Breaking Bad's title card hides two real element symbols. Which two?",
           options: ["Br and Ba — bromine and barium", "B and Bk — boron and berkelium", "Br and Bi — bromine and bismuth", "Ba and Bh — barium and bohrium"], answer: 0,
           fact: "Br (bromine) in \"Breaking\" and Ba (barium) in \"Bad\" — the best chemistry joke on television." },
-        { type: 'mc', prompt: "Captain America's \"Super Soldier Serum\" — history's most off-label injection. Who formulated it?",
-          options: ["Dr. Abraham Erskine", "Dr. Arnim Zola", "Howard Stark", "Dr. Hank Pym"], answer: 0,
-          fact: "Erskine was shot dead right after the procedure and took the formula with him. Howard Stark built the machine; Zola worked for Hydra; Pym is Ant-Man." },
-        { type: 'mc', prompt: "Michael Scott spent 11 years writing a movie. What was it called?",
-          options: ["Threat Level Midnight", "Agent Michael Scarn", "Code Name: Scarn", "The Scranton Strangler"], answer: 0,
-          fact: "Michael Scarn is the hero; Threat Level Midnight is the film. It finally screened in season 7." },
+        { type: 'mc', prompt: "In Home Alone, the McCallisters leave Kevin behind and fly where for Christmas?",
+          options: ["Paris", "London", "Rome", "Miami"], answer: 0,
+          fact: "Paris. In Home Alone 2 the family makes it to Florida while Kevin lands in New York. This family should not be allowed near an airport." },
+        { type: 'mc', prompt: "In 1965 the Gemini 6 crew smuggled a harmonica and sleigh bells aboard and played the first song ever broadcast from space. Which song?",
+          options: ["Jingle Bells", "Silent Night", "White Christmas", "Deck the Halls"], answer: 0,
+          fact: "Wally Schirra and Tom Stafford played \"Jingle Bells\" after reporting a UFO in a red suit. NASA was not amused. The harmonica is in the Smithsonian." },
         { type: 'mc', prompt: "Dr. Gregory House limped through eight seasons hooked on which painkiller?",
           options: ["Vicodin", "Percocet", "Dilaudid", "Tramadol"], answer: 0,
           fact: "House's pain came from a thigh-muscle infarction. And it's never lupus." },
         { type: 'mc', prompt: "Coca-Cola was created in 1886 by John Pemberton, who worked as a...",
           options: ["Pharmacist", "Dentist", "Chemistry teacher", "Soda-fountain owner"], answer: 0,
-          fact: "He sold it as a nerve tonic at a pharmacy soda fountain. Pepsi (Caleb Bradham) and Dr Pepper (Charles Alderton) came from pharmacists too — your profession invented soda." }
+          fact: "He sold it as a nerve tonic at a pharmacy soda fountain — and Coke's 1930s ads shaped the red-suited Santa we all picture today." }
       ] },
   ];
 
@@ -287,7 +289,10 @@
       "Right! That's a hat trick waiting to happen.",
       "Correct! Your brain has excellent bioavailability today.",
       "Right! You understood the assignment.",
-      "Correct! Someone roll the highlight reel."
+      "Correct! Someone roll the highlight reel.",
+    "Right! You're on the nice list.",
+    "Correct! That answer sleighs.",
+    "Right! Straight to the top of the nice list, no counseling required."
     ],
     wrong: [
       "Nope! That answer got voted off the island.",
@@ -335,7 +340,10 @@
       "Incorrect. That's a partial fill at best.",
       "Nope! You fumbled the bag. Pick it back up.",
       "Wrong! Houston, we have a problem.",
-      "Nope. Rotten Tomatoes gives that answer 12%."
+      "Nope. Rotten Tomatoes gives that answer 12%.",
+    "Wrong! Straight to the naughty list.",
+    "Nope! That answer got re-gifted.",
+    "Wrong! Even the Grinch winced at that one."
     ],
     none: [
       "Missed dose! Take it as soon as you remember... next question.",
@@ -362,7 +370,8 @@
       "No tap! That's a \"patient declined counseling\" moment.",
       "You blinked. The question didn't.",
       "No answer? Even Kevin from The Office would've guessed.",
-      "The countdown hit zero before you did. Tap faster, hero."
+      "The countdown hit zero before you did. Tap faster, hero.",
+    "Nothing? You went full Kevin McCallister and got left behind."
     ]
   };
   // Question-specific lines. Each player has roughly a 1-in-3 chance per question of getting one of these instead of a general line.
@@ -372,23 +381,25 @@
     '1-3': { right: ["Wakanda forever! Arms crossed, everyone.", "Correct! Vibranium-grade brain."], wrong: ["Wrong kingdom! Shuri is shaking her head.", "Nope! Wakanda forgets you picked that."] },
     '2-1': { right: ["Counted by fives like a true professional.", "Correct! The counting spatula salutes you."], wrong: ["Off by a few. Recount — the auditor is watching.", "Wrong! And THAT is why we double-count, people."] },
     '2-2': { right: ["Correct! Your eyes are basically a pill-counting machine.", "Right count! No discrepancy report needed."], wrong: ["Close, but the narcotics log would NOT accept that.", "Wrong count! Somewhere an inventory manager just gasped."] },
-    '3-1': { right: ["Correct! It's gonna be ME... who gets that point.", "Right! No strings attached to that answer."], wrong: ["Bye bye bye... to that point.", "Wrong! Justin Timberlake would like a word."] },
-    '3-2': { right: ["Correct! Since you been right, I can breathe for the first time.", "Right! Simon Cowell just... smiled?"], wrong: ["Since that answer been gone, you're sad.", "Wrong! Karaoke privileges: revoked."] },
-    '3-3': { right: ["What's cooler than being cool? Getting that right.", "Correct! Alright alright alright alright!"], wrong: ["Shake it like a Polaroid picture. (Don't, actually.)", "Wrong! André 3000 is putting down the flute in disappointment."] },
+    '3-1': { right: ["Correct! You've heard it 4,000 times in a CVS. It finally paid off.", "Right! Bobby Helms would tip his hat."], wrong: ["Wrong! And you've heard that song since birth.", "Nope! Jingle Bell Rock, 1957. Write it on your hand."] },
+    '3-2': { right: ["Correct! Last Christmas, you gave them the right answer.", "Right! George Michael approves."], wrong: ["Wrong! This year, to save you from tears, memorize this one.", "Nope! Wham! That's the sound of that point leaving."] },
+    '3-3': { right: ["Correct! 25 years to number one. Slower than a prior auth, but it got there.", "Right! Mariah defrosts in November and you clearly pay attention."], wrong: ["Wrong! It took until 2019 — the slowest-release formulation in music history.", "Nope! Mariah waited 25 years. You waited 10 seconds and still missed."] },
     '4-1': { right: ["Caught it! You just saved a patient AND your license.", "Correct! Textbook catch. Frame it."], wrong: ["Missed it! This is why pharmacists do final verification.", "Wrong! Metoprolol and metformin: same letters, VERY different day."] },
     '5-1': { right: ["Correct! That's what she said. (Sorry. We had to.)", "Right! Dwight is adding you to the Schrute Farms guest list."], wrong: ["FALSE. — Dwight Schrute", "Wrong! Michael Scott would call this... a Scott's Tots moment."] },
     '5-2': { right: ["Correct! You were NOT on a break from paying attention.", "PIVOT! PIVOT! ...right to the correct answer."], wrong: ["We were on a break! From the right answer.", "Wrong! Ross would say you said the wrong name at the altar."] },
     '5-3': { right: ["Correct! Eleven gives you a nosebleed-free high five.", "Right! Eggos for everyone."], wrong: ["Wrong! You've been pulled into the Upside Down.", "Nope — run up that hill and try again."] },
     '6-1': { right: ["Correct! NAC to the rescue. Smells like eggs, works like magic.", "Right! Your liver sends its regards."], wrong: ["Wrong! Your liver would like to file a complaint.", "Nope! N-acetylcysteine was right there, waving."] },
     '6-2': { right: ["Correct! K is for Koagulation. (It's German. It counts.)", "Right! Warfarin has met its match."], wrong: ["Wrong! That vitamin is not bringing the clotting factors back.", "Nope — it's K, as in \"K, let's reverse this.\""] },
-    '7-1': { right: ["Say my name. ...Correct.", "Correct! As Jesse would say: \"Yeah, science!\""], wrong: ["Wrong! Better call Saul — you need a lawyer for that answer.", "Nope! Walter White is disappointed, and he's hard to disappoint."] },
-    '7-2': { right: ["Correct! Your heart will go on... to the next question.", "Right! There was room on the door AND on the scoreboard."], wrong: ["Wrong! That answer sank faster than the ship.", "Nope! Jack could've fit on the door. That answer could not."] },
+    '7-1': { right: ["KEVINNN! Correct.", "Right! You'd never leave your kid — or a point — behind."], wrong: ["Wrong! You just got hit in the face with a paint can.", "Nope! That's a Kevin-sized miss."] },
+    '7-2': { right: ["Correct! Candy, candy canes, candy corn and syrup. The four food groups.", "Right! You know how to treat a cotton-headed ninny muggins."], wrong: ["Wrong! Buddy the Elf is disappointed, and Buddy likes everybody.", "Nope! SANTA? I KNOW HIM! ...You didn't, though."] },
     '8-1': { right: ["Correct! hydrOXYzine vs hydrALAZINE — tall-man lettering was made for you.", "Right! You'd never mix those up. Unlike the rest of us at 5 pm."], wrong: ["Wrong! This is exactly why tall-man lettering exists.", "Nope — look-alike, sound-alike strikes again."] },
     '8-2': { right: ["Correct! One's for joints, one's for moods. Don't mix them up.", "Right! Your brain has perfect label vision."], wrong: ["Wrong! Joints and moods: very different departments.", "Nope! Celebrex vs Celexa, the classic trap."] },
     '9-1': { right: ["Correct! Chill. Literally.", "Right! Unopened insulin loves the fridge."], wrong: ["Wrong! That insulin is now sweating nervously.", "Nope! Unopened insulin goes in the fridge. Cold, like the break room."] },
     '10-1': { right: ["Correct! Marvel lore AND compounding history. Dangerous combo.", "Right! Dr. Erskine's serum and your brain: both super."], wrong: ["Wrong! That serum recipe stays lost forever.", "Nope — Dr. Erskine would've filled that prescription differently."] },
-    '10-2': { right: ["Correct! It's never lupus, but it IS Vicodin.", "Right! Pharmacy staff everywhere nod knowingly."], wrong: ["Wrong! It's never lupus, and it's never that answer.", "Nope! Dr. House is rolling his eyes at you. Again."] },
-    '10-3': { right: ["Correct! Pharmacists: inventing iconic sodas since 1886.", "Right! John Pemberton would pour you a glass."], wrong: ["Wrong! It was a pharmacist. We are everywhere.", "Nope! Pharmacists invented Coke. Respect the profession."] }
+    '10-2': { right: ["Correct! Paris. And they STILL did it again in the sequel.", "Right! You're more reliable than the entire McCallister family."], wrong: ["Wrong! Paris. Which is also where they forgot a child.", "Nope! That bet flew off to the wrong continent."] },
+    '10-3': { right: ["Correct! Harmonica, sleigh bells, and a fake UFO report. Astronauts are chaos.", "Right! Jingle Bells: first song in space, and you knew it."], wrong: ["Wrong! It was Jingle Bells, played on a smuggled harmonica in orbit.", "Nope! That answer never made it past the launch pad."] },
+    '10-4': { right: ["Correct! It's never lupus, but it IS Vicodin.", "Right! Pharmacy staff everywhere nod knowingly."], wrong: ["Wrong! It's never lupus, and it's never that answer.", "Nope! Dr. House is rolling his eyes at you. Again."] },
+    '10-5': { right: ["Correct! Pharmacists: inventing iconic sodas AND the modern Santa since 1886.", "Right! John Pemberton would pour you a glass."], wrong: ["Wrong! It was a pharmacist. We are everywhere.", "Nope! Pharmacists invented Coke. Respect the profession."] }
   };
   function hashStr(s) { var h = 2166136261; for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
   // n-th quip of a kind for a player: a per-player shuffle, cycling without repeats
@@ -464,7 +475,7 @@
 
   // Build stamp + content signature. Every device checks these match, so a phone running a
   // cached older copy of this file can never show a different question than the TV.
-  var BUILD = '20260923-a';
+  var BUILD = '20260925-b';
   function contentSig() {
     var s = BUILD + '|';
     QUESTIONS.concat(SUDDEN).forEach(function (q) { s += q.key + ':' + q.prompt + ':' + (q.options || []).join('~') + ':' + q.answer + '|'; });
@@ -480,6 +491,17 @@
   function baseScore() {   // points available before the Final Wager
     return QUESTIONS.reduce(function (t, q) { return t + (q.isWager ? 0 : q.pts); }, 0);
   }
+  // End-screen cheers: tap one, it floats across everyone else's screen with your name.
+  var CHEERS = [
+    { e: '\uD83D\uDC4F', t: 'clap' }, { e: '\uD83C\uDF89', t: 'party' }, { e: '\u2764\uFE0F', t: 'love' },
+    { e: '\uD83D\uDD25', t: 'fire' }, { e: '\uD83D\uDCAF', t: '100' }, { e: '\uD83D\uDE02', t: 'laugh' },
+    { e: '\uD83E\uDD2F', t: 'mind blown' }, { e: '\uD83E\uDD21', t: 'clown' }, { e: '\uD83D\uDC80', t: 'dead' },
+    { e: '\uD83E\uDEE0', t: 'melting' }, { e: '\uD83C\uDF7F', t: 'popcorn' }, { e: '\uD83D\uDE2D', t: 'sobbing' },
+    { e: '\uD83D\uDC8A', t: 'pill' }, { e: '\uD83D\uDC89', t: 'shot' }, { e: '\uD83E\uDE7A', t: 'stethoscope' },
+    { e: '\uD83E\uDDEA', t: 'lab' }, { e: '\uD83E\uDE79', t: 'bandage' }, { e: '\u2695\uFE0F', t: 'rx' },
+    { e: '\uD83D\uDE91', t: 'ambulance' }, { e: '\uD83E\uDDE0', t: 'big brain' }
+  ];
+
   function maxScore() {     // theoretical ceiling: base, doubled by every all-in wager
     return baseScore() * Math.pow(2, QUESTIONS.filter(function (q) { return q.isWager; }).length);
   }
@@ -622,7 +644,7 @@
 
   root.STAT = {
     ROUNDS: ROUNDS, QUESTIONS: QUESTIONS, SUDDEN: SUDDEN, maxScore: maxScore,
-    BUILD: BUILD, SIG: contentSig(), wagerCapFor: wagerCapFor, baseScore: baseScore, wagerOutcome: wagerOutcome, runScores: runScores, rankSudden: rankSudden, findTies: findTies, finalRanking: finalRanking, QUIPS: QUIPS, QQUIPS: QQUIPS, quipFor: quipFor, dealQuips: dealQuips, roundSummary: roundSummary, STICKERS: STICKERS, BG_TILE: BG_TILE,
+    BUILD: BUILD, SIG: contentSig(), CHEERS: CHEERS, wagerCapFor: wagerCapFor, baseScore: baseScore, wagerOutcome: wagerOutcome, runScores: runScores, rankSudden: rankSudden, findTies: findTies, finalRanking: finalRanking, QUIPS: QUIPS, QQUIPS: QQUIPS, quipFor: quipFor, dealQuips: dealQuips, roundSummary: roundSummary, STICKERS: STICKERS, BG_TILE: BG_TILE,
     computeScores: computeScores, rankPlayers: rankPlayers,
     trayHTML: trayHTML, extraHTML: extraHTML,
     LETTERS: ['A', 'B', 'C', 'D']

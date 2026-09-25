@@ -50,6 +50,10 @@
                chords: [[57, 'm'], [53, 'M'], [60, 'M'], [55, 'M']],
                kick: 'x...x...x...x...', snare: '....x.......x.x.', hat: 'xxxxxxxxxxxxxxxx',
                bass: 'r.r.r.r.r.r.r.r.', mel: 'o5t5o5t5o5f5o5t5' },
+    defeat:  { name: 'Sad Trombone Blues', bpm: 84, lead: 'sawtooth', lv: 0.055,
+               chords: [[57, 'm'], [53, 'M'], [50, 'm'], [52, 'M']],
+               kick: 'x.......x.......', snare: '....x.......x...', hat: '..x...x...x...x.',
+               bass: 'r...5...o...5...', mel: 'o..7..5...3..r..' },
     victory: { name: 'Victory Lap', bpm: 120, lead: 'triangle', lv: 0.055,
                chords: [[60, 'M'], [53, 'M'], [55, 'M'], [60, 'M']],
                kick: 'x...x...x...x...', snare: '....x.......x...', hat: 'x.x.x.x.x.x.x.x.',
@@ -181,6 +185,23 @@
           g.gain.setValueAtTime([0.22, 0.08, 0.04][k], t0); g.gain.exponentialRampToValueAtTime(0.0008, t0 + 1.4);
           o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0 + 1.45);
         });
+        return;
+      }
+      if (kind === 'sad') {                      // womp womp womp waaaah
+        [[311, 0], [294, 0.26], [277, 0.52]].forEach(function (n) {
+          var t = t0 + n[1], o = ctx.createOscillator(), g = ctx.createGain(), f = ctx.createBiquadFilter();
+          o.type = 'sawtooth'; f.type = 'lowpass'; f.frequency.value = 900;
+          o.frequency.setValueAtTime(n[0], t); o.frequency.linearRampToValueAtTime(n[0] * 0.94, t + 0.22);
+          g.gain.setValueAtTime(0.0001, t); g.gain.linearRampToValueAtTime(0.3, t + 0.04);
+          g.gain.exponentialRampToValueAtTime(0.0008, t + 0.26);
+          o.connect(f); f.connect(g); g.connect(ctx.destination); o.start(t); o.stop(t + 0.3);
+        });
+        var t3 = t0 + 0.8, o3 = ctx.createOscillator(), g3 = ctx.createGain(), f3 = ctx.createBiquadFilter();
+        o3.type = 'sawtooth'; f3.type = 'lowpass'; f3.frequency.value = 800;
+        o3.frequency.setValueAtTime(262, t3); o3.frequency.linearRampToValueAtTime(175, t3 + 1.0);   // the long sad slide
+        g3.gain.setValueAtTime(0.0001, t3); g3.gain.linearRampToValueAtTime(0.32, t3 + 0.06);
+        g3.gain.exponentialRampToValueAtTime(0.0008, t3 + 1.05);
+        o3.connect(f3); f3.connect(g3); g3.connect(ctx.destination); o3.start(t3); o3.stop(t3 + 1.1);
         return;
       }
       var seq = kind === 'win' ? [523, 659, 784, 1047] : [660, 520];

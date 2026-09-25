@@ -130,6 +130,14 @@
   .lastwin h3{font-family:var(--disp);color:var(--amber);font-size:18px;margin-bottom:4px}
   /* ---------- pressure: red closes in, card shakes harder each second ---------- */
   #press{position:fixed;inset:0;pointer-events:none;z-index:40;transition:box-shadow .3s}
+  #cheerlayer{position:fixed;inset:0;pointer-events:none;z-index:46;overflow:hidden}
+  .cheer{position:absolute;left:0;display:flex;align-items:center;gap:10px;white-space:nowrap;background:rgba(255,248,230,.96);
+    border:3px solid var(--amberd);border-radius:999px;padding:8px 18px;box-shadow:0 8px 22px rgba(0,0,0,.35);
+    animation-name:drift;animation-timing-function:linear;animation-iteration-count:infinite;will-change:transform}
+  .cheer .ce{font-size:38px;line-height:1}
+  .cheer .cn{font-family:var(--disp);font-weight:800;font-size:24px;color:var(--link)}
+  @keyframes drift{from{transform:translateX(102vw)}to{transform:translateX(-110%)}}
+  @media (prefers-reduced-motion:reduce){ .cheer{animation:none;left:12px} }
   body.press1 #press{box-shadow:inset 0 0 60px rgba(228,87,61,.25)}
   body.press2 #press{box-shadow:inset 0 0 90px rgba(228,87,61,.38)}
   body.press3 #press{box-shadow:inset 0 0 130px rgba(228,87,61,.52)}
@@ -169,14 +177,15 @@
 <canvas id="confetti"></canvas>
 <div id="stkLayer"></div>
 <div id="press"></div>
+<div id="cheerlayer"></div>
 <div class="wrap" id="wrap"><div class="panel gate"><h2>Loading…</h2></div></div>
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="config.js?v=20260923-a"></script>
-<script src="game-core.js?v=20260923-a"></script>
-<script src="music.js?v=20260923-a"></script>
+<script src="config.js?v=20260925-b"></script>
+<script src="game-core.js?v=20260925-b"></script>
+<script src="music.js?v=20260925-b"></script>
 
 
 <script>
@@ -212,11 +221,12 @@
     document.getElementById('pin').addEventListener('keydown',function(e){if(e.key==='Enter')document.getElementById('ok').click();});
   }
 
-  var firstState=true, lastResults=null;
+  var firstState=true, lastResults=null, cheers={};
   var MIDGAME={question:1,reveal:1,sudden_intro:1,sudden:1,sudden_reveal:1};
   function boot(){
     base.child('settings').set({qsec:QSEC, reveal:REVEAL_SEC, sdsec:SDSEC, sig:STAT.SIG, build:STAT.BUILD});
     base.child('lastResults').on('value',function(s){ lastResults=s.val(); render(); });
+    base.child('cheers').on('value',function(s){ cheers=s.val()||{}; drawCheers(); });
     // Decide where the host lands only once players/answers/sudden AND state have all loaded (avoids saving empty winners)
     var loaded={}, st0=null, decided=false;
     function decide(){
@@ -259,7 +269,7 @@
   // Start a fresh game on the waiting page. Keeps players checked in; saves last winners for prize hand-out.
   function newGame(saveWinners){
     var rk=applySudden(STAT.rankPlayers(players,scores)).slice(0,3);
-    var ups={ answers:null, sudden:null, state:{phase:'lobby',qIndex:-1,paused:false,endsAt:null,sdIndex:null,tiedNames:null} };
+    var ups={ answers:null, sudden:null, cheers:null, state:{phase:'lobby',qIndex:-1,paused:false,endsAt:null,sdIndex:null,tiedNames:null} };
     if(saveWinners && rk.length && rk[0].score>0) ups.lastResults={ at:now(), top:rk.map(function(r){return {name:r.name,score:r.score};}) };
     Object.keys(ups).forEach(function(k){ if(ups[k]===null) base.child(k).remove(); else base.child(k).set(ups[k]); });
     clearAuto();
@@ -344,7 +354,7 @@
         : autoAdvance);
     } else clearAuto();
     if(phase==='lobby'||paused) drawQR();
-    pressTick();
+    pressTick(); drawCheers();
     if(phase==='ended') confetti();
   }
 
@@ -356,6 +366,7 @@
         '<li><b>Final Wager:</b> 5 questions. Players bet <b>up to their whole score</b> on each. Anyone on 0 points cannot bet and gets a free 1-point question.</li>'+
         '<li><b>Sudden death</b> if anyone is tied for 1st, 2nd or 3rd: 5 easy questions, '+SDSEC+' seconds each.</li>'+
         '<li><b>Prizes</b> for 1st, 2nd and 3rd. Pharmacists, techs &amp; interns all have a shot.</li>'+
+        '<li><b>&#128266; Nobody mutes their phone.</b> Winners get victory music. Everyone else gets the sad trombone. Take as directed, with volume.</li>'+
       '</ul></div>';
   }
   function roundsOnly(){
@@ -490,6 +501,23 @@
     return html;
   }
 
+  function drawCheers(){
+    var lay=document.getElementById('cheerlayer'); if(!lay) return;
+    if(state.phase!=='ended'){ lay.innerHTML=''; return; }
+    var seen={};
+    Object.keys(cheers).forEach(function(p){
+      var c=cheers[p]; if(!c||!c.e) return; seen[p]=1;
+      var el=lay.querySelector('[data-cp="'+p+'"]');
+      if(!el){ el=document.createElement('div'); el.className='cheer'; el.dataset.cp=p;
+        el.style.top=(6+Math.random()*78)+'%';
+        el.style.animationDuration=(11+Math.random()*8).toFixed(1)+'s';
+        el.style.animationDelay=(-Math.random()*8).toFixed(1)+'s';
+        el.innerHTML='<span class="ce"></span><span class="cn"></span>'; lay.appendChild(el); }
+      el.querySelector('.ce').textContent=c.e;
+      el.querySelector('.cn').textContent=c.n||'';
+    });
+    Array.prototype.forEach.call(lay.querySelectorAll('[data-cp]'),function(el){ if(!seen[el.dataset.cp]) el.remove(); });
+  }
   function fullBoard(ranked){
     var m=['&#129351;','&#129352;','&#129353;'];
     return '<div class="fboard" id="fboard">'+ranked.map(function(r){

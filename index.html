@@ -97,6 +97,30 @@
   .fact{font-size:14px;color:#6B5A2E;line-height:1.4;margin-top:4px}
   .pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
   .medal{font-size:44px}
+  #cheerlayer{position:fixed;inset:0;pointer-events:none;z-index:46;overflow:hidden}
+  .cheer{position:absolute;left:0;display:flex;align-items:center;gap:7px;white-space:nowrap;background:rgba(255,248,230,.96);
+    border:2px solid var(--amberd);border-radius:999px;padding:5px 12px;box-shadow:0 6px 16px rgba(0,0,0,.28);
+    animation-name:drift;animation-timing-function:linear;animation-iteration-count:infinite;will-change:transform}
+  .cheer .ce{font-size:24px;line-height:1}
+  .cheer .cn{font-family:var(--disp);font-weight:800;font-size:15px;color:var(--link);max-width:38vw;overflow:hidden;text-overflow:ellipsis}
+  @keyframes drift{from{transform:translateX(102vw)}to{transform:translateX(-110%)}}
+  @media (prefers-reduced-motion:reduce){ .cheer{animation:none;right:auto;left:8px;opacity:.95} }
+  .cheerbar{margin-top:12px;background:var(--link);border-radius:14px;padding:10px 12px}
+  .cheerlab{font-family:var(--disp);font-weight:800;font-size:13px;color:var(--amber);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+  .cheergrid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+  .cheergrid .ch{font-size:24px;line-height:1;padding:8px 0;border-radius:10px;border:2px solid transparent;background:rgba(255,255,255,.10)}
+  .cheergrid .ch.on{background:var(--amber);border-color:#fff;transform:scale(1.06)}
+  .cheerhint{font-size:12px;color:#E8D5AE;margin-top:6px;text-align:center}
+  .namecard{background:var(--link);border-radius:12px;padding:10px 12px;margin:8px 0;color:#FBEFD2}
+  .namecard .nlab{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--amber);font-family:var(--disp);font-weight:700}
+  .namecard .nrow{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .namecard b{font-family:var(--disp);font-weight:800;font-size:26px;color:#fff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .namecard button{border:2px solid var(--amber);background:transparent;color:var(--amber);border-radius:999px;padding:6px 12px;font-family:var(--disp);font-weight:800;font-size:14px;flex:none}
+  .namecard .nhint{font-size:12px;color:#E8D5AE;margin-top:2px}
+  .namecard .nedit{display:flex;gap:6px;margin-top:4px}
+  .namecard .nedit input{flex:1;min-width:0;margin:0;padding:10px;border-radius:10px;border:2px solid var(--amber);font-size:16px}
+  .namecard .nedit button{background:var(--amber);color:var(--link)}
+  .musicwarn{background:#FFF1D6;border:2px dashed var(--amberd);border-radius:12px;padding:10px 12px;margin-bottom:8px;font-size:14px;line-height:1.35;text-align:left;color:#6B4A12}
   .nobet{background:#FFF1D6;border:2px solid var(--amber);border-radius:12px;padding:12px;margin-bottom:8px;font-size:15px;line-height:1.35;text-align:center}
   .betbox{background:var(--link);border-radius:14px;padding:10px 12px;margin-bottom:8px}
   .betnum{text-align:center;color:#fff}
@@ -222,6 +246,7 @@
 <body>
 <div id="stkLayer"></div>
 <div id="press"></div>
+<div id="cheerlayer"></div>
 <div class="app">
   <header>
     <div class="logo"><svg class="rxlogo" viewBox="0 0 100 100" aria-hidden="true"><path d="M20 46 H80 C80 68 68 80 50 80 C32 80 20 68 20 46 Z" fill="currentColor"/><rect x="16" y="40" width="68" height="9" rx="4.5" fill="currentColor"/><rect x="44" y="82" width="12" height="6" rx="3" fill="currentColor"/><path d="M58 38 L78 14" stroke="currentColor" stroke-width="8" stroke-linecap="round"/><circle cx="80" cy="12" r="7" fill="currentColor"/></svg><span>STAT!</span></div>
@@ -235,9 +260,9 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-<script src="config.js?v=20260923-a"></script>
-<script src="game-core.js?v=20260923-a"></script>
-<script src="music.js?v=20260923-a"></script>
+<script src="config.js?v=20260925-b"></script>
+<script src="game-core.js?v=20260925-b"></script>
+<script src="music.js?v=20260925-b"></script>
 <script>
 (function(){
   var main=document.getElementById('main'), meEl=document.getElementById('me');
@@ -300,6 +325,7 @@
   var OFF=0; try{ db.ref('.info/serverTimeOffset').on('value',function(s){ OFF=+(s.val()||0); }); }catch(e){}
   function now(){ return Date.now()+OFF; }
   var VERBAD=false;
+  base.child('players').on('value',function(s){ players=s.val()||{}; if(name && typeof draw==='function'){ try{ draw(); }catch(e){} } });
   base.child('settings').on('value',function(s){ SET=s.val()||{};
     if(SET.sig && SET.sig!==STAT.SIG){
       VERBAD=true;
@@ -319,7 +345,7 @@
   // stopwatch starts the FIRST time this phone shows a question - redraws caused by other players must not reset it
   var shownAt={};
   function markShown(key){ if(!shownAt[key]) shownAt[key]=Date.now(); return shownAt[key]; }
-  var state={phase:'lobby',qIndex:-1}, players={}, scores={}, myAnswers={}, sdMine={}, sdAll={}, allAns={};
+  var state={phase:'lobby',qIndex:-1}, players={}, scores={}, myAnswers={}, sdMine={}, sdAll={}, allAns={}, cheers={};
   var qShownAt=0, pickedWager=null, lowTimer=null;
 
   function renderFatal(msg){ main.innerHTML='<div class="card center"><h1>Hmm.</h1><div class="sub">'+msg+'</div></div>'; }
@@ -332,16 +358,17 @@
         '<div class="checkband"></div>'+
         '<div class="badge">&#127881; World Pharmacists Day &middot; Room '+ROOM+'</div>'+
         '<h1>Pharmacy Trivia<br><span class="h1sub">Celebration Game</span></h1>'+
-        '<div class="sub">20 questions. Tap your answer on your phone. Pharmacists, techs and interns &mdash; everyone plays.</div>'+
+        '<div class="sub">'+STAT.QUESTIONS.length+' questions. Tap your answer on your phone. Pharmacists, techs and interns &mdash; everyone plays.</div>'+
         '<ul class="rulelist">'+
           '<li><b><span id="jq">'+QS()+'</span> seconds</b> per question &mdash; it moves on automatically, so answer fast.</li>'+
           '<li><b>Faster = better.</b> Ties are broken by who answered quickest.</li>'+
           '<li><b>Sudden death</b> if anyone is still tied: 5 questions, <span id="jsd">'+SDS()+'</span> seconds each.</li>'+
           '<li><b>Prizes</b> for 1st, 2nd and 3rd place.</li>'+
         '</ul>'+
-        '<label for="nm">Your name (players will see this)</label>'+
+        '<label for="nm">Your name (everyone sees this on the big screen)</label>'+
         '<input id="nm" maxlength="24" autocomplete="name" placeholder="e.g. Aisha, tech" value="'+esc(name)+'">'+
-        '<div class="musicopt">&#128266; Music plays on your phone &mdash; turn your volume up! (Tap &#9835; at the top to mute.)</div>'+
+        '<div class="hint" style="margin:-2px 0 8px">Leave it blank and we&rsquo;ll call you <b>Nameless</b> &mdash; you can fix that in the waiting room.</div>'+
+        '<div class="musicopt">&#128266; <b>Keep the music ON.</b> Sound is part of the dose.</div>'+
         '<button class="go" id="join">Join the game</button>'+
         '<div class="note">&#127881; Happy World Pharmacists Day &mdash; good luck!</div>'+
       '</div>';
@@ -350,22 +377,45 @@
     input.addEventListener('keydown',function(e){if(e.key==='Enter')doJoin();});
     input.focus();
   }
+  function autoName(){
+    var used={}, max=0;
+    Object.keys(players||{}).forEach(function(p){ var n=(players[p].name||''); used[n.toLowerCase()]=1;
+      var mm=/^nameless\s+(\d+)$/i.exec(n); if(mm) max=Math.max(max,+mm[1]); });
+    var n=max+1; while(used[('nameless '+n)]) n++;
+    return 'Nameless '+n;
+  }
+  // two people can tap Join at the same instant - if we ended up with a twin, quietly take the next number
+  function fixNameClash(){
+    setTimeout(function(){
+      if(!/^Nameless\s+\d+$/i.test(name)) return;
+      var mine=(players[pid]||{}).joinedAt||0;
+      var clash=Object.keys(players||{}).some(function(p){ return p!==pid && (players[p].name||'').toLowerCase()===name.toLowerCase() && ((players[p].joinedAt||0)<mine); });
+      if(clash){ setName(autoName()); }
+    },1200);
+  }
+  function setName(v){
+    name=String(v).trim().slice(0,24); if(!name) return;
+    localStorage.setItem('stat_name_'+ROOM,name);
+    base.child('players/'+pid).update({name:name});
+    meEl.textContent=name; draw();
+  }
   function doJoin(){
     var v=document.getElementById('nm').value.trim().slice(0,24);
-    if(!v){document.getElementById('nm').focus();return;}
+    if(!v) v=autoName();                    // no name typed? you're Nameless N - changeable in the waiting room
     var wantMusic=localStorage.getItem('stat_music')!=='0';
     try{ STATMusic.arm(); STATMusic.setSong('lobby'); if(wantMusic) STATMusic.start(); }catch(e){} setTimeout(musicBtn,50);
     name=v; localStorage.setItem('stat_name_'+ROOM,name);
     base.child('players/'+pid).update({name:name,joinedAt:firebase.database.ServerValue.TIMESTAMP,v:STAT.SIG});
     base.child('players/'+pid+'/online').onDisconnect().set(false);
     base.child('players/'+pid+'/online').set(true);
-    listen();
+    listen(); fixNameClash();
   }
 
   // ---------- LIVE ----------
   function listen(){
     base.child('state').on('value',function(s){ state=s.val()||{phase:'lobby',qIndex:-1}; draw(); });
     base.child('players').on('value',function(s){ players=s.val()||{}; draw(); });
+    base.child('cheers').on('value',function(s){ cheers=s.val()||{}; drawCheers(); });
     base.child('sudden').on('value',function(s){ sdAll=s.val()||{}; sdMine={}; Object.keys(sdAll).forEach(function(k){ if(sdAll[k]&&sdAll[k][pid])sdMine[k]=sdAll[k][pid]; }); draw(); });
     base.child('answers').on('value',function(s){ var a=s.val()||{}; allAns=a; myAnswers={}; Object.keys(a).forEach(function(qk){ if(a[qk]&&a[qk][pid])myAnswers[qk]=a[qk][pid]; }); scores=STAT.computeScores(players,a); draw(); });
     draw();
@@ -415,10 +465,12 @@
       main.innerHTML='<div class="card center"><div class="checkband"></div><div class="badge">Rx received &middot; Room '+ROOM+'</div>'+
         '<svg class="bottle" viewBox="0 0 80 110" aria-hidden="true"><rect x="14" y="4" width="52" height="16" rx="4" fill="#F7F3EA" stroke="#2A1206" stroke-width="3"/><rect x="10" y="20" width="60" height="84" rx="10" fill="#E89A2C" fill-opacity=".35" stroke="#2A1206" stroke-width="3"/><rect x="18" y="42" width="44" height="30" rx="3" fill="#FBEFD2" stroke="#2A1206" stroke-width="2"/><text x="40" y="62" text-anchor="middle" font-family="Arial" font-weight="700" font-size="14" fill="#C8371F">Rx</text><g class="pillsfall"><circle cx="30" cy="94" r="5" fill="#fff"/><circle cx="44" cy="96" r="5" fill="#fff"/><circle cx="52" cy="90" r="5" fill="#C8371F"/><circle cx="38" cy="86" r="5" fill="#fff"/></g></svg>'+
         '<h1>You\'re in!</h1><div class="sub">Your order is in the queue. The pharmacist (host) starts the game shortly. <b>'+n+'</b> player'+(n===1?'':'s')+' checked in so far.</div>'+
-        '<div class="big pulse" style="color:var(--amberd);margin:2px 0 10px">Now filling&hellip;</div>'+rulesCard()+'</div>';
+        '<div class="big pulse" style="color:var(--amberd);margin:2px 0 6px">Now filling&hellip;</div>'+
+        nameCard()+musicWarn()+rulesCard()+'</div>';
+      wireName();
       return;
     }
-    if(phase==='ended'){ setSong('victory'); victoryStop(true); drawFinal(); return; }
+    if(phase==='ended'){ drawFinal(); return; }   // drawFinal chooses winner or loser music
     if(phase==='sudden_intro'){ try{STATMusic.setMode('sudden');}catch(e){} drawSuddenIntro(); return; }
     if(phase==='sudden'||phase==='sudden_reveal'){ try{STATMusic.setMode('sudden');}catch(e){} drawSudden(phase); return; }
     if(!q){ main.innerHTML='<div class="card center pulse">…</div>'; return; }
@@ -602,6 +654,32 @@
     }
   }
 
+  function nameCard(){
+    return '<div class="namecard" id="namecard">'+
+      '<div class="nlab">On the big screen you are</div>'+
+      '<div class="nrow"><b id="myname">'+esc(name)+'</b><button id="rename">&#9998; Change</button></div>'+
+      (/^Nameless\s+\d+$/i.test(name)?'<div class="nhint">That&rsquo;s a placeholder &mdash; tap Change so people know who beat them.</div>':'')+
+    '</div>';
+  }
+  function wireName(){
+    var b=document.getElementById('rename'); if(!b) return;
+    b.onclick=function(){
+      var card=document.getElementById('namecard'); if(!card) return;
+      card.innerHTML='<div class="nlab">Pick your name</div><div class="nedit">'+
+        '<input id="nmedit" maxlength="24" value="'+esc(name)+'" placeholder="e.g. Aisha, tech">'+
+        '<button id="nmsave">Save</button></div>';
+      var inp=document.getElementById('nmedit'); inp.focus(); inp.select();
+      function save(){ var v=inp.value.trim().slice(0,24); if(v) setName(v); else draw(); }
+      document.getElementById('nmsave').onclick=save;
+      inp.addEventListener('keydown',function(e){ if(e.key==='Enter') save(); });
+    };
+  }
+  function musicWarn(){
+    return '<div class="musicwarn"><b>&#128266; Do not mute your phone.</b><br>'+
+      'This game is dispensed with sound. Side effects of muting include missing the countdown, '+
+      'missing your own victory music, and severe FOMO. No refills, no substitutions &mdash; '+
+      '<b>take as directed, with volume.</b></div>';
+  }
   function rulesCard(){
     var R=STAT.roundSummary(), ic={pop:'&#127916;',pharm:'&#128138;',wager:'&#127922;'};
     var qs=QS();
@@ -624,6 +702,56 @@
       '<div class="sub" style="margin-top:10px;font-size:13px">If it keeps saying this: close this tab completely and open the link again.</div></div>';
     var b=document.getElementById('hardref');
     if(b) b.onclick=function(){ sessionStorage.removeItem('stat_reloaded'); location.replace(location.pathname+'?g='+encodeURIComponent(ROOM)+'&fresh='+Date.now()); };
+  }
+  /* ---------- end-screen cheers ---------- */
+  function sendCheer(e){
+    if(cheers[pid] && cheers[pid].e===e){ base.child('cheers/'+pid).remove(); return; }   // tap it again to take it back
+    base.child('cheers/'+pid).set({e:e, n:name, at:now()});                                // one per person: this REPLACES theirs
+  }
+  function cheerBar(){
+    var mine=(cheers[pid]||{}).e;
+    return '<div class="cheerbar"><div class="cheerlab">Send a cheer &mdash; it floats across everyone else&rsquo;s screen</div>'+
+      '<div class="cheergrid">'+STAT.CHEERS.map(function(c){
+        return '<button class="ch'+(mine===c.e?' on':'')+'" data-e="'+c.e+'" title="'+c.t+'">'+c.e+'</button>';}).join('')+'</div>'+
+      '<div class="cheerhint">'+(mine?('You&rsquo;re sending <b>'+mine+'</b> &mdash; tap another to swap it, or tap it again to stop.'):'One at a time. Swapping replaces yours.')+'</div></div>';
+  }
+  function wireCheers(){
+    Array.prototype.forEach.call(document.querySelectorAll('.cheergrid .ch'),function(b){
+      b.onclick=function(){ sendCheer(b.dataset.e); };
+    });
+  }
+  // One floating bubble per sender. Changing your emoji swaps the one you already have - it never adds a second.
+  function updateCheerUI(){        // the final screen deliberately does not redraw, so update the picker in place
+    var grid=document.querySelector('.cheergrid'); if(!grid) return;
+    var mine=(cheers[pid]||{}).e;
+    Array.prototype.forEach.call(grid.querySelectorAll('.ch'),function(b){ b.classList.toggle('on', b.dataset.e===mine); });
+    var hint=document.querySelector('.cheerhint');
+    if(hint) hint.innerHTML = mine ? ('You&rsquo;re sending <b>'+mine+'</b> &mdash; tap another to swap it, or tap it again to stop.')
+                                   : 'One at a time. Swapping replaces yours.';
+  }
+  function drawCheers(){
+    updateCheerUI();
+    var lay=document.getElementById('cheerlayer'); if(!lay) return;
+    var show=(state.phase==='ended');
+    if(!show){ lay.innerHTML=''; return; }
+    var seen={};
+    Object.keys(cheers).forEach(function(p){
+      if(p===pid) return;                      // you see everyone else's, not your own
+      var c=cheers[p]; if(!c||!c.e) return;
+      seen[p]=1;
+      var el=lay.querySelector('[data-cp="'+p+'"]');
+      if(!el){
+        el=document.createElement('div'); el.className='cheer'; el.dataset.cp=p;
+        el.style.top=(6+Math.random()*72)+'%';
+        el.style.animationDuration=(9+Math.random()*7).toFixed(1)+'s';
+        el.style.animationDelay=(-Math.random()*6).toFixed(1)+'s';
+        el.innerHTML='<span class="ce"></span><span class="cn"></span>';
+        lay.appendChild(el);
+      }
+      el.querySelector('.ce').textContent=c.e;                       // swap in place
+      el.querySelector('.cn').textContent=c.n||'';
+    });
+    Array.prototype.forEach.call(lay.querySelectorAll('[data-cp]'),function(el){ if(!seen[el.dataset.cp]) el.remove(); });
   }
   function drawPaused(){
     main.innerHTML='<div class="card center"><div class="checkband"></div><div class="badge">&#9208; Paused</div>'+
@@ -651,7 +779,7 @@
     if(me.rank===1){ head='\uD83C\uDF89 You won!'; sub='1st place - come collect the Grand Prize.'; }
     else if(me.rank===2){ head='\uD83E\uDD48 2nd place!'; sub='You won the Runner-Up Prize - see the host.'; }
     else if(me.rank===3){ head='\uD83E\uDD49 3rd place!'; sub='You won the Third Prize - see the host.'; }
-    else { head='Nice game!'; sub='You finished #'+me.rank+' of '+total+' with '+me.score+' points.'; }
+    else { head='Nice game!'; sub='You finished #'+me.rank+' of '+total+' with '+me.score+' points. That sound on your phone? The sad trombone. It is contractually obligated.'; }
     var prizeBanner = (me.rank<=3) ?
       '<div class="rxlabel"><div class="rxl-top"><span>WORLD PHARMACISTS DAY PHARMACY</span><span>Rx #0925-WIN'+me.rank+'</span></div>'+
       '<div class="rxl-pt">PATIENT: '+esc(name).toUpperCase()+'</div>'+
@@ -665,13 +793,21 @@
       '<div class="mypos"><span>Your position</span><b>#'+me.rank+'</b><span>of '+total+' &middot; '+me.score+' pts &middot; '+(me.correct||0)+' correct</span></div>'+
       '<div class="bhead"><span>Full scoreboard</span><button id="findme" class="findme">&#128205; Find me</button></div>'+
       '<div class="board" id="board">'+rows+'</div>'+
+      cheerBar()+
       '<div class="note">&#127881; Happy World Pharmacists Day &mdash; now go get nachos!</div></div>';
+    wireCheers();
     function toMe(smooth){ var b=document.getElementById('board'), m=document.getElementById('myrow'); if(!b||!m) return;
       b.scrollTo({top:m.offsetTop-b.offsetTop-b.clientHeight/2+m.clientHeight/2, behavior:smooth?'smooth':'auto'}); }
     setTimeout(function(){ toMe(false); },30);
     document.getElementById('findme').onclick=function(){ toMe(true); var m=document.getElementById('myrow'); if(m){ m.classList.remove('flash'); void m.offsetWidth; m.classList.add('flash'); } };
+    drawCheers();
     var gk=(state.game||'g');
-    if(me.rank<=3 && celebrated!==gk){ celebrated=gk; celebrate(); }   // fanfare once per game, not on every redraw
+    if(celebrated!==gk){
+      celebrated=gk;
+      if(me.rank<=3){ setSong('victory'); try{ STATMusic.sting('win'); }catch(e){} celebrate(); }
+      else { setSong('defeat'); try{ STATMusic.sting('sad'); }catch(e){} }   // womp womp womp waaah
+      victoryStop(true);
+    } else { setSong(me.rank<=3?'victory':'defeat'); }
   }
   function celebrate(){
     if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return;
