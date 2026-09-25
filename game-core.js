@@ -96,17 +96,24 @@
           options: ['Fridge','Room-temp shelf','Locked vault','Freezer'], answer: 0,
           fact: 'Unopened insulin lives at 2-8 C. Once in use, most pens are fine at room temp for 28 days. Never freeze it.' },
       ] },
-    { id: 10, name: 'Final Wager', short: 'Three bets, 0–5 points each. Risk it.', kind: 'wager', pts: 5, wager: true, blurb: 'Three questions. Bet 0-5 on each. Fortunes change here.',
+    { id: 10, name: 'Final Wager', short: '5 questions — bet up to everything you have', kind: 'wager', pts: 5, wager: true,
+      blurb: 'Five questions. Bet up to every point you own. Fortunes are made and destroyed here.',
       q: [
-        { type: 'mc', prompt: "Captain America got his powers from the \"Super Soldier Serum\" — history's most off-label injection. Who created it?",
-          options: ["Dr. Abraham Erskine", "Dr. Bruce Banner", "Howard Stark", "Dr. Arnim Zola"], answer: 0,
-          fact: "Erskine was killed right after the procedure and took the formula with him — the ultimate lost prescription." },
-        { type: 'mc', prompt: "Dr. Gregory House could not get through an episode without which painkiller? (Pharmacy staff: you know this one.)",
-          options: ["Vicodin", "Percocet", "OxyContin", "Tramadol"], answer: 0,
-          fact: "House's leg pain came from a thigh-muscle infarction, and the Vicodin habit ran for all eight seasons. It's never lupus." },
+        { type: 'mc', prompt: "Breaking Bad's title card hides two real element symbols. Which two?",
+          options: ["Br and Ba — bromine and barium", "B and Bk — boron and berkelium", "Br and Bi — bromine and bismuth", "Ba and Bh — barium and bohrium"], answer: 0,
+          fact: "Br (bromine) in \"Breaking\" and Ba (barium) in \"Bad\" — the best chemistry joke on television." },
+        { type: 'mc', prompt: "Captain America's \"Super Soldier Serum\" — history's most off-label injection. Who formulated it?",
+          options: ["Dr. Abraham Erskine", "Dr. Arnim Zola", "Howard Stark", "Dr. Hank Pym"], answer: 0,
+          fact: "Erskine was shot dead right after the procedure and took the formula with him. Howard Stark built the machine; Zola worked for Hydra; Pym is Ant-Man." },
+        { type: 'mc', prompt: "Michael Scott spent 11 years writing a movie. What was it called?",
+          options: ["Threat Level Midnight", "Agent Michael Scarn", "Code Name: Scarn", "The Scranton Strangler"], answer: 0,
+          fact: "Michael Scarn is the hero; Threat Level Midnight is the film. It finally screened in season 7." },
+        { type: 'mc', prompt: "Dr. Gregory House limped through eight seasons hooked on which painkiller?",
+          options: ["Vicodin", "Percocet", "Dilaudid", "Tramadol"], answer: 0,
+          fact: "House's pain came from a thigh-muscle infarction. And it's never lupus." },
         { type: 'mc', prompt: "Coca-Cola was created in 1886 by John Pemberton, who worked as a...",
-          options: ["Pharmacist", "Dentist", "Chef", "Chemistry teacher"], answer: 0,
-          fact: "He sold it as a nerve tonic at a pharmacy soda fountain. Pepsi (Caleb Bradham) and Dr Pepper (Charles Alderton) came from pharmacists too — your profession basically invented soda." }
+          options: ["Pharmacist", "Dentist", "Chemistry teacher", "Soda-fountain owner"], answer: 0,
+          fact: "He sold it as a nerve tonic at a pharmacy soda fountain. Pepsi (Caleb Bradham) and Dr Pepper (Charles Alderton) came from pharmacists too — your profession invented soda." }
       ] },
   ];
 
@@ -464,35 +471,58 @@
     return hashStr(s).toString(36) + '-' + QUESTIONS.length;
   }
 
-  function maxScore() {
-    return QUESTIONS.reduce(function (s, q) { return s + q.pts; }, 0);
+  // Points this player may bet on question qKey (0 = no bet allowed, flat 1-point question)
+  function wagerCapFor(players, answersByQ, qKey, pid) {
+    var s = runScores(players, answersByQ, qKey)[pid];
+    return s ? Math.max(0, s.score) : 0;
   }
+
+  function baseScore() {   // points available before the Final Wager
+    return QUESTIONS.reduce(function (t, q) { return t + (q.isWager ? 0 : q.pts); }, 0);
+  }
+  function maxScore() {     // theoretical ceiling: base, doubled by every all-in wager
+    return baseScore() * Math.pow(2, QUESTIONS.filter(function (q) { return q.isWager; }).length);
+  }
+
 
   // ---- Scoring. Idempotent full recompute from all recorded answers. ----
   // answersByQ: { "<qKey>": { "<pid>": { choice:Int, ms:Int, wager:Int? } } }
   // players:    { "<pid>": { name } }  -> returns { pid: {score,totalMs,correct,answered} }
-  function computeScores(players, answersByQ) {
+  // How many points a player can bet on a wager question = what they hold going INTO it.
+  // At zero points there is no bet: the question is a flat 1-point lifeline, with nothing to lose.
+  function wagerOutcome(available, bet, right) {
+    if (available <= 0) return { bet: 0, flat: true, delta: right ? 1 : 0 };
+    var b = Math.max(0, Math.min(available, (typeof bet === 'number' && isFinite(bet)) ? Math.floor(bet) : 0));
+    return { bet: b, flat: false, delta: right ? b : -b };
+  }
+  function runScores(players, answersByQ, stopKey) {
     var out = {};
     Object.keys(players || {}).forEach(function (pid) { out[pid] = { score: 0, totalMs: 0, correct: 0, answered: 0 }; });
-    QUESTIONS.forEach(function (q) {
+    for (var i = 0; i < QUESTIONS.length; i++) {
+      var q = QUESTIONS[i];
+      if (stopKey && q.key === stopKey) break;          // stop BEFORE this question
       var a = (answersByQ || {})[q.key] || {};
       Object.keys(a).forEach(function (pid) {
-        if (!out[pid]) return; // answer from a player no longer present
-        var ans = a[pid];
-        var right = ans && ans.choice === q.answer;
+        if (!out[pid]) return;                          // answer from a player no longer present
+        var ans = a[pid], right = ans && ans.choice === q.answer;
         out[pid].answered += 1;
         out[pid].totalMs += (ans && typeof ans.ms === 'number') ? ans.ms : 0;
         if (q.isWager) {
-          var w = ans && typeof ans.wager === 'number' ? Math.max(0, Math.min(5, ans.wager)) : 0;
-          out[pid].score += right ? w : -w;
+          var r = wagerOutcome(Math.max(0, out[pid].score), ans && ans.wager, right);
+          out[pid].score += r.delta;
           if (right) out[pid].correct += 1;
         } else if (right) {
           out[pid].score += q.pts;
           out[pid].correct += 1;
         }
+        if (out[pid].score < 0) out[pid].score = 0;      // never below zero, ever
       });
-    });
-    // never show a negative total at a party — floor at zero
+    }
+    return out;
+  }
+  function computeScores(players, answersByQ) {
+    var out = runScores(players, answersByQ, null);
+  // never show a negative total at a party — floor at zero
     Object.keys(out).forEach(function (pid) { if (out[pid].score < 0) out[pid].score = 0; });
     return out;
   }
@@ -592,7 +622,7 @@
 
   root.STAT = {
     ROUNDS: ROUNDS, QUESTIONS: QUESTIONS, SUDDEN: SUDDEN, maxScore: maxScore,
-    BUILD: BUILD, SIG: contentSig(), rankSudden: rankSudden, findTies: findTies, finalRanking: finalRanking, QUIPS: QUIPS, QQUIPS: QQUIPS, quipFor: quipFor, dealQuips: dealQuips, roundSummary: roundSummary, STICKERS: STICKERS, BG_TILE: BG_TILE,
+    BUILD: BUILD, SIG: contentSig(), wagerCapFor: wagerCapFor, baseScore: baseScore, wagerOutcome: wagerOutcome, runScores: runScores, rankSudden: rankSudden, findTies: findTies, finalRanking: finalRanking, QUIPS: QUIPS, QQUIPS: QQUIPS, quipFor: quipFor, dealQuips: dealQuips, roundSummary: roundSummary, STICKERS: STICKERS, BG_TILE: BG_TILE,
     computeScores: computeScores, rankPlayers: rankPlayers,
     trayHTML: trayHTML, extraHTML: extraHTML,
     LETTERS: ['A', 'B', 'C', 'D']

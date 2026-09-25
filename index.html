@@ -97,6 +97,16 @@
   .fact{font-size:14px;color:#6B5A2E;line-height:1.4;margin-top:4px}
   .pulse{animation:p 1.6s ease-in-out infinite}@keyframes p{0%,100%{opacity:1}50%{opacity:.5}}
   .medal{font-size:44px}
+  .nobet{background:#FFF1D6;border:2px solid var(--amber);border-radius:12px;padding:12px;margin-bottom:8px;font-size:15px;line-height:1.35;text-align:center}
+  .betbox{background:var(--link);border-radius:14px;padding:10px 12px;margin-bottom:8px}
+  .betnum{text-align:center;color:#fff}
+  .betnum b{font-family:var(--disp);font-weight:800;font-size:40px;color:var(--amber);line-height:1;display:block}
+  .betnum span{font-size:12px;color:#E8D5AE;text-transform:uppercase;letter-spacing:.06em}
+  #betrange{width:100%;margin:8px 0 6px;accent-color:var(--amber);height:34px}
+  .betquick{display:grid;grid-template-columns:1fr 1fr 1.5fr;gap:6px}
+  .betquick.two{grid-template-columns:1fr 1.5fr}
+  .betquick button{border:2px solid var(--amber);background:transparent;color:var(--amber);border-radius:10px;padding:10px 4px;font-family:var(--disp);font-weight:800;font-size:15px}
+  .betquick button.allin{background:var(--alert);border-color:var(--alert);color:#fff}
   .lockmsg{margin-top:4px;text-align:center;font-size:14px;color:#9A7A52;padding:8px;border-radius:10px}
   .lockmsg.on{background:var(--link);color:var(--amber);font-family:var(--disp);font-weight:700;font-size:15px}
   .opt.chosen{box-shadow:0 0 0 3px var(--amberd) inset,0 4px 0 var(--amberd);background:#FFF1D0}
@@ -428,23 +438,46 @@
   function qmeta(q){
     var i=STAT.QUESTIONS.indexOf(q)+1;
     return '<div class="rxhead"><div class="rxtop"><span class="rxno">Rx #'+rxNum(q)+'</span><span class="rxof">'+i+' of '+STAT.QUESTIONS.length+'</span></div>'+
-      '<div class="rxrow"><span><b>Sig:</b> '+esc(q.roundName)+'</span><span><b>Qty:</b> '+(q.isWager?'wager 0–5':q.pts+' pt'+(q.pts>1?'s':''))+'</span></div></div>';
+      '<div class="rxrow"><span><b>Sig:</b> '+esc(q.roundName)+'</span><span><b>Qty:</b> '+(q.isWager?(availFor(q)>0?'bet up to '+availFor(q):'1 pt (no bet)'):q.pts+' pt'+(q.pts>1?'s':''))+'</span></div></div>';
   }
 
+  function availFor(q){ return q.isWager ? STAT.wagerCapFor(players, allAns, q.key, pid) : 0; }
   function drawQuestion(q){
-    qShownAt=markShown(q.key); var prev=myAnswers[q.key]; pickedWager=(q.isWager?(prev&&prev.wager!=null?prev.wager:(pickedWager||0)):null);
+    qShownAt=markShown(q.key); var prev=myAnswers[q.key], avail=availFor(q);
+    pickedWager = q.isWager ? Math.max(0, Math.min(avail, (prev && prev.wager!=null) ? prev.wager : Math.min(1, avail))) : null;
     var html='<div class="card" data-qv="'+q.key+'">'+qmeta(q);
     html+='<div class="filling"><span id="fillab">Filling&hellip;</span><div class="cdbar"><i id="bar"></i></div><b id="secs" class="secs">'+QS()+'</b></div>';
     html+='<div class="prompt">'+esc(q.prompt)+'</div>';
     html+=STAT.extraHTML(q).replace(/<div class="mock/g,'<div class="mock').replace(/class="card"/g,'class="cardm"');
     if(q.isWager){
-      html+='<label>1. Your wager</label><div class="wager" id="wg">'+[0,1,2,3,4,5].map(function(n){return '<button data-w="'+n+'"'+(n===pickedWager?' class="sel"':'')+'>'+n+'</button>';}).join('')+'</div><label>2. Your answer</label>';
+      if(avail<=0){
+        html+='<div class="nobet">&#128176; You have <b>0 points</b> &mdash; nothing to bet.<br>This one is a freebie: <b>1 point</b> if you get it right, nothing to lose.</div>';
+      } else {
+        html+='<label>1. Your bet &mdash; you have <b>'+avail+'</b> point'+(avail===1?'':'s')+'</label>'+
+          '<div class="betbox">'+
+            '<div class="betnum"><b id="betval">'+pickedWager+'</b><span id="betlab">point'+(pickedWager===1?'':'s')+' on the line</span></div>'+
+            '<input type="range" id="betrange" min="0" max="'+avail+'" step="1" value="'+pickedWager+'" aria-label="Your bet">'+
+            '<div class="betquick'+(avail<2?' two':'')+'"><button data-bet="0">0</button>'+
+              (avail>=2?'<button data-bet="'+Math.floor(avail/2)+'">Half</button>':'')+
+              '<button data-bet="'+avail+'" class="allin">ALL IN ('+avail+')</button></div>'+
+          '</div><label>2. Your answer</label>';
+      }
     }
+
     html+=q.options.map(function(o,i){return '<button class="opt" data-i="'+i+'"><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
     html+='<div class="lockmsg" id="lockmsg">Tap an answer. You can change it until time runs out.</div>';
     html+='</div>';
     main.innerHTML=html;
-    if(q.isWager){ Array.prototype.forEach.call(document.querySelectorAll('#wg button'),function(b){ b.onclick=function(){ pickedWager=+b.dataset.w; document.querySelectorAll('#wg button').forEach(function(x){x.classList.remove('sel');}); b.classList.add('sel'); var m=myAnswers[q.key]; if(m) submit(q,m.choice,true); }; }); }
+    if(q.isWager && avail>0){
+      var rng=document.getElementById('betrange');
+      var setBet=function(v,save){ pickedWager=Math.max(0,Math.min(avail,+v||0));
+        if(rng) rng.value=pickedWager;
+        var bv=document.getElementById('betval'), bl=document.getElementById('betlab');
+        if(bv) bv.textContent=pickedWager; if(bl) bl.textContent='point'+(pickedWager===1?'':'s')+' on the line';
+        var m=myAnswers[q.key]; if(save && m) submit(q,m.choice,true); markChoice(q,myAnswers[q.key]); };
+      if(rng){ rng.oninput=function(){ setBet(rng.value,false); }; rng.onchange=function(){ setBet(rng.value,true); }; }
+      Array.prototype.forEach.call(document.querySelectorAll('.betquick button'),function(b){ b.onclick=function(){ setBet(b.dataset.bet,true); }; });
+    }
     Array.prototype.forEach.call(document.querySelectorAll('.opt'),function(b){ b.onclick=function(){ submit(q,+b.dataset.i); }; });
     runBar(QS());
   }
@@ -465,7 +498,7 @@
     var prev=myAnswers[q.key];
     if(prev && prev.choice===i && !wagerOnly && (!q.isWager || prev.wager===(pickedWager||0))) return;   // same tap again: keep your original speed
     // speed = time of your FINAL answer, so switching late can't win a speed tiebreak
-    var rec={choice:i,ms:Date.now()-qShownAt}; if(q.isWager)rec.wager=(pickedWager||0);
+    var rec={choice:i,ms:Date.now()-qShownAt}; if(q.isWager)rec.wager=Math.max(0,Math.min(availFor(q), pickedWager||0));
     if(prev) rec.changes=(prev.changes||0)+(prev.choice!==i?1:0);
     myAnswers[q.key]=rec; markChoice(q,rec);
     base.child('answers/'+safeKey(q.key)+'/'+pid).set(rec).catch(function(){});
@@ -478,7 +511,7 @@
     var bs=main.querySelectorAll('[data-qv="'+q.key+'"] .opt'); if(!bs.length) return;
     Array.prototype.forEach.call(bs,function(b){ b.classList.toggle('chosen', !!mine && +b.dataset.i===mine.choice); });
     var m=document.getElementById('lockmsg'); if(!m) return;
-    if(mine){ m.className='lockmsg on'; m.innerHTML='&#9745; Locked in: <b>'+STAT.LETTERS[mine.choice]+'</b>'+(q.isWager?' &middot; bet <b>'+(mine.wager||0)+'</b>':'')+' &mdash; tap another to change it'; }
+    if(mine){ m.className='lockmsg on'; m.innerHTML='&#9745; Locked in: <b>'+STAT.LETTERS[mine.choice]+'</b>'+(q.isWager?' &middot; betting <b>'+(mine.wager||0)+'</b>':'')+' &mdash; tap another to change it'; }
     else { m.className='lockmsg'; m.textContent='Tap an answer. You can change it until time runs out.'; }
   }
   function drawLocked(q,mine){
@@ -492,7 +525,8 @@
     clearInterval(lowTimer);
     var got=mine&&mine.choice===q.answer;
     var html='<div class="card">'+qmeta(q);
-    html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?(q.isWager?'&#10004; VERIFIED! +'+(mine.wager||0):'&#10004; VERIFIED! +'+q.pts):(mine?(q.isWager?'&#10008; REJECTED &minus;'+(mine.wager||0):'&#10008; REJECTED at verification'):'&#10008; Never dispensed'))+'</div>';
+    var wr=q.isWager?STAT.wagerOutcome(STAT.wagerCapFor(players,allAns,q.key,pid), mine&&mine.wager, got):null;
+    html+='<div class="verdict '+(got?'yes':'no')+'">'+(got?(q.isWager?'&#10004; VERIFIED! +'+wr.delta+(wr.flat?' (freebie)':''):'&#10004; VERIFIED! +'+q.pts):(mine?(q.isWager?(wr.flat?'&#10008; REJECTED (no points lost)':'&#10008; REJECTED &minus;'+wr.bet):'&#10008; REJECTED at verification'):'&#10008; Never dispensed'))+'</div>';
     html+=quipHTML(q,mine,STAT.QUESTIONS,STAT.QUESTIONS.indexOf(q));
     html+=q.options.map(function(o,i){var c=i===q.answer?' correct':(mine&&i===mine.choice?' wrong':'');return '<button class="opt'+c+'" disabled><span class="k">'+STAT.LETTERS[i]+'</span><span>'+esc(o)+'</span></button>';}).join('');
     html+='<div class="fact">'+esc(q.fact)+'</div>';
@@ -575,7 +609,7 @@
       '<li><b>'+qs+' seconds</b> per question &mdash; it moves on by itself. The last 5 seconds get intense!</li>'+
       '<li><b>Changed your mind?</b> Tap another answer any time before the clock runs out. Your last tap counts.</li>'+
       '<li><b>Tap fast.</b> Ties go to whoever locked in their final answer quickest.</li>'+
-      '<li><b>Final Wager:</b> 3 questions, bet 0&ndash;5 points on each. Win it or lose it.</li>'+
+      '<li><b>Final Wager:</b> 5 questions. Bet <b>up to every point you have</b> &mdash; win it or lose it. At 0 points you cannot bet, and the question is a free 1-pointer.</li>'+
       '<li><b>Sudden death</b> breaks any tie for the top 3: 5 easy questions, '+SDS()+' seconds each.</li>'+
       '<li><b>Prizes</b> for 1st, 2nd &amp; 3rd.</li></ul>'+
       '<h3>The '+R.length+' rounds</h3><ol class="rounds">'+R.map(function(r){
